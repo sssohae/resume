@@ -38,7 +38,7 @@
 
                                     <ul style="list-style:none;float:right;">
                                         <li>
-                                            생년월일 <input type="date" name="birthDate" th:value="*{birthDate}">|
+                                            생년월일 <input type="date" name="birthDate" th:value="*{birthDate}">
                                             &nbsp;멤버권한
                                             <select name="memCd">
                                                 <option value="" th:selected="*{memCd == 'all'}">선택</option>
@@ -46,9 +46,9 @@
                                                 <option value="M1" th:selected="*{memCd == 'all'}">일반</option>
                                                 <option value="M2" th:selected="*{memCd == 'all'}">작가</option>
                                                 <option value="M3" th:selected="*{memCd == 'all'}">사진관</option>
-                                            </select>|&nbsp;
+                                            </select>&nbsp;
                                             남<input type="radio" name="genCd" value="m">
-                                            여<input type="radio" name="genCd" value="f">&nbsp;|&nbsp;
+                                            여<input type="radio" name="genCd" value="f">&nbsp;&nbsp;|
                                             <select name="type"
                                                 style="width:120px;height:30px;font-size:16px;border:none;">
                                                 <option value="all" th:selected="*{type == 'all'}">전체</option>
