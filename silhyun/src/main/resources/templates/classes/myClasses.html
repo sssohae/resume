@@ -1,0 +1,402 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="pxdraft" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <title>ShopApp - eCommerce Bootstrap 5 Template</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link href="/css/theme.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div layout:fragment="content">
+
+        <div class="wrapper">
+            <div class="py-3 bg-gray-100">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 my-2">
+                            <h1 class="m-0 h4 text-center text-lg-start">마이페이지</h1>
+                        </div>
+                        <div class="col-lg-6 my-2">
+                            <ol class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+                                <li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+                                            class="bi bi-home"></i>홈</a></li>
+                                <li class="breadcrumb-item text-nowrap active" aria-current="page">마이페이지</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-6">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+                            <div class="bg-white border border-bottom-0 shadow-lg">
+                                <div class="d-flex p-3 align-items-center">
+                                    <div class="avatar avatar-lg rounded-circle">
+                                        <img src="../../assets/img/avatar/1000x1000.jpg" title="" alt="">
+                                    </div>
+                                    <div class="col ps-3">
+                                        <h6 class="m-0">닉네임</h6>
+                                        <small><a href="#">이름</a></small>
+                                    </div>
+                                    <div>
+                                        <button>작가변경</button>
+                                    </div>
+                                </div>
+                                <ul class="list-unstyled mb-0 theme-link">
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-profile.html">
+                                            <i class="fi-user me-2"></i>회원정보수정
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center active p-3"
+                                            href="account-order.html">
+                                            <i class="bi bi-bag me-2"></i> 주문내역 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center active p-3"
+                                            href="account-order.html">
+                                            <i class="bi-cash-stack me-2"></i> 내포인트내역 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center active p-3"
+                                            href="account-order.html">
+                                            <i class="bi-ticket me-2"></i> 쿠폰내역 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center active p-3"
+                                            href="account-order.html">
+                                            <i class="fi-heart me-2"></i> 찜 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-wishlist.html">
+                                            <i class="bi-hand-thumbs-up me-2"></i>좋아요<div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            th:href="@{/silhyun/myPage/myClasses}">
+                                            <i class="bi-play-btn me-2"></i>내 클래스 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-tickets.html">
+                                            <i class="bi-chat-square-dots me-2"></i>문의내역 <div
+                                                class="ms-auto badge-pill badge bg-secondary"></div>
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-address.html">
+                                            <i class="bi-calendar me-2"></i>캘린더
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-payment.html">
+                                            <i class="bi bi-credit-card me-2"></i>결제내역
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-payment.html">
+                                            <i class="bi-person-bounding-box me-2"></i>내 히스토리
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="account-payment.html">
+                                            <i class="bi-hand-thumbs-down me-2"></i>신고내역
+                                        </a>
+                                    </li>
+                                    <li class="border-bottom mb-0">
+                                        <a class="nav-link-style d-flex align-items-center p-3"
+                                            href="/mpg/checkPassword">
+                                            <i class="bi bi-box-arrow-left me-2"></i>회원탈퇴
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-xxl-9">
+                            <div>
+                                <section>
+                                    <div class="container">
+                                        <div class="row g-0 px-4 px-lg-5 py-5 rounded bg-cover bg-fiex bg-center border"
+                                            style="background-image: url();">
+                                            <div class="col-md-8 my-4 text-center text-md-start">
+                                                <h1 th:text="${myName}+'님의'"></h1>
+                                                <h1>학습 공간</h1>
+                                            </div>
+                                            <div class="col-md-4 my-3 text-center text-md-end">
+                                                <br>
+                                                <h3 th:text="'오프라인 : '+ ${count1}"></h3>
+                                                <h3 th:text="'온라인 : '+ ${count2}"></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <br>
+                            </div>
+
+
+                            <!-- 오프라인 테이블 -->
+                            <p><b>오프라인 강의🚗</b></p>
+                            <div class="table-responsive fs-md mb-4">
+                                <table class="table table-bordered table-hover mb-0">
+                                    <thead class="text-700 bg-gray-200">
+                                        <tr>
+                                            <th class="text-center" style="width:50px;">번호</th>
+                                            <th class="fw-600" style="width: 250px">강의명</th>
+                                            <th class="text-center" style="width: 100px">기록가</th>
+                                            <th class="text-center" style="width: 130px">분야</th>
+                                            <th class="text-center" style="width: 200px">장소일시</th>
+                                            <th class="text-center" style="width: 130px">진행현황</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="myC1,sts : ${myC1}" th:Class="${sts}" data-bs-toggle="modal"
+                                            data-bs-target="#seeMyC1" th:attr="onclick=|myC1Ajax('${myC1.classNum}')|">
+
+                                            <td class="p-3" align="center"><span class="fw-500"
+                                                    th:text="${sts.count}"></span></td>
+                                            <td class="p-3"><span class="fw-600" th:text="${myC1.ttl}"></span></td>
+                                            <td class="p-3" align="center" th:text="${myC1.pName}"></td>
+                                            <td class="p-3" align="center" th:text="${myC1.fdCd}"></td>
+                                            <td class="p-3" align="center"><a th:text="${myC1.cPlace}"></a> <br>
+                                                <a th:text="${myC1.cDt} +''+ ${myC1.cTime}"></a></td>
+                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
+                                                    th:text="${myC1.dDayCnt}+ '일 전'"></span></td>
+                                        </tr>
+                                </table>
+                            </div>
+
+                            <br>
+                            <Br>
+
+                            <!-- 온라인 테이블 -->
+                            <p><b>온라인 강의💻</b></p>
+                            <div class="table-responsive fs-md mb-4">
+                                <table class="table table-bordered table-hover mb-0">
+                                    <thead class="text-700 bg-gray-200">
+                                        <tr>
+                                            <th class="text-center" style="width: 50px">번호</th>
+                                            <th class="fw-600" style="width: 250px">강의명</th>
+                                            <th class="text-center" style="width: 100px">기록가</th>
+                                            <th class="text-center" style="width: 130px">분야</th>
+                                            <th class="text-center" style="width: 200px">강의수</th>
+                                            <th class="text-center" style="width: 130px">남은 이용기한</th>
+                                    </thead>
+                                    <tbody th:each="myC2,sts2 : ${myC2}" th:Class="${sts2}"
+                                        th:if="${myC2.IVCnt != null and myC2.IVCnt != 0 }"
+                                        th:onclick="|location.href='@{/silhyun/classes/myClassesVideos(classNum=${myC2.classNum}) }'|">
+                                        <tr>
+                                            <td class="p-3" align="center"><span class="fw-500"
+                                                    th:text="${sts2.count}"></span></td>
+                                            <td class="p-3"><span class="fw-600" th:text="${myC2.ttl}"></span></td>
+                                            <td class="p-3" align="center" th:text="${myC2.pName}"></td>
+                                            <td class="p-3" align="center" th:text="${myC2.fdCd}"></td>
+                                            <td class="p-3" align="center"
+                                                th:text="'총 ' + ${myC2.IVCnt} + '강/ 총 ' + ${myC2.timeSum}+'분'"></td>
+                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
+                                                    th:text="${myC2.dDayCnt}+'일'"></span></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody th:each="myC2,sts2 : ${myC2}" th:Class="${sts2}"
+                                        th:if="${myC2.IVCnt == null or myC2.IVCnt == 0}" data-bs-toggle="modal"
+                                        data-bs-target="#notPrepared">
+                                        <tr>
+                                            <td class="p-3" align="center"><span class="fw-500"
+                                                    th:text="${sts2.count}"></span></td>
+                                            <td class="p-3"><span class="fw-600" th:text="${myC2.ttl}"></span></td>
+                                            <td class="p-3" align="center" th:text="${myC2.pName}"></td>
+                                            <td class="p-3" align="center" th:text="${myC2.fdCd}"></td>
+                                            <td class="p-3" align="center"
+                                                th:text="'총 ' + ${myC2.IVCnt} + '강/ 총 ' + ${myC2.timeSum}+'분'"></td>
+                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
+                                                    th:text="${myC2.dDayCnt}+'일'"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                            <div class="modal fade" id="seeMyC1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content" id="myC1Body">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="notPrepared">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-secondary">
+                                            <div class="modal-title p-3">
+                                                <p class="m-0 text-white">클래스안내</p>
+                                            </div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="w-100 p-3">
+
+                                                <div class="mb-3">
+                                                    <img src="/img/blank.jpg" style="width: 440px" alt="">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <b>현재 강의를 준비중입니다.</b>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            function myC1Ajax(classNum) {
+                var classNum = classNum;
+                $.ajax({
+                    url: "/myPageU/myC1Ajax",
+                    type: "GET",
+                    data: {
+                        classNum: classNum
+                    },
+                    dataType: 'json'
+                }).then(result => {
+
+                    var myC1Ajax = result;
+                    console.log("아작스로 받은 클래스 인포" + myC1Ajax)
+
+                    //날짜 형태 변환
+                    var options = {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    };
+
+
+                    var myC1Body = document.getElementById("myC1Body");
+                    myC1Body.innerHTML = "";
+
+
+                    var appendContent = `
+    
+            <div class="modal-header bg-primary">
+                <div class="modal-title p-3">
+                    <h5 class="m-0 text-white" id="updateMId"></h5>
+                
+                    <p class="m-0 text-white">${myC1Ajax.TTL} 상세정보</p>
+                
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="w-100 p-3">
+
+                    <div class="mb-3">
+                        <img  src="${myC1Ajax.THNI}" style="width: 440px"  alt="">                          
+                    </div> 
+                    <div class="mb-3">
+                        <b>클래스명</b>
+                        <p>${myC1Ajax.TTL}</p>
+                    </div>     
+                            <div class="mb-3">
+                        <b>기록가</b>
+                        <p>${myC1Ajax.NAME}(연락처: ${myC1Ajax.TEL})</p>
+                    </div> 
+                                                    <div class="mb-3">
+                        <b>분야</b>
+                        <p>${myC1Ajax.FCD}</p>
+                    </div>     
+                            <div class="mb-3">
+                        <b>장소</b>
+                        <p>${myC1Ajax.CPLACE}</p>
+                    </div>
+                                                    <div class="mb-3">
+                        <b>일시</b>
+                        <p>${new Date(myC1Ajax.CDT).toLocaleDateString("ko-KR", options)}
+                        / ${myC1Ajax.CTIME}</p>
+                    </div>
+                            <div class="mb-3">
+                        <b>클래스설명</b>
+                        <p>${myC1Ajax.DESCT}</p>
+                    </div>
+                                                    <div class="mb-3">
+                        <b>모집인원</b>
+                        <p>${myC1Ajax.YPSN}명</p>
+                    </div>
+                </div>
+            </div>
+
+        `;
+
+                    document.getElementById("myC1Body").innerHTML += appendContent;
+
+                });
+
+            };
+
+
+            function notPrepared() {
+                alert("강의를 준비중입니다.");
+            }
+        </script>
+
+    </div>
+
+    <!-- script start -->
+    <!-- jquery -->
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <!--bootstrap-->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- slick carousel -->
+    <script src="/vendor/swiper/swiper-bundle.min.js"></script>
+    <!-- magnific -->
+    <script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+    <!-- isotope -->
+    <script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/count-down/jquery.countdown.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/jarallax/jarallax-all.js"></script>
+    <!-- Theme Js -->
+    <script src="/js/custom.js"></script>
+    <script src="/js/theme.js"></script>
+    <!-- End script start -->
+</body>
+
+</html>

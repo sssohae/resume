@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="co.yedam.silhyun.portfolio.map.PortfolioMapper">
+
+
+	<select id="findLike"
+		parameterType="co.yedam.silhyun.portfolio.vo.LikePhotoVO"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM LIKE_PHOTO
+		WHERE ID = #{id} AND PORT_NUM
+		= #{portNum}
+	</select>
+
+	<insert id="insertLike"
+		parameterType="co.yedam.silhyun.portfolio.vo.LikePhotoVO">
+		INSERT INTO LIKE_PHOTO (ID, PORT_NUM)
+		VALUES (#{id},
+		#{portNum})
+	</insert>
+
+	<delete id="deleteLike"
+		parameterType="co.yedam.silhyun.portfolio.vo.LikePhotoVO">
+		DELETE FROM LIKE_PHOTO WHERE ID = #{id} AND PORT_NUM =
+		#{portNum}
+	</delete>
+
+	<!-- 모달 사진 리스트 -->
+	<select id="detailPortfolioPhoto"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"
+		parameterType="String">
+		SELECT PH.PHO_NUM,PH.PHO_RT,PO.PORT_NUM,PO.PTG_ID
+		FROM
+		PHOTO PH, PORTFOLIO PO
+		WHERE PH.CTGR_NUM = PO.PORT_NUM
+		AND PH.CTGR = 'P'
+		AND PORT_NUM=#{portNum}
+	</select>
+
+	<!-- 포트폴리오상세페이지 작가정보 -->
+	<select id="portfolioPtg"
+		resultType="co.yedam.silhyun.member.vo.PhotographerVO"
+		parameterType="String">
+		SELECT PTG.PTG_ID, PTG.ST_ID, PTG.PTG_CD,
+		C.CDNAME,PTG.ITR, PTG.INST,
+		M.NAME, M.PROFILE, ST.ST_NAME,
+		NVL(Z.ZZIMSS, 0) ZZIMS
+		FROM PHOTOGRAPHER PTG
+		JOIN MEMBER M ON PTG.PTG_ID
+		= M.ID
+		JOIN (SELECT CD,CDNAME FROM CODE WHERE CDID = 'PTG_CD') C ON
+		C.CD = PTG.PTG_CD
+		LEFT OUTER JOIN STUDIO ST ON PTG.ST_ID = ST.ST_ID
+		LEFT OUTER JOIN (SELECT CTGR_NUM, COUNT(*) ZZIMSS FROM ZZIM WHERE CTGR
+		= 'A' GROUP BY CTGR_NUM) Z
+		ON PTG.PTG_ID = Z.CTGR_NUM
+		WHERE PTG.PTG_ID =
+		#{ptgId}
+	</select>
+
+	<!-- 작가필드 -->
+	<select id="ptgField"
+		resultType="co.yedam.silhyun.member.vo.PhotographerVO"
+		parameterType="String">
+		SELECT F.FD_CD,F.PTG_ID,C.CDNAME
+		FROM FIELD F, (SELECT
+		CDNAME,CD FROM CODE WHERE CDID='FIELD') C
+		WHERE F.FD_CD = C.CD
+		AND
+		PTG_ID = #{ptgId}
+	</select>
+
+	<!-- 작가별 포트폴리오리스트 띄우기 -->
+	<select id="ptgPortfolioList"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"
+		parameterType="String">
+		SELECT A.PHO_RT, A.PHO_NUM, P.*, NVL(L.LIKESS,0) AS LIKES
+		FROM (SELECT PHO_RT, PHO_NUM, CTGR_NUM
+		FROM PHOTO
+		WHERE PHO_NUM IN ( SELECT MIN(TO_NUMBER(PHO_NUM))
+		FROM PHOTO WHERE CTGR = 'P'
+		GROUP BY CTGR_NUM) ORDER BY PHO_NUM) A
+		JOIN PORTFOLIO P ON A.CTGR_NUM = P.PORT_NUM
+		LEFT OUTER JOIN (SELECT PORT_NUM, COUNT(*) AS LIKESS
+		FROM LIKE_PHOTO
+		GROUP BY PORT_NUM) L ON P.PORT_NUM = L.PORT_NUM
+		WHERE P.UP_STA = 'Y'
+		AND P.PTG_ID = #{ptgId}
+		ORDER BY P.PORT_DATE DESC
+	</select>
+
+
+
+	<insert id="insertPortfolio"
+		parameterType="co.yedam.silhyun.portfolio.vo.PortfolioVO">
+		<selectKey keyProperty="portNum" order="BEFORE"
+			resultType="String">
+			SELECT
+			NVL(MAX(TO_NUMBER(port_num)), 0) + 1
+			AS port_num
+			FROM
+			portfolio
+		</selectKey>
+		INSERT INTO portfolio (port_num, ptg_id, cntn, port_date, up_sta)
+		VALUES (#{portNum}, #{ptgId}, #{cntn}, sysdate, #{upSta})
+	</insert>
+
+	<insert id="insertPhoto">
+		<selectKey keyProperty="phoNum" order="BEFORE"
+			resultType="String">
+			SELECT NVL(MAX(TO_NUMBER(pho_num)), 0) + 1
+			AS
+			pho_num
+			FROM
+			photo
+		</selectKey>
+		INSERT INTO photo (pho_num, ctgr, ctgr_num, pho_rt)
+		VALUES (#{phoNum},
+		'P', #{portNum}, #{phoRt})
+	</insert>
+
+	<insert id="insertTag">
+		INSERT INTO tag (tag_cntn)
+		VALUES (#{tagCntn})
+	</insert>
+
+	<!-- 작가별 임시저장리스트 -->
+	<select id="imsiList"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"
+		parameterType="String">
+		SELECT A.PHO_RT, A.PHO_NUM, P.*, NVL(L.LIKESS,0) AS
+		LIKES
+		FROM (SELECT
+		PHO_RT, PHO_NUM, CTGR_NUM
+		FROM PHOTO
+		WHERE PHO_NUM IN (
+		SELECT
+		MIN(TO_NUMBER(PHO_NUM))
+		FROM PHOTO
+		WHERE CTGR = 'P'
+		GROUP BY
+		CTGR_NUM)
+		ORDER BY PHO_NUM) A
+		JOIN PORTFOLIO P ON A.CTGR_NUM =
+		P.PORT_NUM
+		LEFT
+		OUTER JOIN (SELECT PORT_NUM, COUNT(*) AS LIKESS
+		FROM
+		LIKE_PHOTO
+		GROUP BY
+		PORT_NUM) L ON P.PORT_NUM = L.PORT_NUM
+		WHERE P.UP_STA
+		= 'N'
+		AND P.PTG_ID = #{ptgId}
+		ORDER BY P.PORT_DATE DESC
+	</select>
+
+	<select id="portfolioSelectOne"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"
+		parameterType="String">
+		SELECT *FROM PORTFOLIO WHERE PORT_NUM = #{portNum}
+	</select>
+
+	<update id="updatePortfolio"
+		parameterType="co.yedam.silhyun.portfolio.vo.PortfolioVO">
+		UPDATE PORTFOLIO
+		SET CNTN = #{cntn},
+		UP_STA= #{upSta}
+		WHERE
+		PORT_NUM =
+		#{portNum}
+	</update>
+	<select id="selectPortLike"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"
+		parameterType="String">
+		Select * FROM LIKE_PHOTO WHERE PORT_NUM = #{portNum}
+	</select>
+
+
+	<delete id="deletePortfolio">
+		DELETE FROM PORTFOLIO WHERE PORT_NUM = #{portNum}
+	</delete>
+	<delete id="deletePortLike">
+		DELETE FROM LIKE_PHOTO WHERE PORT_NUM = #{portNum}
+	</delete>
+
+</mapper>

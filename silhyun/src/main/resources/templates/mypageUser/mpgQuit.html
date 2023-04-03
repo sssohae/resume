@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	body {
+		font-family: sans-serif;
+		}
+	h2 {
+		text-align: center;
+		padding-top: 15px;
+	}
+	h3 {
+		text-align: center;
+	}
+	
+	p {
+	 	text-align: center;
+	}
+	
+	#check {
+		background-color: #f0f0f0;
+	}
+	
+	#selReason {
+		text-align: center;
+	}
+	
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+<div id=check>
+	<h2>회원 탈퇴</h2>
+        
+        <hr>
+        <h3> 회원탈퇴 신청 전 아래 사항을 확인 부탁드립니다 😊 </h3><br>
+
+        <p> 1. 회원탈퇴 시 클래스, 포인트, 캐시, 쿠폰 등 회원이 가진 권리는 모두 소멸합니다.
+        <p> 2. 회원탈퇴 시 회사가 보관하고 있는 회원 데이터는 모두 영구적으로 삭제됩니다. <br>다만, 관련 법령에 따라 회사가 보관할 의무가 있는 정보 또는 자료는 일정기간 동안 보관됩니다.</p>
+        <p> 3. 회원탈퇴 후 실현하다에 게시한 게시물을 편집하거나 삭제할 수 없습니다. <br>필요한 경우 신청 전 게시물을 편집하거나 삭제해주세요.</p>
+        <hr>
+        
+</div><br>
+        <p id="check-line">
+        <input type="checkbox" name="delete-really" value="sure" style="width:20px; height:20px;" required="required"> 
+        &nbsp;안내사항을 모두 확인하였으며, 이에 동의합니다.</p>
+        <br>
+        <div id="selReason">
+        <label for="reason">탈퇴 사유 :</label>
+			<select id="reason" name="reason" >
+				<option value="T1">기록 삭제 목적</option>
+				<option value="T2">이용이 불편하고 장애가 많아서</option>
+				<option value="T3">다른 사이트가 더 좋아서</option>
+				<option value="T4">사용빈도가 낮아서</option>
+				<option value="T5">콘텐츠 불만</option>
+				<option value="T6">기타</option>
+			</select><br><br>
+		<h6>상세 사유</h6>
+		<textarea id="detailReason" name="detailReason" rows="5" cols="50"></textarea>
+		</div>
+		<div id="subBtn" style="text-align: center; padding-bottom: 20px; padding-top: 20px">		
+			<input type="submit" value="탈퇴하기" id="submit-btn" onclick="" style="margin-right: 50px; border:none; background-color: white;">확인 <!-- 버튼클릭하면 탈퇴 delete -->
+						
+			<button type="button" value="" id="cancel-btn" style="border:none; background-color: white;">취소</button>
+		</div>	
+		
+		<script>
+		
+		</script>
+	</div>	
+</body>
+</html>

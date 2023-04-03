@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content">
+		<!-- Table -->
+		<div class="py-6">
+			<div class="container">
+				<div class="row" th:each="ptg : ${ptgInfo}">
+					<!-- Profile Menu -->
+					<div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+						<div class="bg-white border border-bottom-0 shadow-lg">
+							<div class="d-flex p-3 align-items-center">
+								<div class="avatar avatar-lg rounded-circle">
+									<img th:src="${ptg.profile}" title=""
+										alt="">
+								</div>
+								<div class="col ps-3">
+									<h6 class="m-0" th:text="${ptg.Id}"></h6>
+									<small><a href="/photo/mypageAo"th:text="${ptg.name}">이름</a></small>
+								</div>
+								
+							</div>
+							<ul class="list-unstyled mb-0 theme-link">
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/modPfAo"> <i class="fi-user me-2"></i>회원정보수정
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resManage"> <i class="bi bi-card-checklist"></i>예약
+										관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/classManage"> <i class="bi-play-btn me-2"></i>클래스 관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageAoAsk"> <i class="bi-chat-square-dots me-2"></i>문의내역
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resCalendarAo"> <i class="bi-calendar me-2"></i>캘린더
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" th:href="@{/silhyun/portfolio/{ptgId}(ptgId=${session.id})}">
+										<i class="bi-person-bounding-box me-2"></i>포토폴리오
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/reportFormAo"> <i class="bi bi-exclamation-diamond"></i>신고
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>회원탈퇴
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- End Profile Menu -->
+			<!--  옆화면에 나오게하기-->
+					<div class="col-lg-8 col-xxl-9">
+						<div class="">
+										<input type="radio" id="que" name="que" value="q1" onchange="queForm('q1')"><label class="m-0 text-black">클래스</label> &nbsp;&nbsp;
+										<input type="radio" id="que" name="que" value="q2" onchange="queForm('q2')"><label class="m-0 text-black">이벤트</label>
+										<input type="radio" id="que" name="que" value="q6" onchange="queForm('q6')"><label class="m-0 text-black">내 문의</label> &nbsp;&nbsp;
+									</div>
+						<div class="table-responsive fs-md mb-4">
+								<table class="table table-bordered table-hover mb-0" id="classQna" style="display: none;">
+									<thead class="text-700 bg-gray-200">
+										<tr>
+											<th>번호</th>
+											<th >이름</th>
+											<th >아이디</th>
+											<th >문의 제목</th>
+											<th >등록일</th>
+											<th >등급</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td  class="mainNum" id="mainNum">1</td>
+											<td class="name" id="name">김유저</td>
+											<td class="id" id="id">kim</td>
+											<td class="ttl" id="ttl"></td>
+											<td class="mainDate" id="mainDate"></td>
+											<td class="memCd" id="memCd"></td>
+										</tr>
+									</tbody>
+								</table>
+								<table class="table table-bordered table-hover mb-0" id="eventQna" style="display: none;">
+									<thead class="text-700 bg-gray-200">
+										<tr>
+											<th>번호</th>
+											<th >이름</th>
+											<th >아이디</th>
+											<th >문의 제목</th>
+											<th >등록일</th>
+											<th >등급</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td  class="mainNum" id="mainNum">1</td>
+											<td class="name" id="name">김유저</td>
+											<td class="id" id="id">kim</td>
+											<td class="ttl" id="ttl"></td>
+											<td class="mainDate" id="mainDate"></td>
+											<td class="memCd" id="memCd"></td>
+										</tr>
+									</tbody>
+									</table>
+								<table class="table table-bordered table-hover mb-0" id="myQna" style="display: none;">
+									<thead class="text-700 bg-gray-200">
+										<tr>
+											<th>번호</th>
+											<th >이름</th>
+											<th >아이디</th>
+											<th >문의 제목</th>
+											<th >등록일</th>
+											<th >등급</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td  class="mainNum" id="mainNum">1</td>
+											<td class="name" id="name">김유저</td>
+											<td class="id" id="id"></td>
+											<td class="ttl" id="ttl"></td>
+											<td class="mainDate" id="mainDate"></td>
+											<td class="memCd" id="memCd"></td>
+										</tr>
+									</tbody>
+									</table>
+							</div>
+					</div>
+			<!--화면 끝  -->	
+				</div>
+			</div>
+		</div>
+		<!-- End Table -->
+		<script>
+			function queForm(n){
+				if(n == 'q1'){
+					document.getElementById('classQna').setAttribute('style','display:block')
+					document.getElementById('eventQna').setAttribute('style','display:none')
+					document.getElementById('myQna').setAttribute('style','display:none')
+				}else if(n == 'q2'){
+					document.getElementById('classQna').setAttribute('style','display:block')
+					document.getElementById('eventQna').setAttribute('style','display:none')
+					document.getElementById('myQna').setAttribute('style','display:none')
+				}else if(n == 'q6'){
+					document.getElementById('classQna').setAttribute('style','display:none')
+					document.getElementById('eventQna').setAttribute('style','display:none')
+					document.getElementById('myQna').setAttribute('style','display:block')
+					
+				}
+			}
+		</script>
+		</main>
+</body>
+</html>

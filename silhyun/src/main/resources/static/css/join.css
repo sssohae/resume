@@ -1,0 +1,101 @@
+@charset "UTF-8";
+
+.container{
+ 	text-align: center;
+ }
+ .col-lg-5.col-xxl-4{
+ border: 1px solid #ddd;
+ padding: 20px
+ }
+ form{
+ 	margin: 20px;
+ 	text-align: left;
+ }
+ .col-lg-5.col-xxl-4{
+ 	width: 900px;
+ }
+  hr{
+ 	margin-bottom: 30px;
+ 	margin-top: 30px;
+ }
+ form{
+ 	padding: 60px;
+ }
+ input:hover{
+ border: 1px solid black;
+ }
+ select:hover{
+  border: 1px solid black;
+ }
+ .pad{
+ padding-left: 60px;
+ padding-right: 60px;
+  	text-align: left; 
+  		margin: 20px;
+ }
+.marList{
+	 padding-left: 10px;
+     padding-right: 10px;
+}
+.mar:nth-child(1){
+	margin-right: 10px;
+}
+.mar:nth-child(2){
+	margin-right: 10px;
+}
+.col-4.tel{
+ padding-left: 0px;
+}
+.col-4.email{
+ padding-right: 0px;
+}
+.col-1.sm{
+	margin-top: 10px;
+}
+#birthGen{
+ margin-left: 2px;
+}
+/* 약관동의, 회원정보를 입력해주세요 글씨 */
+   .container > p{
+
+       font-size: x-large;
+   }
+
+   /* <!-- terms and conditions --> */
+   .TandC{
+
+       border: 1px solid gray;
+       padding:16px;
+
+   }
+
+   /* 약관 동의서들  */
+   .TandC > div{
+
+       padding:4px;
+       display: flex;
+       justify-content: space-between;
+   }
+
+   /* 약관 간단 설명에서 (필수)  */
+   .TandC strong{
+
+       color:red;
+       
+   }
+
+   /* 약관 상세보기 버튼  */
+   .TandC button{
+
+       background-color: transparent;
+       border: transparent;
+       text-decoration : underline;
+   }
+
+   /* 약관 상세보기 버튼 hover */
+   .TandC button:hover{
+       cursor: pointer;
+   }
+   .pad{
+   margin-bottom: 100px;
+   }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.mypage.map.PointMapper">
+<insert id="pointInsert">
+	begin 
+		<selectKey keyProperty="poNum" resultType="String" order="BEFORE">
+			SELECT 
+				nvl(MAX(to_number(po_num)), 0) + 1 AS "poNum"
+			FROM point
+		</selectKey>
+		insert into point (po_num, id, save_po, save_date
+		           <if test="saveNum != null and saveNum != ''">, save_num</if>)
+		values(#{poNum}, #{id}, #{savePo}, sysdate
+				 <if test="saveNum != null and saveNum != ''">, #{saveNum}</if>);
+    
+    	update member
+    	set point_sum = nvl(point_sum,0) + #{savePo}
+    	where id = #{id};
+	end;
+</insert>
+<insert id="usedPointInsert">
+	begin 
+   		<selectKey keyProperty="usePoNum" resultType="String" order="BEFORE">
+			SELECT 
+				nvl(MAX(to_number(USE_PO_NUM)), 0) + 1 AS "usePoNum"
+			FROM used_point
+		</selectKey>
+		insert into used_point 
+		values(#{usePoNum}, #{id}, #{usePo}, sysdate, #{usedNum});
+    
+    	update member
+    	set point_sum = point_sum - #{usePo}
+    	where id = #{id};
+	end;
+</insert>
+
+</mapper>

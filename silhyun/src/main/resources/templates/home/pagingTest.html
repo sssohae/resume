@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<title>get방식으로 페이지</title>
+</head>
+
+
+<style>
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: grey;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.container {
+ text-align: center;
+}
+</style>
+
+<body>
+<div class="container">
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>no</th>
+				<th>작성자</th>
+				<th>내용</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+		</thead>
+		<tbody>
+				<tr th:each="rev, sts : ${list}">
+					<td th:text="${page.total-(page.criteria.pageNum-1)*page.criteria.amount-sts.index}">
+					<td th:text="${rev.id}"></td>
+					<td th:text="${rev.cntn}"></td>
+					<td th:text="${#dates.format(rev.revDate, 'yyyy년MM월dd일')}"></td>
+					<td th:text="${rev.hit}"></td>
+				</tr>
+		</tbody>
+	</table>
+
+	<div class="pagination">
+		<a th:if="${page.prev}" th:href="${page.startPage-1}">&laquo;</a>
+		<a th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}" th:href="${num}"
+		    th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+		<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+	</div>
+</div>
+<div class="container">
+	<form id="searchFrm" action="reviewList" th:object="${page}">
+		<select name="type">
+			<option value="CW" th:selected="*{criteria.type == 'CW'}">전체</option>
+			<option value="C" th:selected="*{criteria.type == 'C'}">내용</option>
+			<option value="W" th:selected="*{criteria.type == 'W'}">작성자</option>
+		</select>
+		<input type="text" name="keyword" th:value="*{criteria.keyword}">
+		<input type="hidden" name="pageNum" th:value="1">
+		<input type="hidden" name="amount" th:value="*{criteria.amount}">
+		<button class="btn btn-default" type="submit">검색</button>
+	</form>
+</div>
+
+<script>
+history.replaceState({}, null, location.pathname);
+
+$(".pagination a").on("click", function(e){
+	e.preventDefault();
+ 	$("#searchFrm").find("input[name='pageNum']").val($(this).attr("href"));
+	console.log($("#searchFrm").find("input[name='pageNum']").val())
+	
+	
+	apage($('#searchFrm').seralize()) //form안에있는 name이랑 value값을 들고온다.
+	//searchFrm.submit(); //폼태그값을 스트링으로 
+})
+
+
+ 
+</script>
+</body>
+</html>

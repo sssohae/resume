@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.order.map.OrderMapper">
+	<select id="getMemberPointInfo" resultType="co.yedam.silhyun.order.vo.ReserVO">
+		SELECT NAME, POINT_SUM
+		FROM MEMBER
+		WHERE ID = #{id}
+	</select>
+	
+	<select id="getMemberCpnInfo" resultType="co.yedam.silhyun.order.vo.ReserVO">
+		SELECT M.ID, CH.*,C.*
+		FROM COUPONHISTORY CH, COUPON C, MEMBER M
+		WHERE M.ID = CH.ID
+		AND CH.CPN_NUM = C.CPN_NUM
+		AND M.ID = #{id}
+		AND UPPER(CH.CPN_STA) ='N'
+	</select>
+	
+
+	<insert id="reserInsert">
+		<selectKey keyProperty="resNum" resultType="String" order="BEFORE">
+		SELECT NVL(MAX(TO_NUMBER(RES_NUM)),0) +1 AS "resNum"
+		FROM RESER
+		</selectKey>
+		INSERT  INTO RESER
+		VALUES(#{resNum}, #{ptgId}, #{shotDate}, #{id}, #{shotTime}, sysdate, 'R1','Y',#{resPri}, null)
+	
+	</insert>
+
+
+
+</mapper>

@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{home/layout}">
+
+<head>
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta name="author" content="pxdraft" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <!-- title -->
+    <title>ShopApp - eCommerce Bootstrap 5 Template</title>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <!-- 우편번호 API -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <style>
+        .regi {
+            width: 300px;
+        }
+        .zip{
+        width: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Skippy & Prload -->
+        <!-- skippy -->
+        <a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+            <div class="container">
+                <span class="u-skiplink-text">Skip to main content</span>
+            </div>
+        </a>
+        <!-- End skippy -->
+        <!-- Preload -->
+        <!-- <div id="loading" class="loading-preloader">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div> -->
+        <!-- End Preload -->
+        <!-- Edn Skippy & Prload -->
+        <!-- Size Chart  -->
+
+
+        <!-- End Size Chart  -->
+        <!-- 
+    ========================
+        Wrapper 
+    ========================
+    -->
+        <div class="wrapper">
+            <div class="header-height-bar"></div>
+            <!-- Main -->
+            <main>
+                <!-- Page Title -->
+                <div class="py-3 bg-gray-100">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 my-2">
+                                <h1 class="m-0 h4 text-center text-lg-start"></h1>
+                            </div>
+                            <div class="col-lg-6 my-2">
+                                <ol
+                                    class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+                                    <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i
+                                                class="bi bi-home"></i>Home</a></li>
+                                    <li class="breadcrumb-item text-nowrap active" aria-current="page">사진관 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Page Title -->
+                <!-- Section -->
+                <section class="section">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-7">
+                                <!-- 등록 Form -->
+                                <form id="ptgRegiFrm" action="/shin/stdRegister" method="post">
+                                    <!-- Heading -->
+                                    <h6 class="mb-4 h3">사진관 입점 신청서</h6>
+                                    <!-- Billing details -->
+
+                                    <div class="form-group mb-3">
+                                        <label for="stName" class="form-label">사진관 이름<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="stName" name="stName" class="form-control regi"
+                                             required="required">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="ceoName" class="form-label">대표자 이름<span class="text-danger">*</span></label>
+                                        <input type="text" id="ceoName" name="ceoName" class="form-control regi"
+                                            readonly="readonly" th:value="${member.name}">
+                                    </div>
+                                   
+                                    <div class="form-group mb-3">
+                                        <label class="form-label col" for="crn">사업자등록번호<span
+                                                class="text-danger">*</span></label>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control regi" id="crn"
+                                                placeholder="-을 제외한 10자리 숫자를 적어주세요" name="crn">
+                                            <button type="button" class="btn btn-primary w-20 ms-2 crnBtn" id="btnId"
+                                                value="No">사업자
+                                                인증</button>
+                                        </div>
+                                          <div class="text-danger error-msg"></div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label col" for="sample6_address">사진관 주소<span
+                                                class="text-danger">*</span></label>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control zip" id="sample6_postcode" placeholder="우편번호" name="zipAddr" required>
+                                            <button type="button" class="btn btn-primary w-20 ms-2 addrBtn" id="btnId2"
+                                             value="No" onclick="sample6_execDaumPostcode()">찾기</button>
+                                        </div><br>
+                                         <div class="d-flex">
+                                            <input type="text" class="form-control regi" id="sample6_address" placeholder="주소" name="addr"> 
+                                            <input type="text"  class="form-control regi ms-2" id="sample6_extraAddress" placeholder="참고항목"name="detAddr">
+                                            <input type="text" class="form-control regi ms-2" id="sample6_detailAddress" placeholder="상세주소" > 
+                                    </div>
+                                    </div>
+
+                                    <label class="form-label col">지역<span class="text-danger">*</span></label>
+                                    <div class="dropdown btn btn-white border" style="size: 100px; text-align: left;">
+                                        <select id="selectOp" name="regionCd" style="border: 1px solid white;" required>
+                                            <option disabled>::선택::</option>
+                                            <option value="01">서울</option>
+                                            <option value="02">경기</option>
+                                            <option value="03">인천</option>
+                                            <option value="04">강원</option>
+                                            <option value="05">대전/충청</option>
+                                            <option value="06">대구</option>
+                                            <option value="07">부산/울산</option>
+                                            <option value="08">경상</option>
+                                            <option value="09">광주/전라</option>
+                                            <option value="10">제주</option>
+                                        </select>
+                                    </div><br><br>
+
+                                    <input type="hidden" name="stId" th:value="${id}">
+                                    <button style="margin-top: 10px;" type="button" class="btn btn-primary w-20 ms-2"
+                                        onclick="insertPtgRegi()">신청</button>
+                                    <button style="margin-top: 10px;" type="button" class="btn btn-primary w-20 ms-2"
+                                        onclick="location.href = '/'">취소</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- End Section -->
+            </main>
+            <!-- End Main -->
+        </div>
+
+
+        <!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+        <!-- script start -->
+        <!--bootstrap-->
+        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- slick carousel -->
+        <script src="/vendor/swiper/swiper-bundle.min.js"></script>
+        <!-- magnific -->
+        <script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+        <!-- isotope -->
+        <script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+        <!-- count-down -->
+        <script src="/vendor/count-down/jquery.countdown.min.js"></script>
+        <!-- count-down -->
+        <script src="/vendor/jarallax/jarallax-all.js"></script>
+        <!-- Theme Js -->
+        <script src="/js/custom.js"></script>
+        <script src="/js/theme.js"></script>
+        <!-- End script start -->
+        <script>
+            //📌사업자등록전보 진위확인 및 상태조회 서비스
+            $('.btn.btn-primary.w-20.ms-2.crnBtn').on('click', function () {
+                let b_no = $('input[name="crn"]').val()
+                var data = {
+                    "b_no": [b_no]
+                }
+                console.log(b_no)
+
+                $.ajax({
+                    url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=flAksztYZxKbLInc2tRUFueJockBytqC38SEfZrmIVJDDdEOKff8DULN%2FSEDFJQX2AFxyrhNlJwG0cuCHll6Iw%3D%3D", // serviceKey 값을 xxxxxx에 입력
+                    type: "POST",
+                    data: JSON.stringify(data), // json 을 string으로 변환하여 전송
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    accept: "application/json",
+                    success: function (result) {
+                        console.log(result);
+                        console.log(result.data[0].b_stt_cd)
+                        // let num =Number(result.data[0].b_no)
+                        // $('input[name="crn"]').val(num)
+                        // console.log(num)
+                        if (result.data[0].b_stt_cd == '01') {
+                            alert("사업자등록번호가 인증되었습니다.")
+                            $('.btn.btn-primary.w-20.ms-2.crnBtn').val('Yes')
+                            $('.btn.btn-primary.w-20.ms-2.crnBtn').attr("disabled", true)
+
+                        } else {
+                            alert("국세청에 등록되지 않은 사업자등록번호입니다.")
+                        }
+                        
+                    },
+                    error: function (result) {
+                        console.log(result.responseText); //responseText의 에러메세지 확인
+                    }
+                });
+            })
+            
+            //📌신청 버튼을 눌렀을때 event
+            function insertPtgRegi() {
+                let btnCk = $('.btn.btn-primary.w-20.ms-2.crnBtn').val()
+                let addrCk =$('.btn.btn-primary.w-20.ms-2.addrBtn').val()
+                var formData = new FormData($('#ptgRegiFrm')[0])
+                // for (let i = 0; i < selFiles.length; i++) {
+                //     formData.append("files", selFiles[i])
+                // }
+                if (btnCk == 'No') {
+                    alert('사업자등록번호 인증을 하세요.')
+                    return false
+                }
+              
+                $.ajax({
+                    url: "/shin/stdRegister",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        alert("정상적으로 사진관 신청이 되었습니다.")
+                        location.href = "/"; //등록 되면 홈으로 이동 
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                })
+                return false;
+            }
+
+            //📌우편번호Api
+            function sample6_execDaumPostcode() {
+                new daum.Postcode({
+                oncomplete: function(data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var addr = ''; // 주소 변수
+                    var extraAddr = ''; // 참고항목 변수
+
+                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+
+                    // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                    if(data.userSelectedType === 'R'){
+                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                        if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                            extraAddr += data.bname;
+                        }
+                        // 건물명이 있고, 공동주택일 경우 추가한다.
+                        if(data.buildingName !== '' && data.apartment === 'Y'){
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                        if(extraAddr !== ''){
+                            extraAddr = ' (' + extraAddr + ')';
+                        }
+                        // 조합된 참고항목을 해당 필드에 넣는다.
+                        document.getElementById("sample6_extraAddress").value = extraAddr;
+                    
+                    } else {
+                        document.getElementById("sample6_extraAddress").value = '';
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('sample6_postcode').value = data.zonecode;
+                    document.getElementById("sample6_address").value = addr;
+                    // 커서를 상세주소 필드로 이동한다.
+                    document.getElementById("sample6_detailAddress").focus();
+            }
+        }).open();
+    }
+            
+            //정규식 이용한 유효화검사
+        	const errMsg =  "-을 제외한 10자리 숫자를 적어주세요"
+        	let regi = "",
+        		isCrnValid = false
+        	let regiInput = $('#crn')
+        	console.log(regiInput.val())
+        	let ErrorMsgEl = $('.error-msg')
+        	$(regiInput).on('change', () => {
+        		let crnRegExp = /^(?=.*[0-9])[0-9]{10}$/
+        		regi = $(regiInput).val()
+        		if (crnRegExp.test(regi)) { // 정규식 조건 만족 O
+        			isCrnValid = true
+                    $(ErrorMsgEl).text('')
+        		} else { // 정규식 조건 만족 X
+        			isCrnValid = false
+        			$(regiInput).val('')
+        			$(ErrorMsgEl).text(errMsg)
+        		}
+        	})
+        </script>
+
+    </div>
+</body>
+
+</html>

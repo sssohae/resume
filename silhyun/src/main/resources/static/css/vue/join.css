@@ -1,0 +1,299 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0px solid silver;
+  outline: none;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+img {
+  width: 100px;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 0.9rem;
+  color: #999;
+  line-height: 1rem;
+  letter-spacing: 0.1px;
+}
+
+body {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+  height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: pink;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #eee;
+  border-radius: 10px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #444;
+}
+
+h4,
+h5 {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #444;
+}
+
+h1 {
+  font-size: 4rem;
+  line-height: 4.5rem;
+  text-transform: uppercase;
+  color: white;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2.4rem;
+  line-height: 2.4rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+h5 {
+  font-size: 0.9rem;
+  line-height: 2.8rem;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  padding: 10px 30px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+button:hover {
+  color: white;
+  background: black;
+}
+
+/*start*/
+.header {
+  padding-bottom: 15rem;
+}
+
+.login {
+  margin: 0 auto;
+  text-align: center;
+  width: 450px;
+  padding: 0rem 4rem;
+  padding-bottom: 2rem;
+  border: 1px solid #ccc;
+  margin-bottom: 10rem;
+}
+
+.login a:hover {
+  text-decoration: none;
+}
+
+.login > :nth-child(1) > :nth-child(2) h4 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.login > :nth-child(1) > :nth-child(2) {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login > :nth-child(1) > :nth-child(2) a {
+  font-size: 1.6rem;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(1) {
+  color: #c80a1e;
+  border-bottom: 3px solid #c80a1e;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(2) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(3) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(4) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:hover {
+  text-decoration: none;
+}
+
+.login > :first-child > h2 {
+  margin-bottom: 3rem;
+  margin-top: 5rem;
+}
+
+.login > :first-child > h4 {
+  margin-bottom: 4rem;
+  line-height: 2.5rem;
+  color: #666;
+}
+
+.login button {
+  width: 100%;
+  background: #c80a1e;
+  color: white;
+  transition: 0.8s;
+  height: 50px;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.login button:hover {
+  background: red;
+  transition: 0.8s;
+}
+
+.login img {
+  width: 35px;
+  height: 35px;
+  margin: 0 5px;
+  transition: 0.8s;
+  cursor: pointer;
+  margin-top: 3px;
+}
+
+.login button {
+  font-size: 1.5rem;
+}
+
+.login button a {
+  color: white;
+}
+
+.login button a:hover {
+  text-decoration: none;
+}
+
+.login > :nth-child(2) {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: 0.8s;
+}
+
+.login > :nth-child(2):hover {
+  border: 1px solid #000;
+  color: black;
+  transition: 0.8s;
+}
+
+.login h4 {
+  font-size: 1.5rem;
+}
+
+.login > :nth-child(3) {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: 0.8s;
+}
+
+.login > :nth-child(3):hover {
+  border: 1px solid black;
+  transition: 0.8s;
+}
+
+.login > :nth-child(3) img {
+  width: 22px;
+  height: 22px;
+  margin: 0 10px;
+  margin-top: 7px;
+  margin-left: 23px;
+}
+
+.login > :nth-child(4) {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: 0.8s;
+}
+
+.login > :nth-child(4):hover {
+  border: 1px solid black;
+  transition: 0.8s;
+}
+
+.login > :nth-child(4) img {
+  width: 22px;
+  height: 22px;
+  margin: 0 10px;
+  margin-left: 23px;
+  margin-top: 7px;
+}
+
+.login > :last-child {
+  margin-bottom: 5rem;
+}
+
+.login > div > :last-child > :nth-child(1) {
+    background: none;
+    margin-right: 10px;
+    transition: 0.8s;
+}
+.login > :nth-child(2) > :nth-child(1) {
+    background: none;
+}

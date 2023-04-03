@@ -1,0 +1,411 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description"
+	content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>ShopApp - eCommerce Bootstrap 5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/img/favicon.ico">
+<!-- CSS Template -->
+<link href="/css/theme.css" rel="stylesheet">
+<!-- modal -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+.pagination {
+	display: inline-block;
+}
+
+.pagination a {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+.pagination a.active {
+	background-color: grey;
+	color: white;
+	border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+.container {
+	text-align: center;
+}
+</style>
+</head>
+
+
+<!-- Main -->
+<body>
+	<main layout:fragment="content">
+
+
+		<!-- Breadcrumb -->
+		<div class="py-3 bg-gray-100">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-lg-6 my-2">
+						<h1 class="m-0 h4 text-center text-lg-start">Reservation</h1>
+					</div>
+					<div class="col-lg-6 my-2">
+						<ol
+							class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+							<li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+									class="bi bi-home"></i>마이페이지</a></li>
+							<li class="breadcrumb-item text-nowrap active"
+								aria-current="page">예약관리</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Breadcrumb -->
+		<!-- Table -->
+		<div class="py-6">
+			<div class="container">
+				<div class="row" th:each="ptg : ${ptgInfo}">
+					<!-- Profile Menu -->
+					<div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+						<div class="bg-white border border-bottom-0 shadow-lg">
+							<div class="d-flex p-3 align-items-center">
+								<div class="avatar avatar-lg rounded-circle">
+									<img th:src="${ptg.profile}" title="" alt="">
+								</div>
+								<div class="col ps-3">
+									<h6 class="m-0" th:text="${ptg.Id}"></h6>
+									<small><a href="/photo/mypageAo" th:text="${ptg.name}"></a></small>
+								</div>
+							</div>
+							<ul class="list-unstyled mb-0 theme-link">
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/modPfAo"> <i class="fi-user me-2"></i>회원정보수정
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resManage"> <i class="bi bi-card-checklist"></i>예약
+										관리
+
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/classManage"> <i class="bi-play-btn me-2"></i>클래스
+										관리
+
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageAoAsk"> <i
+										class="bi-chat-square-dots me-2"></i>문의내역
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resCalendarAo"> <i class="bi-calendar me-2"></i>캘린더
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" th:href="@{/silhyun/portfolio/{ptgId}(ptgId=${session.id})}">
+										<i class="bi-person-bounding-box me-2"></i>포토폴리오
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/reportFormAo"> <i
+										class="bi bi-exclamation-diamond"></i>신고
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>회원탈퇴
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- End Profile Menu -->
+					<!-- Content -->
+					<!-- <div class="col-lg-1 col-xxl-9">
+					</div> -->
+					<div class="col-lg-8 col-xxl-9">
+						<!-- 				<input type="hidden" value="${id}"> -->
+						<button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" data-bs-target="#workOption">옵션
+							설정</button>
+						<br> <br>
+						<!-- 모달 -->
+						<!-- 옵션 -->
+						<div class="modal fade" id="workOption">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header bg-primary">
+										<div class="modal-title p-3">
+
+											<h5 class="m-0 text-white">옵션 설정</h5>
+										</div>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<div class="w-100 p-3">
+											<!-- Form START -->
+											<form id="Addopt" enctype="multipart/form-data">
+												<!-- let opNum=document.getElementById('optionSet').value; -->
+												<label class="form-label" for="optset">옵션 추가</label>
+												<button type="button" class="optionSet" id="optionSet"
+													onclick="makeTable()">+</button>
+												<table id="optionTable">
+													<tr>
+														<th>옵션 제목</th>
+														<th>옵션 내용</th>
+														<th>가격</th>
+
+													</tr>
+													<tr>
+														<td><input type="text" class="form-control"
+															name="ttl[]" placeholder="ex)액자"></td>
+														<td><input type="text" class="form-control"
+															name="cntn[]" placeholder="ex)8X10(20X25cm)"></td>
+														<td><input type="text" class="form-control"
+															name="pri[]" placeholder="ex)6000원"></td>
+														<td><button type="button" class="minOpt"
+																onclick="removeTr(this)">-</button></td>
+													</tr>
+												</table>
+
+												<!--테이블끝  -->
+												<div class="row align-items-center">
+													<div class="col-sm-4">
+														<br>
+														<button type="button" class="btn btn-dark"
+															onclick="addoptFx()">확인</button>
+													</div>
+													<div class="col-sm-8 text-sm-end">
+														<span class="text-muted"> <a href="/photo/modPfAo">근무
+																가능 요일 정하기</a></span>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- 모달끝 -->
+
+
+						<div class="table-responsive fs-md mb-4">
+							<div>
+								<table class="table table-bordered table-hover mb-0">
+									<thead class="text-700 bg-gray-200">
+										<tr>
+											<th class="fw-600">예약자</th>
+											<th class="fw-600">옵션번호</th>
+											<th class="fw-600">예약날짜</th>
+											<th class="fw-600">촬영날짜</th>
+											<th class="fw-600">예약금액</th>
+											<th class="fw-600">예약상태</th>
+											<th class="fw-600 ">대표사진</th>
+										</tr>
+									</thead>
+									<tbody th:each="resL : ${seReslist}">
+										<tr>
+											<td class="p-3" th:text="${resL.id}"/>
+											<td class="p-3" th:text="${resL.resCd}" />
+											<td class="p-3"
+												th:text="${#dates.format(resL.regiDate,'yyyy/MM/dd')}" />
+											<td class="p-3"
+												th:text="${#dates.format(resL.shotDate,'yyyy/MM/dd')}" />
+											<td class="p-3" th:text="${resL.resPri}" />
+											<td class="p-3" th:text="${resL.resSta}" />
+											<td class="p-3">
+												<div th:if="${resL.mainP}">
+													<img th:src="${resL.mainP}" width="100">
+												</div>
+												<form class="upload-form" name="uploadP"
+													enctype="multipart/form-data">
+													<div th:unless="${resL.mainP}">
+														<input type="file" name="file"> <input
+															type="hidden" name="resNum" th:value="${resL.resNum}">
+														<button type="button" class="upload-button btn btn-dark">업로드</button>
+													</div>
+												</form>
+											</td>
+										</tr>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+						<div class="container" style="text-align: center;">
+							<div class="ms-lg-auto">
+								<div class="pagination">
+									<a th:if="${page.prev}" th:href="${page.startPage-1}">&laquo;</a>
+									<a
+										th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}"
+										th:href="${num}"
+										th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+									<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+								</div>
+									<form id="searchFrm" action="/photo/resManage" th:object="${page}">
+
+										<input type="hidden" name="pageNum" th:value="1">
+										<input type="hidden" name="amount" th:value="*{criteria.amount}">
+									</form>
+							</div>
+						</div>
+					</div>
+					<!-- End Content -->
+				</div>
+			</div>
+		</div>
+		<!--Table -->
+
+		<script type="text/javascript">
+			function makeTable() {
+				// tr 생성
+				var makeTr = document.createElement("tr");
+
+				// 옵션 이름 입력란 생성
+				var ttlTd = document.createElement("td");
+				var nameInput = document.createElement("input");
+				nameInput.type = "text";
+				nameInput.className = "form-control";
+				nameInput.name = "ttl[]";
+				ttlTd.appendChild(nameInput);
+				makeTr.appendChild(ttlTd);
+
+				// 옵션 내용 입력란 생성
+				var optCtntTd = document.createElement("td");
+				var ctntInput = document.createElement("input");
+				ctntInput.type = "text";
+				ctntInput.className = "form-control";
+				ctntInput.name = "cntn[]";
+				optCtntTd.appendChild(ctntInput);
+				makeTr.appendChild(optCtntTd);
+
+				// 가격 입력란 생성
+				var priceTd = document.createElement("td");
+				var priceInput = document.createElement("input");
+				priceInput.type = "text";
+				priceInput.className = "form-control";
+				priceInput.name = "pri[]";
+				priceTd.appendChild(priceInput);
+				makeTr.appendChild(priceTd);
+
+				// 삭제 버튼 생성
+				var removeTd = document.createElement("td");
+				var removeBtn = document.createElement("button");
+				removeBtn.type = "button";
+				removeBtn.className = "minOpt";
+				removeBtn.innerHTML = "-";
+				removeBtn.onclick = function() {
+					removeTr(this);
+				};
+				removeTd.appendChild(removeBtn);
+				makeTr.appendChild(removeTd);
+
+				// tr 추가
+				var optionTable = document.getElementById("optionTable");
+				optionTable.appendChild(makeTr);
+			}
+
+			function removeTr(button) {
+				// tr 찾아 삭제
+				var row = button.parentNode.parentNode;
+				row.parentNode.removeChild(row);
+			}
+			//insert
+			function addoptFx() {
+				var formData = new FormData($("#Addopt")[0]);
+				var optData = [];
+
+				var trs = document.querySelectorAll('#optionTable tr');
+				for (var i = 1; i < trs.length; i++) {
+					//document.querySelectorAll('#optionTable tr')[i].querySelectorAll('td input')
+					var tds = trs[i].querySelectorAll('td input');
+					optData.push({ //배열에 넣기
+						ttl : tds[0].value,
+						cntn : tds[1].value,
+						pri : Number(tds[2].value)
+					});
+				}
+				console.log(optData)
+				//json변환
+				// formData.append('optData',optData);
+				formData.append('optData', JSON.stringify(optData));
+				$.ajax({
+					url : '/photo/insertOption',
+					method : 'POST',
+					// 		 enctype: 'multipart/form-data',
+					data : JSON.stringify(optData),
+					contentType : "application/json",
+					//processData:false,
+					success : function(result) {
+						console.log(result);
+						alert("옵션 설정 완료");
+					},
+					error : function(reject) {
+						console.log(reject)
+						alert("옵션 설정 실패");
+					}
+				});
+
+			}
+
+			//사진업로드
+			$(function() {
+				$('.upload-button').click(function() {
+					var form = $(this).closest('.upload-form');
+					var formData = new FormData(form[0]);
+					$.ajax({
+						url : '/uploadPhoto',
+						method : 'POST',
+						enctype : 'multipart/form-data',
+						data : formData,
+						processData: false,
+						contentType: false,
+						success : function(result) {
+							alert('제출이 성공적으로 되었습니다.');
+							location.reload();
+						},
+						error : function(reject) {
+							//alert('전송이 실패하였습니다.');
+							location.reload();
+						}
+					});
+				});
+			});
+			
+			//페이징
+			history.replaceState({}, null, location.pathname);
+
+			$(".pagination a").on("click", function(e){
+				e.preventDefault();
+			 	$("#searchFrm").find("input[name='pageNum']").val($(this).attr("href"));
+				//console.log($("#searchFrm").find("input[name='pageNum']").val())
+				
+				//apage($('#searchFrm').seralize()) //form안에있는 name이랑 value값을 들고온다.
+				searchFrm.submit(); //폼태그값을 스트링으로 
+			})
+			
+			
+		</script>
+	</main>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.event.map.EventMapper">
+	<select id="getEventList"
+		resultType="co.yedam.silhyun.event.vo.EventVO">
+		SELECT *
+		FROM event
+		WHERE CFM_CD ='Y'
+		ORDER BY event_num DESC
+	</select>
+	<select id="getBannerList"
+		resultType="co.yedam.silhyun.event.vo.EventVO">
+		SELECT event_num, bnph
+		FROM event
+		WHERE BNPH_STA ='Y'
+		AND
+		CFM_CD ='Y'
+		ORDER BY accp_dt DESC
+	</select>
+
+	<!-- 출쳌 -->
+	<select id="chulIdSelect"
+		resultType="co.yedam.silhyun.mypage.vo.ChulcheckVO">
+		SELECT *
+		FROM CHULCHECK
+		WHERE ID=#{id}
+	</select>
+	
+
+<!-- 제일 최근 날짜  -->
+<select id="recentlyDate" resultType="co.yedam.silhyun.mypage.vo.ChulcheckVO">	
+	SELECT id, check_date
+	FROM(
+	    SELECT *
+	      FROM chulcheck
+	      WHERE id = #{id}
+	      ORDER BY check_date desc
+	    )
+	where ROWNUM =1
+</select>
+
+	<insert id="insertChulcheck"
+		parameterType="co.yedam.silhyun.mypage.vo.ChulcheckVO">
+		INSERT INTO CHULCHECK(CHECK_DATE,ID)
+		VALUES
+		(#{checkDate},#{id})
+	</insert>
+	<update id="updateChulcheck">
+		UPDATE CHULCHECK
+		SET CHECK_DATE = #{checkDate}
+		WHERE ID
+		=
+		#{id}
+
+	</update>
+	
+<!-- 출첵 포인트 근데 insert해야하는디  -->
+	<update id="updatePointChul" parameterType="co.yedam.silhyun.mypage.vo.PointVO">
+		update point
+		<set>save_po = save_po+100
+			
+		</set>
+		where id= #{id}
+	</update>
+<!-- <update id="updatePoint">
+UPDATE POINT
+<set>
+ 	save_po =#{savePo}
+ 	save_date = sysdate
+</set>
+where id = #{id}
+
+</update> -->
+</mapper>

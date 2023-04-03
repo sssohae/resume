@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: grey;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.container {
+ text-align: center;
+}
+</style>
+<body>
+	<div layout:fragment="content">
+	 <!-- 작가 리뷰 -->
+	 	<div class="container col-12">
+			<h5 class="mb-4"  style="text-align: center;">실시간 작가 리뷰</h5>
+	 	      <div class="row">
+	 	            <div class="col-4">
+							<div class="product-card-4 col" th:each="rev : ${aReviews}"
+								style="width: 100%;">
+								<div class="product-card-image" >
+									<a href="#"> <img th:src="${rev.phoRt}" title="" alt="" style="width: 120px;height: 140px">
+									</a>
+								</div>
+								<div class="product-card-info">
+									<h6 class="product-title">
+										<a href="#" tabindex="0">[[${rev.id}]]</a>
+									</h6>
+									<div class="product-price">
+										<div class="rating-star text">
+											<i class="bi bi-star-fill active"
+												th:each="num : ${#numbers.sequence(0, rev.star-1)}"></i>
+										</div>
+										<span class="text-primary rev">[[${rev.cntn}]]</span>
+									</div>
+								</div>
+							</div>
+						</div>
+				 </div>
+			<div>
+				<!-- 페이지네이션 -->
+				<div id="aPagination" class="pagination">
+					<a th:if="${aPage.prev}" th:href="${aPage.startPage-1}">&laquo;</a>
+					<a th:each="num : ${#numbers.sequence(aPage.getStartPage(), aPage.getEndPage())}" th:href="${num}"
+					    th:class="${aPage.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+					<a th:if="${aPage.next}" th:href="${aPage.endPage+1}">&raquo;</a>
+				</div>
+				<form id="aFrm" th:object="${aPage}" action="/silhyun/reviewAllList">
+				 	<input type="hidden" name="pageNum" th:value="1">
+					<input type="hidden" name="amount" th:value="*{criteria.amount}">
+				</form>
+			</div>
+	 	</div>
+		
+	 <!-- 클래스 리뷰 -->
+	 	 	<div class="container col-12">
+			<h5 class="mb-4"  style="text-align: center;">실시간 클래스 리뷰</h5>
+	 	      <div class="row">
+	 	            <div class="col-4">
+							<div class="product-card-4 col" th:each="rev : ${cReviews}"
+								style="width: 100%;">
+								<div class="product-card-image" >
+									<a href="#"> <img th:src="${rev.phoRt}" title="" alt="" style="width: 120px;height: 140px">
+									</a>
+								</div>
+								<div class="product-card-info">
+									<h6 class="product-title">
+										<a href="#" tabindex="0">[[${rev.id}]]</a>
+									</h6>
+									<div class="product-price">
+										<div class="rating-star text">
+											<i class="bi bi-star-fill active"
+												th:each="num : ${#numbers.sequence(0, rev.star-1)}"></i>
+										</div>
+										<pre><span class="text-primary rev">[[${rev.cntn}]]</span></pre>
+									</div>
+								</div>
+							</div>
+						</div>
+				 </div>
+			<div>
+				<!-- 페이지네이션 -->
+				<div id="cPagination" class="pagination">
+					<a th:if="${cPage.prev}" th:href="${cPage.startPage-1}">&laquo;</a>
+					<a th:each="num : ${#numbers.sequence(cPage.getStartPage(), cPage.getEndPage())}" th:href="${num}"
+					    th:class="${cPage.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+					<a th:if="${cPage.next}" th:href="${cPage.endPage+1}">&raquo;</a>
+				</div>
+				<form id="cFrm" th:object="${cPage}" action="/silhyun/reviewAllList">
+				 	<input type="hidden" name="pageNum" th:value="1">
+					<input type="hidden" name="amount" th:value="*{criteria.amount}">
+				</form>
+			</div>
+	 	</div>
+	 
+	<script type="text/javascript">
+	$("#aPagination a").on("click", function(e){
+		e.preventDefault();
+	 	$("#aFrm").find("input[name='pageNum']").val($(this).attr("href"));
+		console.log($("#aFrm").find("input[name='pageNum']").val())
+		
+		aFrm.submit(); //나중에 아작스로 하기
+	})
+	$("#cPagination a").on("click", function(e){
+		e.preventDefault();
+	 	$("#cFrm").find("input[name='pageNum']").val($(this).attr("href"));
+		console.log($("#cFrm").find("input[name='pageNum']").val())
+		
+		cFrm.submit(); //나중에 아작스로 하기
+	})
+	
+	</script>
+	</div>
+
+</body>
+</html>

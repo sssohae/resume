@@ -1,0 +1,428 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0px solid silver;
+  outline: none;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+img {
+  width: 100px;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 0.9rem;
+  color: #999;
+  line-height: 1rem;
+  letter-spacing: 0.1px;
+}
+body {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+  height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #eee;
+  border-radius: 10px;
+}
+h1,
+h2,
+h3 {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #444;
+}
+
+h4,
+h5 {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #444;
+}
+
+h1 {
+  font-size: 4rem;
+  line-height: 4.5rem;
+  text-transform: uppercase;
+  color: white;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2.4rem;
+  line-height: 2.4rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+h5 {
+  font-size: 0.9rem;
+  line-height: 2.8rem;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  padding: 10px 30px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+button:hover {
+  color: white;
+  background: black;
+}
+input {
+  border: 1px solid #999;
+}
+input::placeholder {
+  color: #aaa;
+}
+/*start*/
+.header {
+  padding-bottom: 15rem;
+}
+
+.login label {
+  color: 999;
+}
+
+.login {
+  margin: 0 auto;
+  text-align: center;
+  width: 450px;
+  padding: 0rem 4rem;
+  padding-bottom: 2rem;
+  border: 1px solid #ccc;
+  margin-bottom: 10rem;
+}
+.login a:hover {
+  text-decoration: none;
+}
+.login :nth-child(3) {
+    margin-bottom: 20px
+}
+.login > :nth-child(1) > :nth-child(2) h4 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.login > :nth-child(1) > :nth-child(2) {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login > :nth-child(1) > :nth-child(2) a {
+  font-size: 1.6rem;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(1) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(2) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+.login > :nth-child(1) > :nth-child(2) a:nth-child(3) {
+  color: #c80a1e;
+  border-bottom: 3px solid #c80a1e;
+}
+
+.login > :nth-child(1) > :nth-child(2) a:nth-child(4) {
+  color: #999;
+  border-bottom: 3px solid #eee;
+}
+
+.login > :first-child > h2 {
+  margin-bottom: 3rem;
+  margin-top: 5rem;
+  text-align: center;
+}
+.login > :first-child > h4 {
+  margin-bottom: 4rem;
+  line-height: 2.5rem;
+  color: #666;
+}
+
+#email {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 20px auto 0 0;
+}
+
+select {
+  width: 120px;
+  border: 1px solid #666;
+  height: 50px;
+  padding: 0 5px;
+  font-family: inherit;
+  background: url("https://cdn2.iconfinder.com/data/icons/font-awesome/1792/angle-down-512.png")
+    no-repeat;
+  border-radius: 0px;
+  background-position: 95% 50%;
+  background-size: 25px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  opacity: 0.6;
+  margin-bottom: 0px
+}
+select:focus {
+  opacity: 1;
+}
+select option {
+  color: #999;
+}
+#email h5 {
+  margin-top: 15px;
+  margin-right: 5px;
+}
+#email input {
+  width: 110px;
+  border: 1px solid #999;
+  height: 50px;
+  margin-right: 5px;
+  padding: 0 10px;
+}
+#email input[type="button"]{
+    background: #c80a1e;
+    color: white;
+    font-size: 1rem;
+    transition: 0.8s;
+}
+#email input[type="button"]:hover {
+    background: red;
+}
+
+#email input:focus {
+  border: 1px solid black;
+}
+
+.inputInfo input {
+  border: 1px solid #999;
+  height: 50px;
+  padding: 0 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.inputInfo input[class="sm"] {
+    width: 60%;
+    float: left;
+    margin-bottom: 20px;
+    
+}
+.inputInfo input::placeholder {
+  color: #aaa;
+}
+.inputInfo input:focus {
+  border: 1px solid black;
+}
+
+#birth {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0px
+}
+#birth select:nth-child(1) {
+  width: 110px;
+}
+#birth select:nth-child(2) {
+  width: 70px;
+}
+#birth select:nth-child(3) {
+  width: 70px;
+}
+#birth > :last-child {
+  width: 100px;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+#birth > :last-child h5 {
+  display: inline;
+  margin: 0 3px;
+}
+
+#tel {
+    clear: both;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+#tel input {
+  width: 117px;
+  padding: 5px;
+  height: 50px;
+  margin-bottom: 0px
+}
+#tel input:focus {
+  border: 1px solid black;
+  color: black;
+}
+.login > div > :nth-child(7) {
+  text-align: right;
+  color: #c80a1e;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+
+.login > div > :nth-child(8) {
+  color: #c80a1e;
+  margin-bottom: 2rem;
+}
+.login > div > :nth-child(9) {
+  display: flex;
+  justify-content: space-between;
+}
+.login > div > :nth-child(9) h5 {
+  display: inline;
+  margin: 0 5px;
+}
+.login > div > :nth-child(9) label {
+  padding-top: 1.5rem;
+}
+.login > div > :nth-child(9) select {
+  width: 65px;
+}
+.login > div > :nth-child(9) > :nth-child(3) {
+  width: 110px;
+}
+.login > div > :nth-child(10) {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+.login > div > :nth-child(10) label {
+  padding-top: 1.5rem;
+  width: 100%;
+}
+.login > div > :nth-child(10) h5 {
+  display: inline;
+  margin: 0 5px;
+  padding: 0;
+}
+.login > div > :nth-child(10) select {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#chk{
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#chk input {
+  height: 50px;
+  padding: 0 5px;
+  width: 100%;
+  margin-right: 10px;
+}
+#chk input:last-child {
+  margin-right: 0;
+      background: #c80a1e;
+    color: white;
+    font-size: 1rem;
+    transition: 0.8s;
+}
+#chk input:nth-child(2) {
+  margin-right: 0;
+      background: #c80a1e;
+    color: white;
+    font-size: 1rem;
+    transition: 0.8s;
+}
+
+#chk input:last-child:hover {
+    background: red;
+}
+
+#chk input:nth-child(2):hover {
+  background: red;
+}
+
+#chk input:focus {
+  border: 1px solid black;
+}
+
+#choi{
+    text-align: left;
+}
+
+.login button {
+  width: 100%;
+  background: #c80a1e;
+  color: white;
+  transition: 0.8s;
+  height: 50px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+.login button:hover {
+  background: red;
+}
+.login button {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  width: 100%;
+}
+.login > div > :last-child {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.login > div > :last-child a {
+  text-decoration: none;
+  color: white;
+}
+.login > div > :last-child > :nth-child(1) {
+  background: #444;
+  margin-right: 10px;
+  transition: 0.8s;
+}
+
+.login > div > :last-child > :nth-child(1):hover {
+  background: #666;
+  transition: 0.8s;
+}

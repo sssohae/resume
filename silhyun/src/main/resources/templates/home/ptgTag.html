@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+
+<head>
+	<!-- metas -->
+	<meta charset="utf-8">
+	<meta name="author" content="pxdraft" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+	<meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+	<!-- title -->
+	<title>지은이의 예약하기</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.js"
+		integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+
+	<link rel="shortcut icon" href="/img/favicon.ico">
+	<!-- CSS Template -->
+	<link href="/css/swimwear.css" rel="stylesheet">
+	<style>
+		.btn.btn-sm.active {
+			border-radius: 20px;
+			width: 140px;
+		}
+
+		.shop-top-bar .layout-change .btn {
+			border-radius: 20px;
+			width: 140px;
+			height: 55px;
+		}
+
+		.img-fluid {
+			width: 100;
+			height: 100;
+		}
+		.btn.btn-primary{
+			width: 15%;
+		
+		}
+	</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<!-- Skippy & Prload -->
+		<!-- skippy -->
+		<a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+			<div class="container">
+				<span class="u-skiplink-text">Skip to main content</span>
+			</div>
+		</a>
+		<!-- End skippy -->
+		<!-- Preload -->
+		<!-- <div id="loading" class="loading-preloader"> -->
+		<!--     <div class="spinner-border text-primary" role="status"> -->
+		<!--         <span class="visually-hidden">Loading...</span> -->
+		<!--     </div> -->
+		<!-- </div> -->
+		<!-- End Preload -->
+		<!-- Edn Skippy & Prload -->
+		<!-- Main -->
+		<main>
+			<!-- Shop Section -->
+			<section class="py-6">
+				<div class="container">
+					<div class="row">
+						<!-- Sidebar -->
+						<div
+							class="col shop-sidebar-option-04 d-none d-lg-block mb-auto sticky-lg-top sticky-lg-top-header">
+						</div>
+						<!-- End Sidebar -->
+						<!-- Product Box -->
+						<div class="col">
+							<!-- Shop Topbar -->
+							<div class="shop-top-bar-04">
+								<div class="row">
+									<div class="col-md-7">
+										<ol
+											class="breadcrumb dark-link m-0 small justify-content-center justify-content-md-start">
+											<li class="breadcrumb-item"><a class="text-nowrap" href="/">Home</a></li>
+											<li class="breadcrumb-item text-nowrap active" aria-current="page">간편검색</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+							<!-- End Shop Topbar -->
+							<div class="row g-3 g-lg-4">
+								<!-- Section -->
+								<section class="section">
+									<div class="container">
+										<div class="row justify-content-center">
+											<div class="col-lg-8 col-xl-15 text-center">
+												<form id="searchFrm" style="display: inline;" action="/silhyun/ptgList">
+													<input type="hidden" name="pageNum" th:value="1">
+													<input type="hidden" name="ptgId" th:each="ptg : ${tagPtgList}" th:value="${ptg.ptgId}">
+												</form>
+											</div>
+										</div>
+									</div>
+								</section>
+								<!-- End Section -->
+							</div>
+							<div class="shop-top-bar d-flex pb-3">
+								<div class="layout-change ms-2">
+									<a class="btn btn-sm" align="center"> <i class=""
+											th:text="'# '+${tagPtgList[0].fldName}">#태그</i></a>
+								</div>
+							</div>
+
+							<!-- 작가 리스트 -->
+							<div class="row g-3 g-lg-4 list" id="page">
+								<!-- section -->
+								<section class="section overflow-hidden">
+									<div class="container">
+										<div class="swiper-hover-arrow position-relative">
+											<div class="swiper swiper-container swiper-no-scroll" data-swiper-options='{
+													  "slidesPerView": 2,
+													  "spaceBetween": 24,
+													  "pagination": {
+														"el": ".swiper-pagination",
+														"type": "progressbar"
+														},
+													  "navigation": {
+														"nextEl": ".swiper-next-02",
+														"prevEl": ".swiper-prev-02"
+													  },
+													  "breakpoints": {
+														"600": {
+														  "slidesPerView": 3
+														},
+														"991": {
+														  "slidesPerView": 3
+														},
+														"1300": {
+														  "slidesPerView": 3
+														}
+													  }
+												}'>
+												<div class="swiper-wrapper">
+													<!-- category -->
+													<div class="swiper-slide" th:each="ptg :${tagPtgList}" style="width: 300px;height: 300px;text-align: center;">
+														<div class="category-card-01" style="width: 300px;height: 300px;">
+															<div class="category-card-img">
+																<a >
+																	<img th:src="${ptg.profile}" title="" alt="사진 없음" style="width: 300px;height: 300px;">
+																</a>
+															</div>
+															<div class="category-card-info">
+
+																<h5 class="font-alt h4">
+																	<a
+																		class="link-effect-02 text-white ptg" style="cursor: pointer;"
+																		th:text="${ptg.name}" th:id="${ptg.ptgId}">Tees & Tanks</a></h5>
+															</div>
+														</div>
+													</div>
+													<!-- End category -->
+												</div>
+												<div class="swiper-pagination mt-4 position-relative"></div>
+											</div>
+											<div class="swiper-arrow-style-01 swiper-next swiper-next-02"><i
+													class="bi bi-chevron-right"></i> </div>
+											<div class="swiper-arrow-style-01 swiper-prev swiper-prev-02"><i
+													class="bi bi-chevron-left"></i></div>
+										</div>
+									</div>
+								</section>
+								<!-- End section -->
+							</div>
+						</div>
+					</div>
+					<button class="btn btn-primary" style="display: none;">예약하러가기</button>
+					<div class="row ptgInfo">
+						
+					</div>
+					<!-- End Product Box -->
+				</div>
+
+			</section>
+		</main>
+		<!-- End Main -->
+		<!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+		<!-- script start -->
+		<!-- jquery -->
+
+		<!--bootstrap-->
+		<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- slick carousel -->
+		<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+		<!-- magnific -->
+		<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+		<!-- isotope -->
+		<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/jarallax/jarallax-all.js"></script>
+		<!-- Theme Js -->
+		<script src="/js/custom.js"></script>
+		<script src="/js/theme.js"></script>
+		<!-- End script start -->
+		<script>
+		
+			//작가 프로필 사진 클릭하면 작가 상세보기로 이동
+			$('.font-alt.h4').on('click', function () {
+				let ptgId = $(this).children().attr('id')
+				$.ajax({
+					url:'/ajaxPort/'+ ptgId
+				}).then(result => {
+					$('.btn.btn-primary').css('display', 'block')
+					$('.row.ptgInfo').children().remove()
+					$(result).each(function(idx,item){
+						$('.row.ptgInfo').append(
+							`
+							<div class="col-lg-4 my-3 ptgInfo d-flex">
+							<div class="hover-scale text-center">
+                                <div class="hover-scale-in position-relative">
+                                    <a href="/silhyun/portfolio/${item.ptgId}">
+                                        <img class="img-fluid" src="${item.phoRt}" title="" alt="사진경로확인요망">
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
+							`						
+						)
+						$('.btn.btn-primary').on('click',function(){
+							location.href = "/silhyun/ptgDetail/"+ item.ptgId
+						})		
+					})
+
+
+				})
+			})
+		</script>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/dashBoard}">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+</head>
+
+<body>
+
+    <div layout:fragment="content">
+
+        <!-- 본문 시작 -->
+        <div class="page-breadcrumb bg-white">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <h3 class="page-title">회원 관리</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 테이블 시작 -->
+        <div id="memberList">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <div>
+                                <h3 class="box-title">회원</h3>
+
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    신규 회원: <code th:text="${todayMem.size}"></code> &nbsp; 총 회원: <code
+                                        th:text="${memberList.size}"></code></p>
+                                <!-- 검색 -->
+                                <form id="searchM" action="/admin/memberManage" th:object="${cri}"
+                                    class="app-search d-none d-md-block me-3">
+
+                                    <ul style="list-style:none;float:right;">
+                                        <li>
+                                            생년월일 <input type="date" name="birthDate" th:value="*{birthDate}">|
+                                            &nbsp;멤버권한
+                                            <select name="memCd">
+                                                <option value="" th:selected="*{memCd == 'all'}">선택</option>
+                                                <option value="M0" th:selected="*{memCd == 'all'}">관리자</option>
+                                                <option value="M1" th:selected="*{memCd == 'all'}">일반</option>
+                                                <option value="M2" th:selected="*{memCd == 'all'}">작가</option>
+                                                <option value="M3" th:selected="*{memCd == 'all'}">사진관</option>
+                                            </select>|&nbsp;
+                                            남<input type="radio" name="genCd" value="m">
+                                            여<input type="radio" name="genCd" value="f">&nbsp;|&nbsp;
+                                            <select name="type"
+                                                style="width:120px;height:30px;font-size:16px;border:none;">
+                                                <option value="all" th:selected="*{type == 'all'}">전체</option>
+                                                <option value="id" th:selected="*{type == 'id'}">아이디</option>
+                                                <option value="name" th:selected="*{type == 'name'}">이름</option>
+                                                <option value="email" th:selected="*{type == 'email'}">이메일</option>
+                                                <option value="tel" th:selected="*{type == 'tel'}">휴대전화</option>
+                                                <option value="joinDate" th:selected="*{type == 'joinDate'}">가입날짜
+                                                </option>
+                                                <option value="pointSum" th:selected="*{type == 'pointSum'}">포인트
+                                                </option>
+                                            </select>
+                                            <input type="text" name="keyword" th:value="*{keyword}"
+                                                placeholder="Search..." class="form-control mt-0"
+                                                style="display:inline-block;width:300px;height:30px;font-size:16px;">
+                                            <input type="hidden" name="pageNum" th:value="*{pageNum}">
+                                            <input type="hidden" name="amount" th:value="*{amount}">
+                                            <button class="btn btn-dark" id="searchMBtn">검색</button>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+                            <br>
+                            <hr>
+
+                            <form id="memberFrm" method="post" action="/deleteMember">
+                                <div class="table-responsive">
+                                    <button type="button" class="btn btn-danger" style="color:white;"
+                                        th:attr="onclick=|disableMemberAll()|">선택 비활성화</button>
+                                    <table class="table text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" id="chkMemAllBox"
+                                                        th:attr="onclick=|chkMemAll()|"></th>
+                                                <th class="border-top-0">#</th>
+                                                <th class="border-top-0">아이디</th>
+                                                <th class="border-top-0">이름</th>
+                                                <th class="border-top-0">이메일</th>
+                                                <th class="border-top-0">휴대전화</th>
+                                                <th class="border-top-0">가입날짜</th>
+                                                <th class="border-top-0">생년월일</th>
+                                                <th class="border-top-0">성별</th>
+                                                <th class="border-top-0">포인트</th>
+                                                <th class="border-top-0">멤버권한</th>
+                                                <th class="border-top-0">수정</th>
+                                                <th class="border-top-0">비활성화</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="mem,sts : ${list}" th:Class="${sts}"
+                                                th:classappend="${mem.memCd == 'M4'} ? 'bg-secondary' : ''">
+                                                <td><input type="checkbox" th:if="${#strings.equals(mem.memCd, 'M1')}" id="memberBox" ></td>
+                                                <td th:text="${page.total-(page.criteria.pageNum-1)*page.criteria.amount-sts.index}"></td>
+                                                <td th:text="${mem.id}" id="id" th:name="id"></td>
+                                                <td th:text="${mem.name}"></td>
+                                                <td th:text="${mem.email}"></td>
+                                                <td th:text="${mem.tel}" ></td>
+                                                <td th:text="${#dates.format(mem.joinDate,'yyyy/MM/dd')}" th:value="${mem.joinDate}"></td>
+                                                <td th:text="${#dates.format(mem.birthDate,'yyyy/MM/dd')}"></td>
+                                                <td th:text="${mem.genCdNm}" ></td>
+                                                <td th:text="${mem.pointSum}"></td>
+                                                <td th:text="${mem.memCdNm}"></td>
+                                                <td><button th:unless="${#strings.equals(mem.memCd, 'M4')}" type="button" class="btn btn-success"  id ="updateMBtn"  data-bs-toggle="modal" data-bs-target="#updateMModal" style="color:white;" th:attr="onclick=|relayMId('${mem.id}')|">수정</button></td>
+                                                <td>
+        <button th:if="${#strings.equals(mem.memCd, 'M1')}" type="button" class="btn btn-danger" style="color:white;" th:attr="onclick=|disableMember('${mem.id}')|" id="disableBtn">비활성화</button>
+        <button th:if="${#strings.equals(mem.memCd, 'M4')}" type="button" class="btn btn-dark" style="color:white;" th:attr="onclick=|ableMember('${mem.id}')|" id="albeBtn">확성화</button>
+    </td>
+</tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            </form>
+                            
+                            
+                            
+                            
+                            
+                            
+                            <!-- 회원리스트 페이징  -->
+                            <div align="center">
+                            
+   <div class="pagination">
+		<a th:if="${page.prev}" th:href="${page.startPage-1}" style="color:black;float:left;padding:8px16px;text-decoration:none">&laquo;</a>
+		<a th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}" th:href="${num}"
+		    th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+		<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+	</div>
+	<form id="actionFrm" action="/admin/memberManage" th:object="${cri}">
+		<input type="hidden" name="pageNum" th:value="*{pageNum}">
+		<input type="hidden" name="amount" th:value="*{amount}">
+		<input type="hidden" name="type" th:value="*{type}">
+		<input type="hidden" name="keyword" th:value="*{keyword}">
+	</form>
+</div>
+
+<!-- 페이징 끝 -->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 기록가 테이블  -->
+        <div id="ptgTable">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <div>
+                            <span>
+                     <input type="button" class="box-title" style="background-color:white;border:none;" value="기록가" th:attr="onclick=|openPtgList()|">
+  					&nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="사진관" th:attr="onclick=|openStdList()|">
+                            </span>
+		<br>
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    신규 기록가: <code th:text="${todayPtg.size}"></code> &nbsp; 총 기록가: <code th:text="${ptgList.size}"></code></p>
+                             <form id="searchP" action="/admin/memberManage" th:object="${cri2}" class="app-search d-none d-md-block me-3">
+               
+                            <ul style="list-style:none;float:right;">
+								<li>		
+  									<select name="type" style="width:120px;height:30px;font-size:16px;border:none;">
+  
+                                              	<option value="all" th:selected="*{type == 'all'}">전체</option>
+                                   
+                                   
+                                                <option value="ptgId" th:selected="*{type == 'ptgId'}">작가아이디</option>
+                                   				<option value="stId" th:selected="*{type == 'stId'}">사진관아이디</option>
+                                                <option value="regionCd" th:selected="*{type == 'regionCd'}">지역</option>
+                                                <option value="crn" th:selected="*{type == 'crn'}">사업자등록번호</option>
+                                                <option value="inst" th:selected="*{type == 'inst'}">인스타주소</option>
+                                                <option value="workDay" th:selected="*{type == 'workDay'}">근무가능요일</option>
+                                                <option value="ptgCd" th:selected="*{type == 'ptgCd'}">소속여부</option>
+                                                <option value="accpDate" th:selected="*{type == 'accpDate'}">등록일자</option>
+
+                                            </select>
+                                            <input type="text" name="keyword2" th:value="*{keyword}" placeholder="Search..." class="form-control mt-0"
+                                                style="display:inline-block;width:300px;height:30px;font-size:16px;">
+											<input type="hidden" name="pageNum2" th:value="*{pageNum}">
+											<input type="hidden" name="amount" th:value="*{amount}">
+											<button class="btn btn-dark" id="searchPBtn">검색</button>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+                                          
+              
+
+                            <br>
+                            <hr>
+                                   <form id="ptgFrm" method="post">
+                            <div class="table-responsive">
+                                <!-- 작가 테이블 -->
+                                <table class="table text-nowrap">
+                                    
+                                    <thead>
+                                    
+                                        <tr>
+
+                                                      <th class="border-top-0">#</th>
+                                            <th class="border-top-0">작가아이디</th>
+                                            <th class="border-top-0">사진관아이디</th>
+                                            <th class="border-top-0">지역</th>
+                                            <th class="border-top-0">사업자등록번호</th>
+                                            <th class="border-top-0">인스타주소</th>
+                                            <th class="border-top-0">근무가능요일</th>
+                                            <th class="border-top-0">소속여부</th>
+                                            <th class="border-top-0">등록일자</th>
+                                                               
+                                        </tr>
+                                    </thead>
+                                    <tbody> <!-- test -->
+                                        <tr th:each="ptg,sts : ${ptglist}" th:Class="${sts}">
+                                            <td th:text="${ptgPage.total-(ptgPage.criteria.pageNum-1)*ptgPage.criteria.amount-sts.index}"></td>
+                                            <td th:text="${ptg.ptgId}" th:value="${ptg.ptgId}" id="id" th:name="id"></td>
+                                            <td th:text="${ptg.stId}" th:value="${ptg.stId}"></td>
+                                            <td th:text="${ptg.regionCd}" th:value="${ptg.regionCd}"></td>
+                                            <td th:text="${ptg.crn}" th:value="${ptg.crn}"></td>
+                                            <td th:text="${ptg.inst}" th:value="${ptg.inst}"></td>
+                                            <td th:text="${ptg.workDay}" th:value="${ptg.workDay}"></td>
+                                            <td th:text="${ptg.ptgCd}" th:value="${ptg.ptgCd}"></td>
+                                            <td th:text="${#dates.format(ptg.accpDate,'yyyy/MM/dd')}" th:value="${ptg.accpDate}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            </form>
+                            
+                                                        <!-- 기록가리스트 페이징  -->
+                            <div align="center">
+                            
+   <div class="paginationP">
+		<a th:if="${ptgPage.prev}" th:href="${ptgPage.startPage-1}" style="color:black;float:left;padding:8px16px;text-decoration:none">&laquo;</a>
+		<a th:each="num : ${#numbers.sequence(ptgPage.getStartPage(), ptgPage.getEndPage())}" th:href="${num}"
+		    th:class="${ptgPage.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+		<a th:if="${ptgPage.next}" th:href="${ptgPage.endPage+1}">&raquo;</a>
+	</div>
+	<form id="actionP" action="/admin/memberManage" th:object="${cri2}">
+		<input type="hidden" name="pageNum2" th:value="*{pageNum}">
+		<input type="hidden" name="amount" th:value="*{amount}">
+		<input type="hidden" name="type" th:value="*{type}">
+		<input type="hidden" name="keyword2" th:value="*{keyword}">
+	</form>
+</div>
+
+<!-- 페이징 끝 -->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 사진관 테이블 -->
+        <div id="stdTable" style="display:none">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <div>
+                            <span>
+                     <input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="기록가" th:attr="onclick=|openPtgList()|">
+  					&nbsp;<input type="button" class="box-title" style="background-color:white;border:none;" value="사진관" th:attr="onclick=|openStdList()|">
+                            </span>
+                            <br>
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    신규 사진관: <code th:text="${todayStd.size}">5</code> &nbsp; 총 사진관: <code th:text="${stdList.size}"></code></p>
+                                <form role="searchS" class="app-search d-none d-md-block me-3" th:object="${cri3}" >
+                                    <ul style="list-style:none;float:right;">
+                                        <li>
+                                            <select name="type3" style="width:120px;height:30px;font-size:16px;border:none;">
+                                                <option value="all" th:selected="*{type == 'all'}">전체</option>
+                                                <option value="stId" th:selected="*{type == 'stId'}">사진관아이디</option>
+                                                <option value="stName" th:selected="*{type == 'stName'}">이름</option>
+                                                <option value="ceoName" th:selected="*{type == 'ceoName'}">대표자</option>
+                                                <option value="tel" th:selected="*{type == 'tel'}">전화번호</option>
+                                                <option value="regionCd" th:selected="*{type == 'regionCd'}">지역</option>
+                                                <option value="addr" th:selected="*{type == 'addr'}">주소</option>
+                                                <option value="crn" th:selected="*{type == 'crn'}">사업자등록번호</option>
+                                                <option value="regiDate" th:selected="*{type == 'regiDate'}">등록일자</option>
+                                            </select>
+                                            <input type="text" name="keyword3" th:value="*{keyword}" placeholder="Search..." class="form-control mt-0"
+                                                style="display:inline-block;width:300px;height:30px;font-size:16px;">
+											<input type="hidden" name="pageNum3" th:value="*{pageNum}">
+											<input type="hidden" name="amount" th:value="*{amount}">
+											<button class="btn btn-dark" id="searchSBtn">검색</button>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <form id="stdFrm">
+          
+                            <div class="table-responsive">
+                                <table class="table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <!-- 보여줄 부분 -->
+                                            <th class="border-top-0">#</th>
+                                            <th class="border-top-0">사진관아이디</th>
+                                            <th class="border-top-0">이름</th>
+                                            <th class="border-top-0">대표자</th>
+                                            <th class="border-top-0">전화번호</th>
+                                            <th class="border-top-0">지역</th>
+                                            <th class="border-top-0">주소</th>
+                                            <th class="border-top-0">사업자등록번호</th>
+                                            <th class="border-top-0">등록일자</th>
+                                            <th class="border-top-0">소속작가</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                           <tr th:each="std,sts : ${stdList}" th:Class="${sts}">                                
+                                            <td th:text="${sts.count}"></td>    
+                                            <td th:text="${std.stId}"></td>
+                                            <td th:text="${std.stName}"></td>
+                                            <td th:text="${std.ceoName}"></td>
+                                            <td th:text="${std.tel}"></td>
+                                            <td th:text="${std.regionCd}"></td>
+                                            <td th:text="${std.addr}"></td>
+                                            <td th:text="${std.crn}"></td>
+                                            <td th:text="${#dates.format(std.accpDate,'yyyy/MM/dd')}"></td>
+                                            <td>
+                                            <button class="btn btn-secondary" th:if="${#strings.equals(std.stCd, 'G')}" style="color:white;" type="button" id ="updateBtn"  data-bs-toggle="modal" 
+                                            data-bs-target="#StdsPtgList"  th:attr="onclick=|belongAjax('${std.stId}')|">소속작가</button>
+                                            <span th:unless="${#strings.equals(std.stCd, 'G')}">X</span>                            
+                                            </td>
+                                        </tr>
+                                        <!-- 비활성화할 것 -->
+
+                                    </tbody>
+                                </table>
+                            </div>
+                                              </form>
+                                                                     <!-- 사진관리스트 페이징  -->
+                            <div align="center">
+                            
+   <div class="pagination">
+		<a th:if="${stdPage.prev}" th:href="${stdPage.startPage-1}" style="color:black;float:left;padding:8px16px;text-decoration:none">&laquo;</a>
+		<a th:each="num : ${#numbers.sequence(stdPage.getStartPage(), stdPage.getEndPage())}" th:href="${num}"
+		    th:class="${stdPage.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+		<a th:if="${stdPage.next}" th:href="${stdPage.endPage+1}">&raquo;</a>
+	</div>
+	<form id="actionS" action="/admin/memberManage" th:object="${cri3}">
+		<input type="hidden" name="pageNum3" th:value="*{pageNum}">
+		<input type="hidden" name="amount" th:value="*{amount}">
+		<input type="hidden" name="type" th:value="*{type}">
+		<input type="hidden" name="keyword3" th:value="*{keyword}">
+	</form>
+</div>
+
+<!-- 페이징 끝 -->  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- UpdateM Popup  -->
+<div class="modal fade" id="updateMModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title p-3">
+                    <h5 class="m-0 text-white" id="updateMId"></h5>
+                  
+                   <p class="m-0 text-white">아이디와 가입일은 수정할 수 없습니다.</p>
+                  
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="w-100 p-3">
+                    <!-- Form START -->
+                    <form id="updateMFrm" method="post" action="/updateMember">
+                
+                        <input type="hidden" class="form-control" id="id" name="id">
+                      
+                        <div class="mb-3">
+                            <label class="form-label" for="exampleInputEmail1">이름</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="***">
+                        </div>
+                                                <div class="mb-3">
+                            <label class="form-label" for="exampleInputPassword1">Email</label>
+                            <input type="email" class="form-control"  id="email" name="email" placeholder="***@***.***">
+                        </div>
+                                                <div class="mb-3">
+                            <label class="form-label" for="exampleInputPassword1">TEL</label>
+                            <input type="tel" class="form-control"  id="tel" name="tel" placeholder="***-****-****">
+                        </div>
+                                                <div class="mb-3">
+                            <label class="form-label" for="exampleInputPassword1">생년월일</label>
+                            <input type="date" class="form-control"  id="birthDate" name="birthDate">
+                        </div>
+                                                <div class="mb-3">
+                            <label class="form-label" for="exampleInputPassword1">성별</label>
+                            <input type="text" class="form-control"  id="genCd" name="genCd" placeholder="m 또는 f">
+                        </div>
+                        
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-dark" 
+                                onclick="return validationFrm()">수정완료</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Login Popup  -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <!-- Std ->PtgList Popup  -->
+<div class="modal fade" id="StdsPtgList">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title p-3">
+                    <h5 class="m-0 text-white"  id="blStd"></h5>
+                  
+                   <p class="m-0 text-white"></p>
+                  
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="w-100 p-3">
+                    <!-- Form START -->
+                    <form>
+                                <table class="table text-nowrap" id="blTable">
+                                    <thead>
+                                        <tr>
+                                            <!-- 보여줄 부분 -->
+                                            <th class="border-top-0">#</th>
+                                            <th class="border-top-0">작가아이디</th>
+                                            <th class="border-top-0">사업자등록번호</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="blBody">
+
+                                    </tbody>
+                                </table>                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Login Popup  -->
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>   
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>        
+<script th:inline="javascript">
+
+
+function validationFrm() {
+	  const updateMFrm = document.getElementById("updateMFrm");
+
+	  if (
+	    updateMFrm.name.value == "" &&
+	    updateMFrm.email.value == "" &&
+	    updateMFrm.tel.value == "" &&
+	    updateMFrm.birthDate.value == "" &&
+	    updateMFrm.genCd.value == ""
+	  ) {
+	    swal("수정 실패", "수정할 정보를 입력해주세요.", "warning");
+	    return false;
+	  } else {
+	    swal({
+	      title: "수정 성공",
+	      icon: "success",
+	      buttons: "확인",
+	    }).then(function (willSubmit) {
+	      if (willSubmit) {
+	        updateMFrm.submit();
+	      }
+	    });
+	  }
+	}
+
+	
+	function relayMId(id){
+		var id = id;
+  	  $("#updateMId").text(id+"님의 정보 변경");
+	  $("#updateMFrm input[id='id']").val(id);
+	}
+
+
+
+
+//클릭으로 테이블 보이기 여부 
+		const ptgTable = document.getElementById("ptgTable");
+	    const stdTable = document.getElementById("stdTable");
+	    
+		function openPtgList(){
+	    	ptgTable.style.display = 'block';
+	    	stdTable.style.display = 'none';
+	    };
+	    
+		function openStdList(){		
+	    	ptgTable.style.display = 'none';
+	    	stdTable.style.display = 'block';
+	    };
+	
+	    
+	  //단건 활성화버튼. id값만 넘기면서 페이지 새로고침
+	    function ableMember(id){
+	
+			var id= id;
+	    	if(confirm(id+"님을 정말 활성화하시겠습니까?")==true){
+		
+		location.replace('/ableMember?id='+id); 
+		alert(id+"님을 활성화했습니다.")
+		
+	    	}else{
+	    		alert("취소되었습니다.");
+	    	}
+
+	    };
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+//단건 비활성화버튼. id값만 넘기면서 페이지 새로고침
+	    function disableMember(id){
+	
+			var id= id;
+	    	if(confirm(id+"님을 정말 비활성화하시겠습니까?")==true){
+		
+		location.replace('/disableMember?id='+id); 
+		alert(id+"님을 비활성화했습니다.")
+	    	}else{
+	    		alert("취소되었습니다.");
+	    	}
+
+	    };
+
+//다건 비활성화버튼
+
+		function chkMemAll(){
+         if($("#chkMemAllBox").prop("checked")){
+        	 console.log("클릭은 됨")
+            $("input[id*='memberBox']").prop("checked",true); 
+        }else{
+            $("input[id*='memberBox']").prop("checked",false); 
+        }
+    };
+
+
+
+    function disableMemberAll(){
+    		 var ids = '';
+    	let list = [];
+    	
+    	 $("[id='memberBox']:checked").each(function(i, checkbox){
+    		 var tr = $(checkbox).parent().parent();
+    		 var td = $(tr).children();
+    		 
+    		 var id = td.eq(2).text();
+
+    		 ids+= id+"님 ";
+
+    		 var obj = {};
+
+    		 list.push(id);
+    		 
+    	 });
+ 	    	if(confirm(ids+"을 정말 비활성화하시겠습니까?")==true){
+ 	   		
+ 	    		for (const value of list) {
+ 	    		    console.log("비활성화할거얌"+value);
+ 	    		   location.replace('/disableMember?id='+value);
+ 	    		} 
+ 
+ 	    		alert("비활성화 완료");
+ 	    		
+ 	   	    	
+ 	    	}else{
+ 	   	    		alert("취소되었습니다.");
+ 	   	    	}
+    		 
+
+    };
+    
+    
+
+    function belongAjax(stId){
+
+    var stId = stId;
+	$('#blBody').empty();
+    	
+      $.ajax({
+        type: "POST",
+        url: "/belongPtg",
+        data: "stId=" + stId,
+      }).then(map =>{
+	
+		document.createElement('tbody').setAttribute('id','blBody');
+    	$("#blTable").append($("#blBody"));
+    	    	
+		var Stbelong = map.STbelong;
+    	  $("#blStd").text(Stbelong+"님의 소속작가");
+    	  
+    	  var results = map.belongPtg;
+    	  var str ='<TR>';
+    	  
+    	  $.each(results, function(i){
+    		  str += '<TD>'+(i+1)+'</TD><TD>' + results[i].ptgId + '</TD><TD>'+ results[i].crn + '</TD>';
+    		  str +='</tr>';
+    	  });
+    	  
+    	  $("#blBody").append(str);
+    	  
+    	});
+    };
+    
+    
+
+history.replaceState({}, null, location.pathname);
+
+$(".pagination a").on("click", function(e){
+	e.preventDefault();
+	console.log($("#actionFrm").find("input[name='pageNum']").val())
+ 	$("#actionFrm").find("input[name='pageNum']").val($(this).attr("href"));
+	
+	actionFrm.submit(); //폼태그값을 스트링으로 
+
+
+	console.log($('input[type="checkbox"]:checked').val())
+	
+$('#searchMBtn').on("click", function(e){
+	console.log('click')
+	
+	
+	$('#searchFrm').find("input[name='pageNum']").val(1);
+	e.preventDefault();
+	searchFrm.submit();
+})
+})
+ 
+ 
+ 
+ //기록가 리스트 페이징 
+
+history.replaceState({}, null, location.pathname);
+
+$(".paginationP a").on("click", function(e){
+	e.preventDefault();
+	console.log($("#actionP").find("input[name='pageNum2']").val())
+ 	$("#actionP").find("input[name='pageNum2']").val($(this).attr("href"));
+	
+	actionP.submit(); //폼태그값을 스트링으로 
+
+
+	console.log($('input[type="checkbox"]:checked').val())
+	
+$('#searchPBtn').on("click", function(e){
+	console.log('click')
+	
+	
+	$('#searchP').find("input[name='pageNum2']").val(1);
+	e.preventDefault();
+	searchP.submit();
+
+})
+});
+
+
+//사진관 리스트 페이징
+history.replaceState({}, null, location.pathname);
+
+$(".paginationS a").on("click", function(e){
+	e.preventDefault();
+	console.log($("#actionS").find("input[name='pageNum3']").val())
+ 	$("#actionS").find("input[name='pageNum3']").val($(this).attr("href"));
+	
+	actionS.submit(); //폼태그값을 스트링으로 
+
+
+	console.log($('input[type="checkbox"]:checked').val())
+	
+$('#searchSBtn').on("click", function(e){
+	console.log('click')
+	
+	
+	$('#searchS').find("input[name='pageNum3']").val(1);
+	e.preventDefault();
+	searchS.submit();
+})
+})
+ 
+
+</script>
+
+
+</div>
+</body>
+</html>

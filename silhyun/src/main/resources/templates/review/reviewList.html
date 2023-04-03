@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+    <!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>silhyunHada</title>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.8/slick-theme.min.css">
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="/js/review/moreless.js"></script>				
+</head>
+<style>
+
+#review{
+	text-align: letf;
+}
+
+.pagination {
+    display: block; 
+    text-align: center;
+
+  
+}
+
+.pagination a {
+  color: black;
+  float: none;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: grey;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.star-ratings {
+  color: #d3d3d3; 
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+
+}
+ 
+.star-ratings-fill {
+  color: #e7b729;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  	font-size: 40px;
+}
+
+.star-ratings-base {
+  z-index: 0;
+  padding: 0;
+  	font-size: 40px;
+}
+
+.star-ratings-fill.sm{
+  	font-size: 15px;
+}
+.star-ratings-base.sm{
+  	font-size: 15px;
+}
+#btns{
+	float: right;
+}
+.slick-arrow::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 1;
+	border: 1px solid #b8b8b8;
+	border-width: 0 2px 2px 0;
+	margin-left: -2px;
+	padding: 10px;
+}
+.slick-prev::after {
+	left: 60%;
+	-webkit-transform: translate(-50%, -50%) rotate(135deg);
+	transform: translate(-50%, -50%) rotate(135deg);
+}
+
+.slick-next::after {
+	-webkit-transform: translate(-50%, -50%) rotate(-45deg);
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+.imgSlider{
+ width: 200px;
+ height: 200px;
+}
+#right{
+ float: right;
+}
+
+</style>
+<body>
+<div id="reviews">
+<script type="text/javascript" src="/js/review/reviewList.js"></script>
+<!-- 평균별찍기는 파일 처리 끝낸후 ! -->
+	<div class="container col-9">
+	            <div class="row align-items-end">
+	                <div class="col-sm-6">
+	                    <h5 class="m-0">Reviews</h5>
+	                    <br>
+	                    	<!-- 평균별점 -->
+	                    	<div>
+						  	<span>총 별점 <span id="starAvg">[[${star?.star}]]</span>점 </span>
+					       <div class="star-ratings">
+						        <div class="star-ratings-fill">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+						        <div class="star-ratings-base">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+						    </div>
+						    </div>
+						</div>
+	                <div class="col-sm-6 text-sm-end">
+	                    <button type="button" class="btn btn-sm btn-outline-secondary" th:onclick="reviewInsertForm([[${session.id}]])"  th:if='${session.id} neq null'>리뷰작성하기</button>
+	                </div>
+	            </div>
+	            <hr>
+	            <!-- 검색 -->
+	            <div class="container">
+					<form id="searchFrm" action="reviewList" th:object="${page}">
+						<select name="sort" id="sort">
+							<option value="n" th:selected="*{criteria.sort == 'n'}">정렬</option>
+							<option value="s" th:selected="*{criteria.sort == 's'}">별점수</option>
+							<option value="d" th:selected="*{criteria.sort == 'd'}">최신수</option>
+						</select>
+					    <input type="checkbox" name="photo" value="y" id="phosort" th:checked="*{criteria.photo == 'y'}">포토리뷰 보기
+					    <div id="right">
+						<select name="type">
+							<option value="CW">전체</option>
+							<option value="C">내용</option>
+							<option value="W">작성자</option>
+						</select>
+						<input type="text" name="keyword">
+						<button class="btn btn-sm btn-outline-secondary" type="submit">검색</button>	
+						</div>				    
+						<input type="hidden" name="pageNum" th:value="1">
+						<input type="hidden" name="amount" th:value="*{criteria.amount}">
+						<input type="hidden" name="ctgr" >
+						<input type="hidden" name="ctgrNum" >
+					</form>
+				</div>
+				<th:block th:each="rev : ${list}">
+				<form id="upFrm">
+				<input type="hidden" th:value="${rev.revNum}" class="revNum" name="revNum">
+	            <div class="d-flex review-box border-top mt-4 pt-4 reviewContent">
+	                <div class="col ps-3">
+	                    <h6>[[${rev.id}]]</h6>
+	                    <div id="btns">
+	                    <button type="button" class="btn btn-sm btn-outline-secondary upBtn" th:onclick="upFrom([[${rev.revNum}]])"  th:if='${session.id} eq ${rev.Id}'>수정</button>
+	                    <button type="button" class="btn btn-sm btn-outline-secondary" th:onclick="delReview([[${rev.revNum}]])" th:if='${session.id} eq ${rev.Id}'>삭제</button>
+	                    </div>
+
+					       <div class="star-ratings">
+						        <div class="star-ratings-fill sm" th:starCnt="${rev.star}">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+						        <div class="star-ratings-base sm">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+						    </div>
+	                        <span>[[${#dates.format(rev.revDate, 'yyyy-MM-dd')}]]</span><br><br>
+	                <div>
+					    <div class="content">[[${rev.cntn}]]</div>
+	                </div>
+	                </div>
+	            </div>
+	            <div class="photo" th:if="${rev.photoList != null}">
+		            <div class="slider-wrap">
+		            	<div class="cont" th:each="pho : ${rev.photoList}"><img class="imgSlider" th:src="${pho.thumbnail}"></div>
+					</div>
+				</div>
+				</form>
+				</th:block>
+	
+				<!-- 페이지네이션 -->
+				<div class="pagination">
+					<a th:if="${page.prev}" th:href="${page.startPage-1}">&laquo;</a>
+					<a th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}" th:href="${num}"
+					    th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+					<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+				</div>
+			 </div>
+			 
+</div>
+		<script th:inline="javascript">
+		
+		/*<![CDATA[*/   
+        var list = /*[[${list}]]*/
+       /*]]*/
+       console.log(list)
+       
+       
+       </script>
+       <script>
+$(function(){
+
+
+			$('.slider-wrap').slick({
+			 slide: 'div',        //슬라이드 되어야 할 태그
+			 //infinite : true,     //무한 반복 옵션     
+			 slidesToShow : 4,        // 한 화면에 보여질 컨텐츠 개수
+			 slidesToScroll : 1,        //스크롤 한번에 움직일 컨텐츠 개수
+			 speed : 500,     // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+			 arrows : true,         // 옆으로 이동하는 화살표 표시 여부
+			 vertical : false,        // 세로 방향 슬라이드 옵션
+			 prevArrow : "<button type='button' class='slick-next'>Next</button>",
+			 nextArrow : "<button type='button' class='slick-prev'>Prev</button>",
+			 responsive: [ // 반응형 웹 구현 옵션
+			   {  
+			     breakpoint: 960, //화면 사이즈 960px
+			     settings: {
+			       slidesToShow: 4
+			     } 
+			   },
+			   { 
+			     breakpoint: 768, //화면 사이즈 768px
+			     settings: {    
+			       slidesToShow: 5
+			     } 
+			   }
+			 ]
+			
+			});
+
+	
+})
+
+</script>
+</body>
+</html>

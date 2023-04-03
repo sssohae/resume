@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+
+<body>
+
+    <div layout:fragment="content">
+        <section class="section">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4">
+                        <div class="px-4 position-relative pt-5 text-center rounded" style="background-color: #ffe088">
+                            <div class="pb-1">
+                                <h6 style="color: #f62b22">무슨 강의 들을지 고민이라면?</h6>
+                                <h3 class="m-0">TOP 10 강의보기 <br />👑</h3>
+                            </div>
+                            <a href="/bestClasses" class="stretched-link"><img src="/assets/img/grocery/1000x1000.jpg"
+                                    title="" alt="" /></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="px-4 position-relative pt-5 text-center rounded" style="background-color: #e5af79">
+                            <div class="pb-1">
+                                <h6 style="color: #2e6b1c">
+                                    무료 강의부터 가볍게 시작해 보세요.
+                                </h6>
+                                <h3 class="m-0">무료 강의보기 <br />😋</h3>
+                            </div>
+                            <a href="/freeClasses" class="stretched-link"><img src="/assets/img/grocery/1000x1000.jpg"
+                                    title="" alt="" /></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="px-4 position-relative pt-5 text-center rounded" style="background-color: #a2806b">
+                            <div class="pb-1">
+                                <h6 style="color: #fe0d25">다양한 이벤트를 확인하세요.</h6>
+                                <h3 class="m-0">이벤트중인 강의보기 <br />🎈</h3>
+                            </div>
+                            <a href="/silhyun/eventPage" class="stretched-link">
+                                <img src="/assets/img/grocery/1000x1000.jpg" title="" alt="" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section pt-0">
+            <div class="container">
+                <div class="row justify-content-center section-heading">
+                    <div class="col-lg-6 text-center">
+                        <p class="fs-6 m-0">기본부터 실전까지 다양한 강의</p>
+                        <h3 class="h2 mt-2 mb-0">실현하다 클래스</h3>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs nav-tabs-02 justify-content-center" id="home-6_tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="h3_tabnav_5" data-bs-toggle="tab" data-bs-target="#h6_tab_5"
+                            type="button" role="tab" th:onclick="sendCdt(0)">
+                            전체
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="h3_tabnav_1" data-bs-toggle="tab" data-bs-target="#h6_tab_1"
+                            type="button" role="tab" th:onclick="sendCdt(6)">
+                            프로필
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="h3_tabnav_2" data-bs-toggle="tab" data-bs-target="#h6_tab_2"
+                            type="button" role="tab" aria-controls="h6_tab_2" th:onclick="sendCdt(7)">
+                            웨딩
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="h3_tabnav_3" data-bs-toggle="tab" data-bs-target="#h6_tab_3"
+                            type="button" role="tab" aria-controls="h6_tab_3" th:onclick="sendCdt(9)">
+                            동물
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="h3_tabnav_4" data-bs-toggle="tab" data-bs-target="#h6_tab_4"
+                            type="button" role="tab" aria-controls="h6_tab_4" th:onclick="sendCdt(1)">
+                            제품&인테리어&건축
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="home-6_tabsContent">
+                    <div>
+                        <p><b>온라인 강의💻</b></p>
+                        <a id="onEmptyMsg"></a>
+                    </div>
+                    <div class="row g-3 g-lg-4" id="onHere">
+                        <div id="onDiv">
+                            <div class="row g-3 g-lg-4" th:each="c2, sts : ${c2List}" th:Class="${sts}">
+                                <div class="col-6 col-lg-3" style="float: left; height: 485px">
+                                    <div class="product-card-7">
+                                        <div class="product-card-image" style="width: 300px; height: 300px">
+                                            <div class="badge-ribbon">
+                                                <span class="badge bg-warning">new</span>
+                                            </div>
+                                            <div class="product-action">
+                                                <a href="#" class="btn" style="background: none; border: none">
+                                                    <i class="fi-heart" style="color: pink"></i>
+                                                </a>
+                                            </div>
+                                            <div class="product-media">
+                                                <a th:href="@{/silhyun/classes/classesInfo(classNum=${c2.CNUM})}">
+                                                    <img class="img-fluid" th:src="${c2.THNI}" title="" alt="" />
+                                                </a>
+                                            </div>
+                                            <div class="product-cart-btn">
+                                                <a class="btn btn-primary"
+                                                    th:href="@{/silhyun/classes/classesInfo(classNum=${c2.CNUM})}">
+                                                    <i class="fi-eye"></i>
+                                                    상세 보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="product-card-info">
+                                            <div class="rating-star text">
+                                                <span th:each="star : ${#numbers.sequence(1, 5)}">
+                                                    <i th:if="${c2.STAR >= star}" class="bi bi-star-fill active"></i>
+                                                    <i th:if="${c2.STAR >= star - 0.5 && c2.STAR < star}" class="bi bi-star-half active"></i>
+                                                    <i th:if="${c2.STAR < star - 0.5}" class="bi bi-star"></i>
+                                                </span>
+                                                <span th:text="${c2.STAR}"></span>
+                                            </div>
+                                            <h6 class="product-title">
+                                                <a th:href="@{/silhyun/classes/classesInfo(classNum=${c2.CNUM})}" th:text="${c2.TTL}"></a>
+                                            </h6>
+                                            <div class="product-price">
+                                                <span class="text-primary" th:text="${c2.CPRI}"></span><small>원</small>
+                                            </div>
+                                            <a th:text="${c2.NAME}"> </a><br />
+                                            <a th:text="'총 '+ ${c2.CNT}+'강'"> </a>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+
+            <br />
+            <br />
+
+            <!-- 인라인 블록 줄바꿈용 -->
+            <p style="clear: both"></p>
+
+            <div>
+              <p class="ignore-tab"><b>오프라인 강의🚗</b></p>
+              <a id="offEmptyMsg"></a>
+            </div>
+            <div class="row g-3 g-lg-4" id="offHere">
+              <div class="offDiv">
+                <div class="row g-3 g-lg-4" th:each="c1, sts : ${c1List}" th:Class="${sts}">
+                  <div class="col-6 col-lg-3" style="float: left; height: 485px">
+                    <div class="product-card-7">
+                      <div class="product-card-image" style="width: 300px; height: 300px">
+                        <div class="badge-ribbon">
+                          <span class="badge bg-warning">new</span>
+                        </div>
+                        <div class="product-action">
+                          <a href="#" class="btn" style="background: none; border: none">
+                            <i class="fi-heart" style="color: pink"></i>
+                          </a>
+                        </div>
+                        <div class="product-media">
+                          <a th:href="@{/silhyun/classes/classesInfo(classNum=${c1.CNUM})}">
+                            <img id="c1Thni" class="img-fluid" th:src="${c1.THNI}"
+                              title="" alt=""/>
+                          </a>
+                        </div>
+                        <div class="product-cart-btn">
+                          <a class="btn btn-primary" th:href="@{/silhyun/classes/classesInfo(classNum=${c1.CNUM})}">
+                            <i class="fi-eye"></i>
+                            상세 보기
+                          </a>
+                        </div>
+                      </div>
+                      <div class="product-card-info">
+                        <div class="rating-star text">
+                          <span th:each="star : ${#numbers.sequence(1, 5)}">
+                            <i th:if="${c1.STAR >= star}" class="bi bi-star-fill active"></i>
+                            <i th:if="${c1.STAR >= star - 0.5 && c1.STAR < star}" class="bi bi-star-half active"></i>
+                            <i th:if="${c1.STAR < star - 0.5}" class="bi bi-star"></i>
+                          </span>
+                          <span th:text="${c1.STAR}"></span>
+                        </div>
+                        <h6 class="product-title">
+                          <a id="c1Ttl" th:href="@{/silhyun/classes/classesInfo(classNum=${c1.CNUM})}" th:text="${c1.TTL}"></a>
+                        </h6>
+                        <div class="product-price">
+                          <span id="c1Cpri" class="text-primary" th:text="${c1.CPRI}"></span><small>원</small>
+                        </div>
+                        <a id="c1Name" th:text="${c1.NAME}"> </a><br />
+                        <a id="c1Cdt" th:text="${#dates.format(c1.CDT,'yyyy년MM월dd일')}">
+                        </a>
+                        <br />
+                        <a id="c1PlTm" th:text="${c1.CPLACE}+' / '+${c1.CTIME}"></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+
+        //메뉴 분야버튼 클릭시 아작스로 리스트 교체
+        function sendCdt(param1) {
+
+            $.ajax({
+            url: "/silhyun/classes/cdtCList",
+            type: "GET",
+            data: { param1: param1 },
+            dataType: "json",
+            }).then((result) => {
+            
+           	//컨트롤러에서 model에 받은 리스트 분리
+            var cdtC1List = result.cdtC1List;
+            var cdtC2List = result.cdtC2List;
+
+            //기존 요소 div 지우기
+            var offHere = document.getElementById("offHere");
+            offHere.innerHTML = "";
+
+            //날짜 형태 변환
+            var options = { year: "numeric", month: "long", day: "numeric" };
+
+            //클래스 없을 시 준비중 알림
+            if (cdtC1List.length === 0) {
+                document.getElementById("offEmptyMsg");
+                offEmptyMsg.text = "준비중입니다.";
+            } else {
+                offEmptyMsg.text = "";
+
+                // 별점 그리기
+                function drawStar(rating) {
+                var star = "";
+                
+                for (var i = 1; i <= 5; i++) {
+                    if (rating >= i) {
+                    star += '<i class="bi bi-star-fill active"></i>';
+                    } else if (rating >= i - 0.5) {
+                    star += '<i class="bi bi-star-half active"></i>'; 
+                    } else {
+                    star += '<i class="bi bi-star"></i>';
+                    }
+                }
+
+                return star;
+                }
+
+                //cdtC1List를 위한 반복문
+                for (var i = 0; i < cdtC1List.length; i++) {
+                var cdtC1 = cdtC1List[i];
+
+                // 별점 평균값과 개수 계산
+                var rating = cdtC1.STAR;
+
+                //새 div 생성
+                var appendOff = `
+
+                    <div class="col-6 col-lg-3" style="float: left; height: 485px;">
+                    <div class="product-card-7">
+                        <div class="product-card-image" style="width: 300px; height: 300px">
+                        <div class="badge-ribbon">
+                            <span class="badge bg-warning">new</span>
+                        </div>
+                        <div class="product-action">
+                        <a href="#" class="btn" style="background: none; border: none;">
+                                <i class="fi-heart" style="color: pink;"></i>
+                            </a>
+                        </div>
+                        <div class="product-media">
+                        <a href="/silhyun/classes/classesInfo?classNum=${cdtC1.CNUM}">
+                            <img id="c1Thni" class="img-fluid" src="${cdtC1.THNI}" title="" alt="">
+                        </a>
+                        </div>
+                        <div class="product-cart-btn">
+                            <a class="btn btn-primary" href="/silhyun/classes/classesInfo?classNum=${cdtC1.CNUM}">
+                            <i class="fi-eye"></i>
+                            상세 보기
+                            </a>
+                        </div>
+                        </div>
+                        <div class="product-card-info">
+                        <div class="rating-star text">
+                            ${drawStar(rating)}
+                        <a id="cdt1Star">${cdtC1.STAR}</a>
+                    </div>         
+                    <h6 class="product-title">
+                        <a id="c1Ttl" href="/silhyun/classes/classesInfo?classNum=${cdtC1.CNUM}">${cdtC1.TTL}</a>
+                    </h6>
+                    <div class="product-price">
+                        <span id="c1Cpri" class="text-primary">${cdtC1.CPRI}</span><small>원</small>
+                    </div>
+                    <a id="c1Name">${cdtC1.NAME}</a><br>
+                    <a id="c1Cdt">${new Date(cdtC1.CDT).toLocaleDateString("ko-KR", options)}</a><br>
+                        <a id = "c1PlTm">${cdtC1.CPLACE} / ${cdtC1.CTIME}</a>
+                    </div>
+                    </div>
+                    
+                    `;
+
+                //붙일 곳 찾아서
+                document.getElementById("offHere").innerHTML += appendOff;   
+                }
+            }
+
+            //기존 요소 div 지우고
+            var onHere = document.getElementById("onHere");
+            onHere.innerHTML = "";
+
+            if (cdtC2List.length === 0) {
+                document.getElementById("onEmptyMsg");
+                onEmptyMsg.text = "준비중입니다.";
+            } else {
+                onEmptyMsg.text = "";
+
+            // 별점 평균값과 개수 계산
+            function drawStar(rating, count) {
+            var star = "";
+
+            for (var i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                star += '<i class="bi bi-star-fill active"></i>'; // 별 채우기
+                } else if (rating >= i - 0.5) {
+                star += '<i class="bi bi-star-half active"></i>'; // 반 개 채우기
+                } else {
+                star += '<i class="bi bi-star"></i>'; // 빈 별
+                }
+            }
+
+            return star;
+            }
+
+            //cdtC2List를 위한 반복문
+            for (var i = 0; i < cdtC2List.length; i++) {
+            var cdtC2 = cdtC2List[i];
+
+            // 별점 평균값과 개수 계산
+            var rating = cdtC2.STAR;
+            var count = Math.round(rating); // 반올림
+
+            //새 요소 생성
+            var appendON = `
+
+                <div class="col-6 col-lg-3" style="float: left; margin-bottom: 20px">
+                <div class="product-card-7">
+                    <div class="product-card-image" style="width: 300px; height: 300px">
+                        <div class="badge-ribbon">
+                        <span class="badge bg-warning">new</span>
+                    </div>
+                    <div class="product-action">
+                    <a href="#" class="btn" style="background: none; border: none;">
+                            <i class="fi-heart" style="color: pink;"></i>
+                        </a>
+                    </div>
+                    <div class="product-media">
+                        <a href="/silhyun/classes/classesInfo?classNum=${cdtC2.CNUM}">
+                            <img class="img-fluid" src="${cdtC2.THNI}"  title="" alt="">
+                        </a>
+                    </div>
+                    <div class="product-cart-btn">
+                        <a class="btn btn-primary" href="/silhyun/classes/classesInfo?classNum=${cdtC2.CNUM}">
+                            <i class="fi-eye"></i>
+                            상세 보기
+                        </a>
+                    </div>
+                </div>
+                <div class="product-card-info">
+                <div class="rating-star text">
+                    ${drawStar(rating, count)}
+                <a id="cdt2Star">${cdtC2.STAR}</a>
+                </div>
+                    <h6 class="product-title">
+                        <a href="/silhyun/classes/classesInfo?classNum=${cdtC2.CNUM}">${cdtC2.TTL}</a>
+                    </h6>
+                    <div class="product-price">
+                        <span class="text-primary">${cdtC2.CPRI}</span><small>원</small>
+                    </div>
+                    <a>${cdtC2.NAME}</a><br>
+                    <a>총 ${cdtC2.CNT}강</a>
+                </div>
+                </div>
+                </div> 
+                    
+                `;
+
+                //붙일 곳 찾아서
+                document.getElementById("onHere").innerHTML += appendON;
+
+                }
+            }
+
+        });
+    }
+</script>
+</div>
+<br />
+<br />
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description"
+	content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>ShopApp - eCommerce Bootstrap 5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/img/favicon.ico">
+<style>
+.btn.btn-sm.active {
+	border-radius: 20px;
+	width: 140px;
+}
+
+.shop-top-bar .layout-change .btn {
+	border-radius: 20px;
+	width: 140px;
+	height: 55px;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<!-- Main -->
+		<main>
+			<!-- Home Slider -->
+			<div class="swiper swiper-container"
+				data-swiper-options='{
+                  "slidesPerView": 1,
+                  "spaceBetween": 0,
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "clickable": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-next-01",
+                    "prevEl": ".swiper-prev-01"
+                  },
+                  "autoplay": {
+                    "delay": 10000,
+                    "disableOnInteraction": false
+                  }
+                }'>
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" th:each="event : ${eventList}">
+						<div class="bg-no-repeat bg-cover bg-50 px-8"
+							th:style="'background-image: url(' + ${event.bnph} + ')'">
+							<div class="container">
+								<div class="row min-vh-65 align-items-center py-6">
+<!-- 									<div class="col-lg-6 pe-xl-12"> -->
+<!-- 										<h6 class="fw-500 mb-3 letter-spacing-2">TRENDING NOW</h6> -->
+<!-- 										<h1 class="display-4 fw-600"> -->
+<!-- 											Eat clean & green.<br />Eat Organic. -->
+<!-- 										</h1> -->
+<!-- 										<p class="lead">Lorem ipsum dolor sit amet, consectetur -->
+<!-- 											adipisicing elit, sed do eiusmod tempor aliqua.</p> -->
+<!-- 										<div class="pt-3"> -->
+<!-- 											<a class="btn btn-primary" href="#">Discover More</a> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-arrow-style-01 swiper-next swiper-next-01">
+					<i class="bi bi-chevron-right"></i>
+				</div>
+				<div class="swiper-arrow-style-01 swiper-prev swiper-prev-01">
+					<i class="bi bi-chevron-left"></i>
+				</div>
+				<div class="swiper-pagination swiper-pagination-white"></div>
+			</div>
+			<!-- End Home Slider -->
+
+
+			<!-- Deal section -->
+			<section class="section">
+			
+
+				<div class="container">
+				<div class="shop-top-bar d-flex pb-3" style="text-align: center;">
+					<div class="layout-change ms-2" th:each="tag:${fldList}">
+						<a class="btn btn-sm"  th:href="@{/silhyun/ptgTag/{fdCd}(fdCd = ${tag.fdCd})}" align="center"> 
+						<i class=""
+							th:text="'# '+${tag.fldName}">#태그</i></a>
+					</div>
+				</div>
+					<!-- 태그  -->
+					<div class="row">
+						<div class="col-lg-4 my-2">
+							<h5 class="mb-4"  style="text-align: center;">실시간 작가 리뷰</h5>
+							<div class="product-card-4" th:each="rev : ${revList}">
+								<div class="product-card-image" >
+									<a th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId=${rev.ptgId})}"> 
+									<img th:src="${rev.phoRt}" title="" alt="" style="width: 120px;height: 140px">
+									</a>
+								</div>
+								<div class="product-card-info">
+									<h6 class="product-title">
+										<a th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId=${rev.ptgId})}" tabindex="0">[[${rev.id}]]</a>
+									</h6>
+									<div class="product-price">
+										<div class="rating-star text">
+											<i class="bi bi-star-fill active"
+												th:each="num : ${#numbers.sequence(0, rev.star-1)}"></i>
+										</div>
+										<span class="text-primary rev">[[${rev.cntn}]]</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 my-2">
+							<h5 class="mb-4 "  style="text-align: center;">실시간 클래스 리뷰</h5>
+							<div class="product-card-4" th:each="clas : ${clasList}"
+								style="width: 100%;">
+								<div class="product-card-image">
+									<a th:href="@{/silhyun/classes/classesInfo(classNum=${clas.classNum})}"> <img th:src="${clas.phoRt}" title="" alt="" style="width: 120px;height: 140px">
+									</a>
+								</div>
+								<div class="product-card-info">
+									<h6 class="product-title">
+										<a th:href="@{/silhyun/classes/classesInfo(classNum=${clas.classNum})}" tabindex="0">[[${clas.id}]]</a>  
+									</h6>
+									<div class="product-price">
+										<div class="rating-star text">
+											<i class="bi bi-star-fill active"
+												th:each="num : ${#numbers.sequence(0, clas.star-1)}"></i>
+										</div>
+										<span class="text-primary clas">[[${clas.cntn}]]</span>
+									</div>
+								</div>
+							</div>
+						</div>		
+						<div class="col-lg-4 my-2">
+							<h5 class="mb-4" style="text-align: center;">베스트 리뷰</h5>
+							<div class="product-card-4" th:each="best : ${bestList}"
+								style="width: 100%;">
+									<div class="product-card-3">
+									
+									<div class="badge-ribbon">
+										<span class="badge bg-danger">BEST</span>
+									</div>
+									<div class="product-media">
+										<a th:if="${best.ctgr} == 'A'" th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId=${best.ptgId})}"> <img th:src="${best.phoRt}" title="" alt=""
+											style="width: 120px; height: 140px">
+										</a>
+										<a th:if="${best.ctgr} == 'C'" th:href="@{/silhyun/classes/classesInfo(classNum=${best.ptgId})}" > <img th:src="${best.phoRt}" title="" alt=""
+											style="width: 120px; height: 140px">
+										</a>
+									</div>
+									</div>
+								<div class="product-card-info">
+									<h6 class="product-title">
+										<a th:if="${best.ctgr} == 'A'" th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId=${best.ptgId})}" tabindex="0">[[${best.id}]]</a>
+										<a th:if="${best.ctgr} == 'C'" th:href="@{/silhyun/classes/classesInfo(classNum=${best.ptgId})}" tabindex="0">[[${best.id}]]</a>
+									</h6>
+									<div class="product-price">
+										<div class="rating-star text">
+											<i class="bi bi-star-fill active"
+												th:each="num : ${#numbers.sequence(0, best.star-1)}"></i>
+										</div>
+										<span class="text-primary clas">[[${best.cntn}]]</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="pt-3">
+							<a class="btn btn-primary" href="/silhyun/reviewAllList">실시간 리뷰 더 보기</a>
+						</div><br>
+					</div>
+				</div>
+			</section>
+			<!-- End Deal section -->
+
+			<!-- 핫작가 -->
+			<section class="section pt-0">
+				<div class="container">
+					<div class="row justify-content-center section-heading">
+						<div class="row justify-content-center section-heading">
+							<div class="col-lg-6 text-center">
+								<h2 class="h3 m-0 sm-title-01">HOT 작가</h2>
+							</div>
+						</div>
+					</div>
+					<div class="row g-3 g-lg-4">
+						<!-- Product Box -->
+						<div class="col-6 col-lg-3" th:each="hot : ${hotList}">
+							<div class="product-card-1" style="width: 300px;height: 300px;">
+								<div class="product-card-image">
+									<div class="badge-ribbon">
+										<span class="badge bg-danger">HOT</span>
+									</div>
+
+									<div class="product-media">
+										<a
+											th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId = ${hot.ptgId})}">
+											<img class="img-fluid" th:src="${hot.profile}" title=""
+											alt="사진 없음" style="width: 300px;height: 300px;">
+										</a>
+									</div>
+								</div>
+							</div><br>
+							<div class="product-card-info" style="text-align: center;">
+								<!--작가 이름-->
+								<h6 class="product-title">
+									<a class="ptgtitle" th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId = ${hot.ptgId})}" th:text="${hot.name}"></a>
+								</h6>
+							</div>
+						</div>
+						<!-- End Product Box -->
+					</div>
+				</div>
+			</section>
+			<!-- End Product section -->
+			<!-- 응애작가-->
+			<section class="section pt-0">
+				<div class="container">
+					<div class="row justify-content-center section-heading">
+						<div class="row justify-content-center section-heading">
+							<div class="col-lg-6 text-center">
+								<h2 class="h3 m-0 sm-title-01">NEW 작가</h2>
+							</div>
+						</div>
+					</div>
+					<div class="row g-3 g-lg-4">
+						<!-- Product Box -->
+						<div class="col-6 col-lg-3" th:each="list : ${newList}">
+							<div class="product-card-1" style="width: 300px;height: 300px">
+								<div class="product-card-image">
+									<div class="badge-ribbon">
+										<span class="badge bg-danger">NEW</span>
+									</div>
+									<div class="product-media">
+										<a th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId = ${list.ptgId})}">
+											<img class="img-fluid" th:src="${list.profile}" title=""
+											alt="사진 없음" style="width: 300px;height: 300px">
+										</a>
+									</div>
+								</div>
+							</div><br>
+							<div class="product-card-info" style="text-align: center;">
+								<!--작가 이름-->
+								<h6 class="product-title">
+									<a class="ptgtitle"th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId = ${list.ptgId})}" th:text="${list.name}"></a>
+								</h6>
+							</div>
+						</div>
+						<!-- End Product Box -->
+					</div>
+				</div>
+			</section>
+			<!-- End Product section -->
+
+			<!-- Section -->
+			<section class="section pt-0">
+				<div class="container">
+					<div class="row justify-content-center section-heading">
+						<div class="col-lg-6 text-center">
+							<p class="fs-6 m-0">Read Today’s News.</p>
+							<h3 class="h2 mt-2 mb-0">둘러보기</h3>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4 my-3" th:each="port : ${portList}">
+							<div class="hover-scale text-center">
+								<div class="hover-scale-in position-relative">
+									<a th:href="@{/silhyun/portfolio/{ptgId}(ptgId=${port.ptgId})}"> 
+									<img class="img-fluid" th:src="${port.phoRt}"
+										title="" alt="사진 없음" style="width: 390px;height: 300px">
+									</a>
+								</div>
+								<div class="product-card-info" style="text-align: center;">
+									<h6 class="product-title">
+										<a class="ptgtitle" href="#"></a>
+									</h6>
+								</div>
+							</div>
+						</div>
+						<div class="pt-3">
+							<a class="btn btn-primary" href="/silhyun/around">포트폴리오 더 보기</a>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Section -->
+		</main>
+		<!-- End Main -->
+	<!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+	<!-- script start -->
+
+	<!--bootstrap-->
+	<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- slick carousel -->
+	<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+	<!-- magnific -->
+	<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+	<!-- isotope -->
+	<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+	<!-- count-down -->
+	<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+	<!-- count-down -->
+	<script src="/vendor/jarallax/jarallax-all.js"></script>
+	<!-- Theme Js -->
+	<script src="/js/custom.js"></script>
+	<script src="/js/theme.js"></script>
+	<!-- End script start -->
+	<script>
+	
+		//작가 리뷰 말 줄임표
+		$('.text-primary.rev').each(function(idx,item){
+			let opTtl = $(item).text()
+                function cutByMaxStr(str, maxLength) {  
+                if (str == undefined || str == null) {
+                    return '';
+                }
+
+                if (str.length > maxLength) {
+                    str = str.substring(0, maxLength) + '...'; 
+                    // str을 maxLength 길이만큼 자르고 '.....' 을 뒤에 붙인다
+                }
+                return str;
+                 }
+            let text = cutByMaxStr(opTtl,35)
+			$(item).text(text)
+            
+		})
+
+		//클래스 리뷰 말 줄임표
+		$('.text-primary.clas').each(function(idx,item){
+			let opTtl = $(item).text()
+                function cutByMaxStr(str, maxLength) {  
+                if (str == undefined || str == null) {
+                    return '';
+                }
+
+                if (str.length > maxLength) {
+                    str = str.substring(0, maxLength) + '...'; 
+                    // str을 maxLength 길이만큼 자르고 '.....' 을 뒤에 붙인다
+                }
+                return str;
+                 }
+            let text = cutByMaxStr(opTtl,35)
+			$(item).text(text)
+		})
+		
+	</script>
+	</div>
+</body>
+</html>

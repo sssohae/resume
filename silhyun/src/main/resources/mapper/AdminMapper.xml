@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.member.map.AdminMapper">
+
+
+<!-- 대쉬보드 -->
+<!-- 승인 대기 count-->
+<select id="cfmCnt" resultType="map">
+SELECT 
+	to_char(sysdate,'YYYY/MM/DD') as "sysDate",
+  (SELECT COUNT(*) FROM photographer WHERE cfm_cd = 'O') AS "ptgCf",
+  (SELECT COUNT(*) FROM studio WHERE cfm_cd = 'O') AS "stdCf",
+  (SELECT COUNT(*) FROM class WHERE cfm_cd = 'O') AS "classCf",
+  (SELECT COUNT(*) FROM event WHERE cfm_cd = 'O') AS "eventCf"
+FROM dual
+</select>
+
+<!-- 처리 대기 문의 count -->
+<select id="qstCnt" resultType="int">
+select count(*)
+from qst
+where rply_sta = 'N'
+</select>
+ 
+<!-- 지난 2주간 매출 -->
+<select id="lastSales" resultType="map">
+SELECT
+  to_char(ord_date, 'yyyy-MM-dd') as "date",
+  nvl(SUM(ord_pri),0) as "sales"
+FROM
+  payment
+WHERE
+  ord_date BETWEEN trunc(sysdate-13) AND trunc(sysdate)
+GROUP BY
+  to_char(ord_date, 'yyyy-MM-dd')
+ORDER BY
+  to_char(ord_date, 'yyyy-MM-dd') ASC
+</select>
+
+<!-- 최신 결제내역 5 -->
+<select id="recentBuy" resultType="map">
+  <![CDATA[
+    SELECT 
+      CASE WHEN p.ctgr = 'A' THEN '예약' ELSE '클래스' END AS "ctgr",
+      CASE WHEN p.ctgr = 'A' THEN p.ctgr_num ELSE 
+      (SELECT c.ptg_id FROM class c WHERE c.class_num = p.ctgr_num) END AS "ctgrNum", 
+      p.id AS "id", 
+      to_char(p.paym_pri, 'FM999,999,999') AS "pri", 
+      TO_CHAR(p.ord_date,'YYYY/MM/DD') AS "date"
+    FROM payment p
+    ORDER BY p.ord_date DESC
+    FETCH FIRST 5 ROWS ONLY
+  ]]>
+</select>
+
+<!-- 최신 댓글 3-->
+<select id="recentCom" resultType="map">
+SELECT 
+  c.id as "id", 
+  CASE 
+    WHEN c.ctgr = 'A' THEN '예약'
+    WHEN c.ctgr = 'P' THEN '포트폴리오'
+    ELSE '클래스'
+  END AS "ctgr", 
+  c.cntn as "cntn", 
+  to_char(c.com_date,'YYYY/MM/DD') as "comDate",
+  (select m.profile from member m where m.id = c.id) as "cProfile"
+FROM 
+  commment c
+order by c.com_date Desc
+FETCH FIRST 3 ROWS ONLY
+</select>
+
+<!-- 최신 가입 5 -->
+<select id="recentJoin" resultType="co.yedam.silhyun.member.vo.MemberVO">
+select id, profile, join_date
+from member
+order by join_date Desc
+FETCH FIRST 5 ROWS ONLY
+</select>
+
+
+
+<!-- 종합승인관리 -->
+<!-- 승인신청 카운트 -->
+<select id="countNeedCfm" resultType="map">
+SELECT 
+ 	to_char(sysdate,'YYYY/MM/dd') as "sysdate",
+    (SELECT COUNT(*) FROM photographer WHERE cfm_cd = 'O') AS "pCfm",
+    (SELECT COUNT(*) FROM studio WHERE cfm_cd = 'O') AS "sCfm",
+    (SELECT COUNT(*) FROM class WHERE cfm_cd = 'O') AS "cCfm",
+    (SELECT COUNT(*) FROM event WHERE cfm_cd = 'O') AS "eCfm"
+    from dual
+</select>
+
+<!-- 기록가 승인신청 리스트 -->
+<select id="ptgCfmList" resultType="map">
+select  ptg_id as "ptgId", nvl(st_id,'소속없음')as "stId",  find_cd(region_cd) as "regionCd", regi_date as "regiDate", crn as "crn", 
+nvl(shot_place,'장소미정')as "shotPlace", nvl(itr,'소개미정') as "itr", nvl(inst,'인스타없음') as "inst", nvl(work_day,'근무일미정')as "workDay"
+from photographer
+where cfm_cd = 'O'
+</select>
+
+<!--기록가 승인신청 select-->
+<select id="ptgSelect" parameterType="String" resultType="map">
+select  ptg_id as "ptgId", nvl(st_id,'소속없음')as "stId",  		
+find_cd(region_cd) as "regionCd", 
+nvl(shot_place,'장소미정')as "shotPlace", nvl(itr,'소개미정') as "itr", nvl(inst,'인스타없음') as "inst", nvl(work_day,'근무일미정')as "workDay",
+(select nvl(profile,'프로필없음') from member where id = ptg_id) as "profile"
+from photographer
+where cfm_cd = 'O' and ptg_id = #{ptgId}
+</select>
+
+<!-- 기록가 승인신청 승인 -->
+<update id="ptgAccept" parameterType="String">
+UPDATE Photographer
+SET cfm_cd = 'Y',
+accp_date = sysdate
+WHERE ptg_id = #{ptgId}
+</update>
+
+<!-- 기록가 승인신청 반려 -->
+<update id="noPtgAccept" parameterType="String">
+UPDATE Photographer
+SET cfm_cd = 'N'
+WHERE ptg_id = #{ptgId}
+</update>
+
+<!-- 사진관 승인신청 리스트 -->
+<select id="stdCfmList" resultType="map">
+select  
+st_id as "stId", st_name as "stName",
+find_cd(region_cd) as "regionCd",  crn as "crn", addr as "addr", det_addr as "detAddr",
+st_itr as "stItr", nvl(tel,'연락처없음') as "tel", regi_date as "regiDate"
+from Studio
+where cfm_cd = 'O'
+</select>
+
+<!--사진관 승인신청 select-->
+<select id="stdSelect" parameterType="String" resultType="map">
+select  
+st_id as "stId", st_name as "stName",
+find_cd(region_cd) as "regionCd", crn as "crn", addr as "addr", det_addr as "detAddr",
+st_itr as "stItr", nvl(tel,'연락처없음') as "tel", regi_date as "regiDate", st_profile as "profile"
+from Studio
+where st_id = #{stId}
+</select>
+
+<!-- 사진관 승인신청 승인 -->
+<update id="stdAccept" parameterType="String">
+UPDATE Studio
+SET cfm_cd = 'Y',
+accp_date = sysdate
+WHERE st_id = #{stId}
+</update>
+
+<!-- 사진관 승인신청 반려 -->
+<update id="noStdAccept" parameterType="String">
+UPDATE Studio
+SET cfm_cd = 'N'
+WHERE st_id = #{stId}
+</update>
+
+
+<!-- 클래스 승인신청 리스트 -->
+<select id="classCfmList" resultType="map">
+select  
+ptg_id as "ptgId", cla_ttl as "claTtl", class_num as "classNum",
+ 		CASE 
+ 		WHEN cla_cd = 'CL2' THEN '온라인' else '현장' end as "claCd", 
+ 		    nvl(to_char(cla_dt, 'YYYY"년" MM"월" DD"일"'),'없음') as "claDt", 
+    CASE
+      WHEN cla_time = '' THEN '시간미정'
+      WHEN cla_time  <![CDATA[ < ]]>=12 THEN '오전 '|| cla_time || '시'
+      ELSE '오후 '|| to_char(to_number(cla_time)-12) || '시'
+    END AS "claTime", 
+    nvl(cla_place,'없음') as "claPlace",
+ to_char(cla_pri, 'FM999,999,999') as "claPri", regi_date as "regiDate"
+from class
+where cfm_cd = 'O'
+</select>
+
+<!--클래스 승인신청 select-->
+<select id="classSelect" parameterType="String" resultType="map">
+  select  
+    ptg_id as "ptgId", cla_ttl as "claTtl", class_num as "classNum",
+    CASE 
+      WHEN cla_cd = 'CL2' THEN '온라인' else '현장' end as "claCd", 
+    cla_desct as "claDesct",  to_char(cla_pri, 'FM999,999,999') as "claPri", regi_date as "regiDate",
+    nvl(to_char(cla_dt, 'YYYY"년" MM"월" DD"일"'),'없음') as "claDt", 
+    CASE
+      WHEN cla_time = '' THEN '시간미정'
+      WHEN cla_time  <![CDATA[ < ]]>=12 THEN '오전 '|| cla_time || '시'
+      ELSE '오후 '|| to_char(to_number(cla_time)-12) || '시'
+    END AS "claTime", 
+    nvl(cla_place,'없음') as "claPlace", cla_desct as "claDesct", 
+    nvl(ydt,'0') as "ydt", nvl(ypsn,'0') as "ypsn", nvl(rcnt,'0') as "rcnt", nvl(cla_cnt,'0') as "claCnt",
+    thni as "thni", ot as "ot" 
+  from class
+  WHERE class_num = #{classNum}
+</select>
+
+<!-- 클래스 승인신청 승인 -->
+<update id="classAccept" parameterType="String">
+UPDATE class
+SET cfm_cd = 'Y',
+accp_dt = sysdate
+WHERE class_num = #{classNum}
+</update>
+
+<!-- 클래스 승인신청 반려 -->
+<update id="noClassAccept" parameterType="String">
+UPDATE class
+SET cfm_cd = 'N'
+WHERE class_num = #{classNum}
+</update>
+
+<!-- 이벤트 승인신청 리스트 -->
+<select id="getEventOList" resultType="map">
+    <![CDATA[
+SELECT nvl(e.name,'이름없음') as "name", e.id as "id", nvl(e.term, '0')  as "term", 
+    e.start_date as "startDate", e.bnph_sta as "bnphSta", e.cpn_pub_sta as "cpnPubSta",
+    e.event_num as "eventNum", e.regi_dt as "regiDate", e.event_num as "eventNum",
+    e.regi_dt as "regiDate"
+FROM event e
+where e.cfm_cd = 'O'
+    ]]>
+</select>
+
+<!-- 이벤트 승인신청 승인 -->
+<update id="eventAccept" parameterType="String">
+UPDATE EVENT
+SET cfm_cd = 'Y',
+accp_dt = sysdate
+WHERE event_num = #{eventNum}
+</update>
+
+<!-- 이벤트 승인신청 반려 -->
+<update id="noEventAccept" parameterType="String">
+UPDATE EVENT
+SET cfm_cd = 'N'
+WHERE event_num = #{eventNum}
+</update>
+
+
+
+
+
+
+<!-- 회원전체관리 -->
+<!-- 회원 리스트 -->
+	<select id="memberList" parameterType="MemberVO" resultType="co.yedam.silhyun.member.vo.MemberVO">
+		select * 
+		from member
+		order by join_date desc
+	</select>
+
+	<select id="ptgList" parameterType="PhotographerVO" resultType="map">
+		select ptg_id as "ptgId", st_id as "stId", 
+find_cd(region_cd) as "regionCd", 
+        crn as "crn", nvl(inst,'인스타없음') as "inst",
+        work_day as "workDay", case when ptg_cd ='S' then 'X' else 'O' end as "ptgCd", accp_date as "accpDate"
+		from photographer
+		order by accp_date desc
+	</select>
+
+	<select id="stdList" parameterType="StudioVO" resultType="co.yedam.silhyun.member.vo.StudioVO">
+		select *
+		from studio
+		order by accp_date desc
+	</select>
+
+	<select id="adminInfo" parameterType="MemberVO" resultType="co.yedam.silhyun.member.vo.MemberVO">
+		select * from member
+		where mem_cd = 'M0'
+	</select>
+	
+	<select id="qtList" parameterType="QuitVO" resultType="co.yedam.silhyun.mypage.vo.QuitVO">
+		select *
+		from quit
+		order by quit_date
+	</select>
+	
+	<select id="belongPtg" parameterType="MemberVO" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		select *
+		from photographer
+		where st_id = #{st_id}
+	</select>
+	
+<!-- 신규 보여주기 -->
+	<select id="todayMem" parameterType="MemberVO" resultType="co.yedam.silhyun.member.vo.MemberVO">
+		select * 
+		from member
+		where to_char(join_date,'YY/MM/DD') = to_char(SYSDATE,'YY/MM/DD')
+		order by join_date
+	</select>
+	
+	<select id="todayPtg" parameterType="PhotographerVO" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		select * 
+		from photographer
+		where to_char(regi_date,'YY/MM/DD') = to_char(SYSDATE,'YY/MM/DD')
+		order by accp_date
+	</select>
+	
+	<select id="todayStd" parameterType="StudioVO" resultType="co.yedam.silhyun.member.vo.StudioVO">
+		select * 
+		from studio
+		where to_char(regi_date,'YY/MM/DD') = to_char(SYSDATE,'YY/MM/DD')
+		order by accp_date
+	</select>
+
+
+<!-- 비활성화 -->
+<!-- 회원 비활성화 -->
+	<update id="disableMember">
+		update member
+		set
+		mem_cd = 'M4'
+		where id = #{id }
+	</update>
+	
+	<!-- 회원 활성화 -->
+	<update id="ableMember">
+		update member
+		set
+		mem_cd = 'M1'
+		where id = #{id }
+	</update>
+	
+<!-- 수정 -->
+<update id="updateAdmin">
+
+	UPDATE MEMBER
+	<set>
+	<if test="name!=null and !name.equals('')">name = #{name },</if>
+	<if test="email!=null and !email.equals('')">email = #{email },</if>
+	<if test="pwd!=null and !pwd.equals('')">pwd = #{pwd },</if>
+	<if test="tel!=null and !tel.equals('')">tel = #{tel },</if>
+	<if test="birthDate!=null and !birthDate.equals('')">birth_date = #{birthDate },</if>
+	<if test="genCd!=null and !genCd.equals('')">gen_cd = #{genCd }</if>
+	</set>
+	WHERE mem_cd = 'M0' 
+
+</update>
+
+
+<update id="updateMember">
+
+	UPDATE MEMBER
+	<set>
+	<if test="name!=null and !name.equals('')">name = #{name },</if>
+	<if test="email!=null and !email.equals('')">email = #{email },</if>
+	<if test="tel!=null and !tel.equals('')">tel = #{tel },</if>
+	<if test="birthDate!=null and !birthDate.equals('')">birth_date = #{birthDate },</if>
+	<if test="genCd!=null and !genCd.equals('')">gen_cd = #{genCd },</if>
+	<if test="memCd!=null and !memCd.equals('')">mem_cd = #{memCd },</if>
+	</set>
+	WHERE id = #{id } 
+
+</update>
+
+
+
+<!-- 그래프 -->
+
+
+<!-- 탈퇴그래프 -->
+<select id="quitGraph" resultType="HashMap">
+  SELECT 
+    COUNT(CASE WHEN quit_cd = 'T0' THEN 1 END) AS "운영자에 의한 강제퇴장",
+    COUNT(CASE WHEN quit_cd = 'T1' THEN 1 END) AS "기록삭제",
+    COUNT(CASE WHEN quit_cd = 'T2' THEN 1 END) AS "이용장애",
+    COUNT(CASE WHEN quit_cd = 'T3' THEN 1 END) AS "타사이트 선호",
+    COUNT(CASE WHEN quit_cd = 'T4' THEN 1 END) AS "사용빈도 낮음",
+    COUNT(CASE WHEN quit_cd = 'T5' THEN 1 END) AS "콘텐츠불만",
+    COUNT(CASE WHEN quit_cd = 'T6' THEN 1 END) AS "기타"
+  FROM quit
+  order by quit_cd
+</select>
+
+
+<!-- 랭킹 -->
+<!-- 기록가 -->
+<select id="ptgRank" resultType="map">
+select ctgr_num as "ctgrNum", count(*) as cnt, 
+			(select profile from member where id= ctgr_num) as profile
+from payment 
+where ctgr = 'A'
+group by ctgr_num
+order by cnt Desc
+FETCH FIRST 5 ROWS ONLY
+</select>
+
+<!-- 클래스 -->
+<select id="classRank" resultType="map">
+SELECT c.cla_ttl AS "classTitle",
+       COUNT(*) AS "count",
+       c.thni AS "profile",
+       c.ptg_id AS "ptgId"
+FROM payment p
+JOIN class c ON p.ctgr_num = c.class_num
+WHERE p.ctgr = 'C'
+GROUP BY c.class_num, c.cla_ttl, c.thni, c.ptg_id
+ORDER BY "count" DESC
+FETCH FIRST 5 ROWS ONLY
+</select>
+
+
+<!-- 분야그래프/작가분포  -->
+<select id="ptgGraph" resultType="HashMap">
+  SELECT 
+    COUNT(CASE WHEN fd_cd = 'B1' THEN 1 END) AS "제품",
+    COUNT(CASE WHEN fd_cd = 'B2' THEN 1 END) AS "음식",
+    COUNT(CASE WHEN fd_cd = 'B3' THEN 1 END) AS "행사",
+    COUNT(CASE WHEN fd_cd = 'B4' THEN 1 END) AS "건축/인테리어",
+    COUNT(CASE WHEN fd_cd = 'B5' THEN 1 END) AS "패션",
+    COUNT(CASE WHEN fd_cd = 'B6' THEN 1 END) AS "프로필/화보",
+    COUNT(CASE WHEN fd_cd = 'B7' THEN 1 END) AS "웨딩",
+    COUNT(CASE WHEN fd_cd = 'B8' THEN 1 END) AS "일반스냅",
+    COUNT(CASE WHEN fd_cd = 'B9' THEN 1 END) AS "반려동물"
+  FROM FIELD
+  order by fd_cd
+</select>
+
+
+
+<sql id="cri">
+		<where> 	
+		<if test="type == 'id'">and id LIKE '%'||#{keyword }||'%'</if>
+		<if test="type == 'name'">and name LIKE '%'||#{keyword }||'%'</if>
+		<if test="type == 'email'">and email LIKE '%'||#{keyword }||'%'</if>
+		<if test="type == 'tel'">and tel LIKE '%'||#{keyword }||'%'</if>
+		<if test="type == 'joinDate'">and join_date LIKE '%'||#{keyword }||'%'</if>
+		<if test="type == 'pointSum'">and point_sum >= #{keyword }</if>
+		
+		<if test="memCd != null and memCd !=''">and mem_cd =#{memCd }</if>
+		<if test="birthDate != null and birthDate != ''">and birth_date = to_date(#{birthDate },'yyyy-MM-dd')</if>
+		<if test="genCd !=null and genCd != ''">and gen_cd =#{genCd}</if>
+		</where>
+</sql>
+
+
+
+
+
+
+
+
+
+<!-- 회원전체리스트 페이징 -->
+
+<select id="getListMember" resultType="co.yedam.silhyun.member.vo.MemberVO">
+	 select * from( select rownum rn, a.* from( 
+ 
+ 			select  ID,
+					NAME,
+					PWD,
+					BIRTH_DATE,
+					GEN_CD,
+					find_cd(gen_cd) GEN_CD_nm,
+					EMAIL,
+					TEL,
+					RCOMR,
+					MEM_CD,
+					find_cd(mem_cd) MEM_CD_nm,
+					TOKEN,
+					RE_TOKEN,
+					LOGIN_CD,
+					find_cd(login_cd) login_cd_nm,
+					POINT_SUM,
+					PROFILE,
+					JOIN_DATE 
+ 			from member		
+ 		<include refid="cri"></include>
+		<if test="type == 'pointSum'">
+		 order by point_sum DESC	
+		 </if>
+	<![CDATA[	
+	 	) a where rownum <= #{pageNum} * #{amount}) b where rn > (#{pageNum}-1) * #{amount}
+	 ]]>
+	 order by join_date desc
+</select>
+
+<select id="getTotalCount" resultType="int">
+	select count(*) 
+	from member
+<include refid="cri"></include>
+
+</select>
+
+<!-- 기록가리스트 페이징 -->
+<select id="getListPtg" resultType="map">
+		select ptg_id as "ptgId", nvl(st_id,'없음') as "stId", 
+find_cd(region_cd) as "regionCd", 
+        crn as "crn", nvl(inst,'인스타없음') as "inst",
+        work_day as "workDay", case when ptg_cd ='S' then 'X' else 'O' end as "ptgCd", accp_date as "accpDate"
+
+	 
+	 from( select rownum rn, a.* from( 
+ 
+ 			select * 
+ 			from photographer	
+	<if test="type == 'all'">WHERE 1 = 1</if>
+	<if test="type == 'ptgId'">WHERE ptg_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'stId'">WHERE st_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regionCd'">WHERE region_cd LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'crn'">WHERE crn LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'inst'">WHERE inst LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'workDay'">WHERE work_day LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'accpDate'">WHERE accp_date LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'ptgCd'">WHERE ptg_cd LIKE '%'||#{keyword }||'%'</if>
+
+	<![CDATA[	
+	 	) a where rownum <= #{pageNum} * #{amount}) b where rn > (#{pageNum}-1) * #{amount}
+	 ]]>
+</select>
+
+<select id="getTotalPtg" resultType="int">
+	select count(*) 
+	from photographer
+	<if test="type == 'all'">WHERE 1 = 1</if>
+	<if test="type == 'ptgId'">WHERE ptg_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'stId'">WHERE st_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regionCd'">WHERE region_cd LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'crn'">WHERE crn LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'inst'">WHERE inst LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'workDay'">WHERE work_day LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'accpDate'">WHERE accp_date LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'ptgCd'">WHERE ptg_cd LIKE '%'||#{keyword }||'%'</if>
+
+</select>
+
+
+
+<!-- 사진관리스트 페이징 -->
+<select id="getListStd" resultType="map">
+	 select 
+	 st_id as "stId", st_name as "stName", ceo_name as "ceoName", nvl(tel,'연락처없음') as "tel", addr as "addr",
+		find_cd(region_cd) as "regionCd", addr as "addr ", crn as "crn", accp_date as "accpDate", st_cd as "stCd"
+	 
+	 from( select rownum rn, a.* from( 
+ 
+ 			select * 
+ 			from studio 
+ 			where cfm_cd = 'Y'	
+	<if test="type == 'all'">and 1 = 1</if>
+	<if test="type == 'stId'">and st_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'stName'">and st_name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'ceoName'">and ceo_name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'tel'">and tel LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regionCd'">and region_cd LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'addr'">and addr LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'crn'">and crn LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regiDate'">and regi_date LIKE '%'||#{keyword }||'%'</if>
+
+	<![CDATA[	
+	 	) a where rownum <= #{pageNum} * #{amount}) b where rn > (#{pageNum}-1) * #{amount}
+	 ]]>
+</select>
+
+<select id="getTotalStd" resultType="int">
+	select count(*) 
+ 			from studio 
+ 			where cfm_cd = 'Y'	
+	<if test="type == 'all'">and 1 = 1</if>
+	<if test="type == 'stId'">and st_id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'stName'">and st_name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'ceoName'">and ceo_name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'tel'">and tel LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regionCd'">and region_cd LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'addr'">and addr LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'crn'">and crn LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'regiDate'">and regi_date LIKE '%'||#{keyword }||'%'</if>
+
+</select>
+
+<!-- 이벤트리스트 페이징 -->
+<select id="getListEvent" resultType="co.yedam.silhyun.event.vo.EventVO">
+	 select * from( select rownum rn, a.* from( 
+ 			select * 
+ 			from event 
+	<if test="type == 'all'">where 1 = 1</if>
+	<if test="type == 'name'">where name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'id'">where id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'term'">where term LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'startDate'">where start_date LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'bnphSta'">where bnph_sta LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'cpnPubSta'">where cpn_pub_sta LIKE '%'||#{keyword }||'%'</if>
+
+	<![CDATA[	
+	 	) a where rownum <= #{pageNum} * #{amount}) b where rn > (#{pageNum}-1) * #{amount}
+	 ]]>
+</select>
+
+<select id="getTotalEvent" resultType="int">
+	select count(*) 
+ 			from event 
+	<if test="type == 'all'">where 1 = 1</if>
+	<if test="type == 'name'">where name LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'id'">where id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'term'">where term LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'startDate'">where start_date LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'bnphSta'">where bnph_sta LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'cpnPubSta'">where cpn_pub_sta LIKE '%'||#{keyword }||'%'</if>
+</select>
+
+
+
+
+<!-- 탈퇴리스트 페이징 -->
+
+<select id="getListQuit" resultType="map">
+ 			select id as "id", quit_date as "quitDate", 
+ 		find_cd(quit_cd) as "quitCd", nvl(deta_resn,'없음') as "detaResn"
+	 from( select rownum rn, a.* from( 
+ 
+ 			select * 
+ 			from quit		
+    <if test="type == 'all'">WHERE 1 = 1</if>
+      <if test="type == 'id'">WHERE id LIKE '%'||#{keyword}||'%'</if>
+      <if test="type == 'quitDate'">WHERE quit_date LIKE '%'||#{keyword}||'%'</if>
+      <if test="type == 'quitCd'">
+        WHERE quit_cd = 
+        CASE 
+          WHEN #{keyword} = '기록삭제' THEN 'T1'
+          WHEN #{keyword} = '이용장애' THEN 'T2'
+          WHEN #{keyword} = '타사이트 선호' THEN 'T3'
+          WHEN #{keyword} = '사용빈도 낮음' THEN 'T4'
+          WHEN #{keyword} = '콘텐츠불만' THEN 'T5'
+          WHEN #{keyword} like '%'||'운영자'||'%' THEN 'T0'
+          ELSE #{keyword}
+        END
+      </if>
+	
+	<![CDATA[	
+	 	) a where rownum <= #{pageNum} * #{amount}) b where rn > (#{pageNum}-1) * #{amount}
+	 ]]>
+</select>
+
+
+<select id="getTotalQuit" resultType="int">
+	select count(*) 
+	from quit
+	<if test="type == 'all'">WHERE 1 = 1</if>
+	<if test="type == 'id'">WHERE id LIKE '%'||#{keyword }||'%'</if>
+	<if test="type == 'quitDate'">WHERE quit_date LIKE '%'||#{keyword }||'%'</if>
+      <if test="type == 'quitCd'">
+        WHERE quit_cd = 
+        CASE 
+          WHEN #{keyword} = '기록삭제' THEN 'T1'
+          WHEN #{keyword} = '이용장애' THEN 'T2'
+          WHEN #{keyword} = '타사이트 선호' THEN 'T3'
+          WHEN #{keyword} = '사용빈도 낮음' THEN 'T4'
+          WHEN #{keyword} = '콘텐츠불만' THEN 'T5'
+          WHEN #{keyword} like '%'||'운영자'||'%' THEN 'T0'
+          ELSE #{keyword}
+        END
+      </if>
+	<if test="type == 'detaResn'">WHERE deta_resn LIKE '%'||#{keyword }||'%'</if>
+</select>
+
+
+
+
+<!-- 이벤트관리페이지. 이벤트 목록 가져오기. 종료 포함-->
+<select id="getEventList" resultType="map">
+    <![CDATA[
+SELECT nvl(e.name,'이름없음') as "name", e.id as "id", nvl(e.term, '0')  as "term", 
+    e.start_date as "startDate", e.bnph_sta as "bnphSta", e.cpn_pub_sta as "cpnPubSta",
+    e.event_num as "eventNum",
+    CASE 
+        WHEN e.start_date > SYSDATE THEN '진행예정'
+        WHEN e.start_date <= SYSDATE AND SYSDATE <= e.start_date + e.term THEN '진행중'
+        ELSE '종료'    
+    END AS "eventStt"
+FROM event e
+where e.start_date+nvl(e.term,0) > sysdate
+and e.cfm_cd = 'Y'
+    ]]>
+</select>
+
+<!-- 이벤트관리페이지. 이벤트 목록 가져오기. 종료 제외-->
+<select id="getEventAllList" resultType="map">
+    <![CDATA[
+SELECT nvl(e.name,'이름없음') as "name", e.id as "id", nvl(e.term, '0')  as "term", 
+    e.start_date as "startDate", e.bnph_sta as "bnphSta", e.cpn_pub_sta as "cpnPubSta",
+    e.event_num as "eventNum",
+    CASE 
+        WHEN e.start_date > SYSDATE THEN '진행예정'
+        WHEN e.start_date <= SYSDATE AND SYSDATE <= e.start_date + e.term THEN '진행중'
+        ELSE '종료'    
+    END AS "eventStt"
+FROM event e
+where e.cfm_cd = 'Y'
+    ]]>
+</select>
+
+
+<!-- 이벤트관리페이지. 진행예정, 진행중 카운트 -->
+<select id="getEventCnt" resultType="map">
+  <![CDATA[
+SELECT 
+	to_char(sysdate+1,'YYYY/MM/DD') as "sysDate",
+  COUNT(CASE WHEN e.start_date > SYSDATE THEN 1 END) AS "soon",
+  COUNT(CASE WHEN e.start_date <= SYSDATE AND SYSDATE <= e.start_date + NVL(e.term, 0) THEN 1 END) AS "ing"
+FROM event e
+where e.cfm_cd = 'Y'
+]]>
+</select>
+
+
+<!-- 이벤트관리페이지. 이벤트 자세한 정보 아작스 -->
+<select id="getEventContent" parameterType="String" resultType="co.yedam.silhyun.event.vo.EventVO">
+select *
+from event 
+where event_num = #{eventNum}
+</select>
+
+
+
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.common.map.ReviewMapper">
+
+<select id="reviewList" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+select * from( select rownum rn, a.* from( 
+
+	SELECT r.rev_Num, r.ctgr, r.ctgr_num, r.id, r.star, r.cntn,  r.rev_date , count(p.pho_num) as "phoY"
+	    from photo p right outer join review r 
+	    on p.ctgr_num = r.rev_num and p.ctgr = 'R' and p.used = 'Y'
+	    where r.ctgr = #{ctgr} and r.ctgr_num= #{ctgrNum}
+	    GROUP by r.rev_Num, r.ctgr, r.ctgr_num, r.star, r.cntn, r.id, r.rev_date
+	    <if test='cri.photo == "y"'>having count(p.pho_num)<![CDATA[ > ]]>0</if>
+	    <if test='cri.sort == "n"'>ORDER by to_number(r.rev_num) desc</if>
+	    <if test='cri.sort == "s"'>ORDER by to_number(r.star) desc, to_number(r.rev_num) desc</if>
+	    <if test='cri.sort == "d"'>ORDER by r.rev_date desc, to_number(r.rev_num) desc</if>
+	
+	
+<![CDATA[	
+ 	) a where rownum <= #{cri.pageNum} * #{cri.amount}) b where rn > (#{cri.pageNum}-1) * #{cri.amount}
+ ]]>	
+</select>
+<select id="getTotalCount" resultType="int">
+SELECT count(count(r.rev_Num))
+    from photo p right outer join review r 
+    on p.ctgr_num = r.rev_num and p.ctgr = 'R'
+    where r.ctgr = #{ctgr} and r.ctgr_num= #{ctgrNum}
+    GROUP by r.rev_Num
+   <if test='cri.photo == "y"'>having count(p.pho_num)<![CDATA[ >  ]]>0</if>
+
+</select>
+
+<select id="reivewSelect" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+	select * 
+	from review
+	where rev_num = #{revNum}
+</select>
+
+<insert id="reviewInsert">
+    begin
+		<selectKey keyProperty="revNum" resultType="String" order="BEFORE">
+			SELECT 
+				nvl(MAX(to_number(rev_num)), 0) + 1 AS "revNum"
+			FROM review
+		</selectKey>
+		insert into review
+		values(#{revNum}, #{ctgr}, #{ctgrNum}, #{id}, #{star}, #{cntn}, sysdate, 0, #{ordNum});
+		
+		update payment
+		set rev_sta = 'Y'
+		where ord_num = #{ordNum};
+    end;
+</insert>
+
+<delete id="reviewDelete">
+declare
+	v_ord_num payment.ord_num%type;
+begin
+	select ord_num
+	into v_ord_num
+	from review
+	where rev_num = #{revNum};
+
+	delete from review
+	where rev_num = #{revNum};
+	
+	update payment
+	set rev_sta = 'N'
+	where ord_num = v_ord_num;
+ end;
+</delete>
+
+<select id="ptgStarAvg" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+    select round(avg(star), 1) as "star"
+    from review
+    GROUP by ctgr, ctgr_num
+    HAVING ctgr = #{ctgr} and ctgr_num= #{ctgrNum}
+</select>
+
+<update id="reviewUpdate">
+	update review
+	<set>
+	<if test="star != 0 and star != null">star = #{star},</if>
+	<if test="cntn != '' and cntn != null">cntn = #{cntn}</if>
+	</set>
+	where rev_num = #{revNum}
+</update>
+
+<select id="isReviewCheck" resultType="int">
+	select case when count(*) > 0 then 1 else 0 end "paymentIs"
+	from payment
+	where ctgr = #{ctgr} and ctgr_num = #{ctgrNum} and id = #{id} and rev_sta = 'N' and ord_sta = 'Y'
+</select>
+
+<select id="selectPayInfo" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+select
+<if test='ctgr == "A"'>
+p.ord_num, find_op(s.op_num) as "findOp", m.name, m.profile
+from payment p join selected_op s
+on p.res_num = s.res_num2
+join member m 
+on p.ctgr_num = m.id
+where 
+<if test="id != null and id != ''">p.ctgr = 'A' and p.ctgr_num = #{ctgrNum} and p.id = #{id}  and p.rev_sta = 'N' and p.ord_sta = 'Y'</if>
+<if test='id == null'>p.ord_num = #{ordNum}</if>
+</if>
+
+<if test='ctgr == "C"'>
+p.ord_num, c.cla_ttl, c.ptg_id, c.thni
+from payment p join class c
+on p.ctgr_num = c.class_num
+where 
+<if test="id != null and id != ''">p.ctgr = 'C' and p.ctgr_num = #{ctgrNum} and p.id = #{id}  and p.rev_sta = 'N' and p.ord_sta = 'Y'</if>
+<if test='id == null'>p.ord_num = #{ordNum}</if>
+</if>
+</select>
+
+
+<select id="reviewAllList" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT R.CNTN,R.STAR,P.*,M.ID,M.PROFILE
+		FROM REVIEW R, PHOTO P,MEMBER M
+		WHERE R.REV_NUM = P.CTGR_NUM
+		AND PHO_NUM IN (SELECT MIN(TO_NUMBER(PHO_NUM))FROM  PHOTO WHERE CTGR ='R' GROUP BY CTGR_NUM)
+		AND R.ID = M.ID
+		AND UPPER(P.CTGR) ='R'
+		<if test='vo.ctgr == "A"'>AND UPPER(R.CTGR) ='A'</if>
+		<if test='vo.ctgr == "C"'>AND UPPER(R.CTGR) ='C'</if>
+		ORDER BY R.REV_DATE DESC
+		
+	<![CDATA[	
+	 	) a where rownum <= #{cri.pageNum} * #{cri.amount}) b where rn > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+</select>
+<select id="getAllTotal" resultType="int">
+		SELECT count(*)
+		FROM REVIEW
+		WHERE
+		<if test='ctgr == "A"'>UPPER(CTGR) ='A'</if>
+		<if test='ctgr == "C"'>UPPER(CTGR) ='C'</if>
+		ORDER BY REV_DATE DESC
+</select>
+</mapper>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+<style>
+
+#popup{
+  background-color:white;
+  border :1px solid black;
+  width : 300px;
+  height : 400px;
+  position :fixed;
+  top:0;
+  left:0;
+}
+#btn1{
+  float:right;
+  display: inline;
+  width: 100px;
+  height:30px;
+}
+
+ul {
+  overflow: hidden; /* float 요소를 감싸는 부모 요소의 높이 자동 조절 */
+}
+li {
+  float: left;
+}
+
+</style>
+
+<head>
+<!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description"
+	content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>댓글 대댓글</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/img/favicon.ico">
+<!-- CSS Template -->
+<link href="/css/theme.css" rel="stylesheet">
+</head>
+
+<body>
+<div layout:fragment="content">
+
+	<div class="pt-4 mt-5"> 
+	<!-- 댓글 대댓글 들어가는 곳 -->		
+	<ul class="list-unstyled pt-4 commentBox" id="attch">	
+	</ul>
+	</div>
+	<div class="mt-8 border p-4">
+		<form method="post">
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group mb-3">
+						<label class="form-label rd-input-label" for="contact-message">당신의 댓글 : </label>							
+						<textarea class="form-control" id="contact-message" name="message"
+							style="height: 50px" placeholder="댓글 작성해주세요"></textarea>
+					</div>
+				</div>
+				<div class="col-12">
+					<button class="btn btn-primary" type="button" id="send">게시</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- End Main -->
+
+	<!-- End Footer -->
+	<!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+	<!-- script start -->
+	<!-- jquery -->
+	<script src="/js/jquery-3.5.1.min.js"></script>
+	<!--bootstrap-->
+	<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- slick carousel -->
+	<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+	<!-- magnific -->
+	<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+	<!-- isotope -->
+	<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+	<!-- count-down -->
+	<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+	<!-- count-down -->
+	<script src="/vendor/jarallax/jarallax-all.js"></script>
+	<!-- Theme Js -->
+	<script src="/js/custom.js"></script>
+	<script src="/js/theme.js"></script>
+	<!-- End script start -->
+	
+	<script>
+	$(document).ready(function(){	
+		getCommentList()
+		
+	})
+		
+	
+	$("#send").click(function(){
+		
+		
+		let comId = 'catLove' //댓글작성자
+		let ctgr = 'C'; //카테고리
+		let ctgrNum = '12'; //카테고리번호
+		let contactMessage =$("#contact-message").val(); //댓글내용
+		let dep = $("dep").val(); //깊이(댓글,대댓글) 구분
+		let grp = $('#contact-message').data("grp"); //댓글그룹
+		let comNum = $("comNum").val();
+		
+		if($("#contact-message").data("dep") == "1") {
+			dep = 1;
+		}
+
+		
+		if(contactMessage == ""){
+			alert("내용을 입력해 주세요.")
+			$("#contact-message").focus();
+			return false;		// 내용 미입력시 작성 불가
+		}
+		
+		$.ajax({
+			url:"/commentInsert",
+			type:"POST",
+			data: JSON.stringify(
+				{
+					"id" :comId,
+					"ctgr" : ctgr, 
+					"ctgrNum" : ctgrNum,
+					"cntn" : contactMessage,
+					"dep" : dep,					
+					"grp": grp,
+					"comNum" : comNum
+				}
+			),
+			contentType:'application/json',
+			success : function(data){
+				$("#contact-message").val("");
+				getCommentList();
+			},
+			error:function(){
+				alert('등록실패');
+			}
+		});
+	});
+	
+	
+	function getCommentList(){			
+
+		let commentArea = $(".commentBox");
+		$.ajax({
+			url: "/commentList",
+			success : function(result) {
+				
+				let str = '';
+				$(result).each(function(c,comm){
+					if(comm.dep == 0 && c != 0 ){
+					 	str += '</ul>'
+					 	str += '</div>'
+		                str += '</li>'
+					}
+					if(comm.dep == 0) {
+						str += '<li class="media d-flex commentZone">'
+						str += '<div class="avatar rounded-circle">'
+						str += '<img class="img-fluid" src="'+comm.profile+'" title="" alt="">'
+						str += '</div>'
+						str += '<h6 class="mt-0 mb-1 commentId" id="comId" >'+comm.id+'</h6>'
+						str += '<label class="mb-2 small" >'+comm.comDate+'</label>'
+						str += '<p>'+comm.cntn+'</p>'
+						str += '<input type="hidden" class="comGrp" name="grp" id="comGrp" value="'+comm.grp+'">'
+						str += '<input type="hidden" class="comNum" name="comNum" value="'+comm.comNum+'">'
+						str += '<div class="nav dark-link small">'
+						str += '<a class="ms-3" href="#contact-message" id="replyWrite"> 답글 달기 </a>'
+						if(comm.repCnt>0){
+						str += '<button class="replyShowBtn" style="border:none; background-color: white;">답글 보기</button>'	
+						}
+						str += '<button class="comDelBtn" style="border:none; background-color: white;">삭제</button>'	
+						str += '</div>'
+						if(comm.repCnt > 0){
+							str += '<div class=popup style="display:none;">'
+							str += '<ul class="list-unstyled mt-5 pt-5 border-top popup">'
+						}
+						
+					} else{
+						str += '<li class="media d-flex replyZone">'
+                        str += '<div class="avatar rounded-circle">'
+                        str += '<img class="img-fluid" src="'+comm.profile+'" title="" alt="">'
+                        str += '</div>'
+                        str += '<div class="col ps-3">'
+                        str += '<h6 class="mt-0 mb-1 commentId" id="repId">'+comm.id+'</h6>'
+                        str += '<label class="mb-2 small">'+comm.comDate+'</label>'
+                        str += '<p>'+comm.cntn+'</p>'
+                        str += '<input type="hidden" class="repGrp" name="grp" id="repGrp" value="'+comm.grp+'">'
+						str += '<input type="hidden" class="comNum" name="comNum" value="'+comm.comNum+'">'
+                        str += '<div class="nav dark-link small">'
+                        str += '<button class="reDelBtn" style="border:none; background-color: white;">삭제</button>'
+                        str += '</div>'
+                        str += '</div>'
+                        str += '</li>'  
+					}
+				})
+					commentArea.html(str);
+			}
+		})
+	}
+	
+	// 동적으로 생성된 태그에 그룹이벤트 부여
+    $(".commentBox").on('click','#replyWrite', function(e){      
+        console.log('클릭')
+        console.log($(this).parent().parent().children('#comId').text())// 그룹번호 히든으로 만들어서 그룹번호가져옴
+        console.log($(this).parent().parent().children('#comGrp').val())
+        let text = $(this).parent().parent().children('#comId').text();
+        let group_number = $(this).parent().parent().children('#comGrp').val();
+          
+        $('#contact-message').data("dep","1")
+        $('#contact-message').data("grp", group_number);
+        $('#grpNum').val($('#contact-message').data("grp"));
+ 
+     })     
+     
+    $(".commentBox").on('click', '.replyShowBtn', function(e){
+		let parentLi = $(this).closest("li"); // 해당 버튼이 속한 li를 찾음
+		let popup = parentLi.find(".popup"); // 해당 li 엘리먼트에서 popup 클래스를 가진 엘리먼트를 찾음
+		let replyShowBtn = parentLi.find(".replyShowBtn"); // 해당 li 엘리먼트에서 replyShowBtn 클래스를 가진 버튼 엘리먼트를 찾음
+		if(popup.is(":visible")){
+		    popup.hide();
+		    replyShowBtn.text('답글 보기');
+		} else {
+		    popup.show();
+		    replyShowBtn.text('답글 숨기기');
+		}
+	 });
+    
+	
+ 	$(".commentBox").on('click', '.comDelBtn', function() {
+ 		console.log('삭제클릭')
+ 		console.log($(this).closest('li').find('.comNum').val());
+ 		console.log($(this).closest('li').find('.comGrp').val());
+ 		let comNum = $(this).closest('li').find('.comNum').val(); //삭제할 댓글 번호
+ 		let grp = $(this).closest('li').find('.comGrp').val(); //삭제할 댓글의 그룹
+ 		let commentZone = $(this).closest('li').find('.commentZone');
+ 		
+ 		$.ajax({
+			url:"/commentDelete",
+			type:"delete",
+			data:{ 
+				grp		
+			}
+			,
+			success : function(data){
+				getCommentList()
+			}
+		})
+ 		
+ 	}) 
+ 	
+ 	$(".commentBox").on('click', '.reDelBtn', function() {
+ 		console.log('삭제클릭')
+ 		console.log($(this).closest('li').find('.comNum').val());
+ 		let comNum = $(this).closest('li').find('.comNum').val(); //삭제할 댓글 번호
+ 		let commentZone = $(this).closest('li').find('.replyZone');
+ 		
+ 		$.ajax({
+			url:"/replyDelete",
+			type:"delete",
+			data:{ 
+				comNum		
+			}
+			,
+			success : function(data){
+				getCommentList()
+			}
+		})
+ 	}) 
+	
+</script>
+</div>
+</body>
+</html>

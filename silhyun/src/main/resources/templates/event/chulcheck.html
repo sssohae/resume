@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<script
+	src="
+https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js
+"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js"
+	integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+	crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="/img/favicon.ico">
+<style>
+/* ======== Calendar ======== */
+.my-calendar {
+	width: 100%;
+	height: 400px;
+	/*           margin: 30px; */
+	padding: 20px 20px 10px;
+	text-align: center;
+	font-weight: 800;
+	border: 1px solid #ddd;
+	cursor: default;
+}
+
+.my-calendar .clicked-date {
+	border-radius: 25px;
+	margin-top: 1;
+	float: left;
+	width: 1;
+	text-align: center;
+	padding: 46px 0 26px;
+	background: #ddd;
+}
+
+.my-calendar .calendar-box {
+	width: 100%;
+	height: 400px;
+}
+
+.clicked-date .cal-day {
+	/* font-size: 1px; */
+	font-size: 24px;
+}
+
+.clicked-date .cal-date {
+	/* font-size: 1px; */
+	font-size: 130px;
+}
+
+.ctr-box {
+	padding: 0 16px;
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+
+.ctr-box .btn-cal {
+	position: relative;
+	float: left;
+	width: 25px;
+	height: 25px;
+	margin-top: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+.ctr-box .btn-cal:after {
+	content: '<';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	line-height: 25px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.ctr-box .btn-cal.next {
+	float: right;
+}
+
+.ctr-box .btn-cal.next:after {
+	content: '>';
+}
+
+.cal-table {
+	width: 100%;
+}
+
+.cal-table th {
+	width: 14.2857%;
+	padding-bottom: 5px;
+	font-size: 16px;
+	font-weight: 900;
+}
+
+.cal-table td {
+	padding: 3px 0;
+	height: 50px;
+	font-size: 15px;
+	vertical-align: middle;
+}
+
+.cal-table td.day {
+	position: relative;
+	cursor: pointer;
+	color: rgb(0, 0, 0);
+}
+
+.cal-table td.today {
+	background: #ffd255;
+	border-radius: 50%;
+	color: #fff;
+}
+
+
+.cal-table td.has-event:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 4px;
+	background: #FFC107;
+}
+
+.res-yes {
+	background-color: black;
+}
+
+.res-no {
+	background-color: lightgray;
+}
+
+.form-check-input {
+	width: 20px;
+	height: 20px;
+	margin-bottom: 7px;
+}
+
+.form-check-label {
+	font-weight: bold;
+}
+
+#selectDate {
+	font-size: larger;
+	font-weight: bolder;
+}
+
+#selectTime {
+	font-size: larger;
+	font-weight: bolder;
+}
+/*출석체크 성공시 바뀔 색*/
+ td.success {
+        background-color: green;
+        color: white;
+      }
+/* db에 있는 날짜의 색을 바꿈 */      
+.selected {
+  background-color: green;
+  color: white;
+}
+</style>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content">
+		<div class="my-calendar clearfix">
+
+			<div class="clicked-date" style="display: none;">
+				<div class="cal-day"></div>
+				<div class="cal-date"></div>
+			</div>
+			<!--<div class="my-calendar clearfix">-->
+			<div class="calendar-box">
+				<div class="ctr-box clearfix">
+					<button type="button" title="prev" class="btn-cal prev"></button>
+					<span class="cal-month"></span> <span class="cal-year"></span>
+					<button type="button" title="next" class="btn-cal next"></button>
+				</div>
+
+				<table class="cal-table">
+					<thead>
+						<tr>
+							<th id="일"><font color="#F79DC2">일 </th>
+							<th id="월">월</th>
+							<th id="화">화</th>
+							<th id="수">수</th>
+							<th id="목">목</th>
+							<th id="금">금</th>
+							<th id="토"><font color="skyblue">토 </th>
+						</tr>
+					</thead>
+					<tbody class="cal-body"></tbody>
+				</table>
+			</div>
+		</div>
+
+		<div>
+			<!-- form action으론 보내짐 -->
+			<form id="chulcheckFrm" method="post">
+				<div>
+					<!-- 	<input type="hidden"  name="id" value="${id}">  -->
+					<input type="hidden" name="id" th:value="${session.id}">
+					<p th:text="${date}"></p>
+					<input type="hidden" name="checkDate" th:value="${date}">
+				</div>
+				<div>
+					<button type="button" class="btn btn-primary" id="chulcheck-button">출석체크</button>
+				</div>
+			</form>
+		</div>
+<script>
+	
+	
+	//캘린더
+	const init = {
+	              monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+	                'November', 'December'
+	              ],
+	              dayList: ['일', '월', '화', '수', '목', '금', '토'],
+	              today: new Date(), // 오늘 날짜
+	              monForChange: new Date().getMonth(),
+	              activeDate: new Date(),
+	              getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+	              getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+	              nextMonth: function () { // 다음 버튼을 클릭 ->  해당하는 달을 1 증가시킨 후 그 숫자를 새로 가져온 날짜 객체 d에 d.setMonth()
+	                let d = new Date();
+	                d.setDate(1); //5월 31일에 nextMonth 함수를 실행시켜 달만 6월로 바꿔줄 경우 6월에는 30일까지밖에 없으므로 자동으로 7월 1일로 변경될 수 있
+	                d.setMonth(++this.monForChange);
+	                this.activeDate = d;
+	                return d;
+	              },
+	              prevMonth: function () { //이전 버튼 클릭
+	                let d = new Date();
+	                d.setDate(1);
+	                d.setMonth(--this.monForChange);
+	                this.activeDate = d;
+	                return d;
+	              },
+	              addZero: (num) => (num < 10) ? '0' + num : num,
+	              activeDTag: null,
+	              getIndex: function (node) {
+	                let index = 0;
+	                while (node = node.previousElementSibling) {
+	                  index++;
+	                }
+	                return index;
+	              }
+	            };
+	const $calBody = document.querySelector('.cal-body');
+    const $btnNext = document.querySelector('.btn-cal.next');
+    const $btnPrev = document.querySelector('.btn-cal.prev');
+
+    function loadDate(date, dayIn) {
+      document.querySelector('.cal-date').textContent = date;
+      document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+    }
+    
+    function loadYYMM(fullDate) { //동적으로 달력의 일자 출력 / 처음 캘린더 로드할때/ 달력에서 이전,이후 버튼을 클릭할때 실행됨 
+        let yy = fullDate.getFullYear();
+        let mm = fullDate.getMonth();
+        let firstDay = init.getFirstDay(yy, mm);
+        let lastDay = init.getLastDay(yy, mm);
+        let markToday; // 달력의 년도/월이 오늘 날짜의 년도/월과 일치하면 오늘 날짜의 일자를 할당
+
+        if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+          markToday = init.today.getDate();
+        }
+
+        document.querySelector('.cal-month').textContent = init.monList[mm];
+        document.querySelector('.cal-year').textContent = yy;
+
+        let trtd = '';
+        let startCount;
+        let countDay = 0;
+        for (let i = 0; i < 6; i++) { //한달에 있는 한 주 
+          trtd += '<tr class="week">';
+          for (let j = 0; j < 7; j++) { //한주에 들어있는 일
+            if (i === 0 && !startCount && j === firstDay.getDay()) { //날짜가 처음 시작하면 startCount을 1로 변경
+              startCount = 1;
+            }
+            if (!startCount) {
+              trtd += `<td>`
+            } else {
+              let dayList = ['일', '월', '화', '수', '목', '금', '토']
+              let fullDate = yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1);
+              let today = new Date(yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1)).getDay()
+              trtd += '<td class="day';
+              trtd += (markToday && markToday === countDay + 1) ? ' today" ' :
+              '"'; //countDay 변수가 markToday 값과 일치하면 td에 today 클래스
+              trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}" id="${dayList[today]}">` //id="${item}"
+            }
+            trtd += (startCount) ? ++countDay : '';
+            if (countDay === lastDay.getDate()) { //날짜 세는 것이 끝나면 startCount변수를 다시 0으로 초기화
+              startCount = 0;
+            }
+            trtd += '</td>';
+          }
+          trtd += '</tr>';
+        }
+        $calBody.innerHTML = trtd;
+      }
+    function createNewList(val) {
+        let id = new Date().getTime() + '';
+        let yy = init.activeDate.getFullYear();
+        let mm = init.activeDate.getMonth() + 1;
+        let dd = init.activeDate.getDate();
+        const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+        let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+
+        let eventData = {};
+        eventData['date'] = date;
+        eventData['memo'] = val;
+        eventData['complete'] = false;
+        eventData['id'] = id;
+        init.event.push(eventData);
+        $todoList.appendChild(createLi(id, val, date));
+      }
+
+      loadYYMM(init.today);
+      loadDate(init.today.getDate(), init.today.getDay());
+
+      $btnNext.addEventListener('click', () => loadYYMM(init.nextMonth())); //다음 버튼 클릭하면 발생하는 이벤트
+      $btnPrev.addEventListener('click', () => loadYYMM(init.prevMonth())); //이전 버튼 클릭하면 발생하는 이벤트
+
+      
+      //추가
+      
+      
+  	var id=$('input[name=id]').val();
+	var checkDate=$('input[name=checkDate]').val();
+	var todayCells = document.querySelectorAll(".cal-table td.today");
+	$(function() {
+	  $('#chulcheck-button').click(function() {
+	    $.ajax({
+	      url: '/chulcheckEv',
+	      method: 'POST',
+	      data: { id: id, checkDate: checkDate },
+	      success: function(result) {
+	    	  if(result === true) {
+	    	      alert("출석 체크 완료🎉");
+	    	      $('.cal-table td.today').css({
+	    	    	    'background-color': "#B96F4A",
+	    	    	    'color': '#fff',
+	    	    	    'border-radius': '0%',
+	    	    	    'opacity': '0.7'
+	    	    	  });
+	    	    } else {
+	    	      alert('이미 출석하였습니다.');
+	    	      
+	    	    }
+	      },
+	      error: function(reject) {
+	    	window.location.href="/login"
+	        alert('로그인 후 이용해주세요');
+	      }
+	    });
+	  });
+	});
+
+</script>
+
+	</main>
+</body>
+</html>

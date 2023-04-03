@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+ <link href="/css/star.css" rel="stylesheet"/>
+<style>
+  textarea {
+    width: 100%;
+    height: 25em;
+    border: none;
+    resize: none;
+  }
+  #grey {
+  	background-color: #b96f4a;
+  	color: white;
+  	text-align: center;
+  }
+  #myform{
+  	border: 1px;
+  }
+  #btn{
+  	text-align: center;
+  }
+  
+   #fileBtn{
+   	display: none;
+   }
+   img {
+   	width: 130px;
+   	height: 130px;
+   }
+   p{
+		color : #999;
+		font-size:.9em;
+	}
+	
+  #attZone{
+	width: 100%;
+	min-height:130px;
+	padding:10px;
+	border:1px solid #D2D6D6;
+	}
+#attZone:empty:before{
+	content : attr(data-placeholder);
+	color : #999;
+	font-size:.9em;
+}
+</style>
+<body>
+<div id="reviews">
+<script type="text/javascript" src="/js/review/reviewUpdateForm.js"></script>
+<div class="container col-9">
+	<form class="mb-3" id="myform" action="/silhyun/review"> 
+	<input type=hidden th:value="${ordNum}" id="ordNum">
+	<input type="hidden" th:value="${revNum}" id="revNum" name="revNum">
+			<div id="ordInfoZone"></div><br>
+		<div id="grey">
+				<span class="text-bold">별점을 선택해주세요</span><br>
+		<fieldset id="stars">
+				<input type="radio" name="star" value="5" id="rate1"><label
+					for="rate1">★</label>
+				<input type="radio" name="star" value="4" id="rate2"><label
+					for="rate2">★</label>
+				<input type="radio" name="star" value="3" id="rate3"><label
+					for="rate3">★</label>
+				<input type="radio" name="star" value="2" id="rate4"><label
+					for="rate4">★</label>
+				<input type="radio" name="star" value="1" id="rate5"><label
+					for="rate5">★</label>
+			</fieldset>
+		</div>	
+		
+		<table class="table table-border">
+			<tr>
+				<td>
+					<textarea class="form-control" id="cntn" name="cntn" placeholder="2200자이하 내용 입력" maxlength="2200"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div id="zone">
+						<button type="button" class="btn btn-outline-secondary btn-sm" onclick="fileUpAction()">사진선택</button>
+						<input type='file' id='fileBtn' multiple='multiple' accept="image/*"/>
+					<div id='attZone' data-placeholder='사진은 총 6장만 업로드 가능합니다.'></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+		
+		<input type="hidden" name="id" th:value="${session.id}"> <!-- 섹션이나 시큐리티 아이디값 -->
+      	<div id="btn">
+	      	<button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateReview()">작성</button>
+	      	<input type="hidden" name="phoNum" id="phoNums">
+	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="backBtn">뒤로가기</button> 
+      	</div>
+      	<div id="pageInfo">
+      		<input type="hidden" id="pageNum" name="pageNum" th:value="${cri.pageNum}">
+      		<input type="hidden" id="sort" name="sort" th:value="${cri.sort}">
+      		<input type="hidden" id="ctgrNum" name="ctgrNum" th:value="${rev.ctgrNum}">
+      		<input type="hidden" id="ctgr" name="ctgr" th:value="${rev.ctgr}">
+      		<input type="hidden" id="photo" name="photo" th:value="${cri.photo}">
+      	</div>
+	</form>
+</div>
+</div>
+</body>
+</html>

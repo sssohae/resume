@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<meta charset="UTF-8">
+<title>스튜디오 마페</title>
+</head>
+<body>
+	<!-- Main -->
+	<main layout:fragment="content">
+		<!-- Breadcrumb -->
+		<div class="py-3 bg-gray-100">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-lg-6 my-2">
+						<h1 class="m-0 h4 text-center text-lg-start">Profile</h1>
+					</div>
+					<div class="col-lg-6 my-2">
+						<ol
+							class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+							<li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+									class="bi bi-home"></i>Home</a></li>
+							<li class="breadcrumb-item text-nowrap active"
+								aria-current="page">Profile </li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Breadcrumb -->
+		<!-- Table -->
+		<div class="py-6">
+			<div class="container">
+				<div class="row" th:each="std : ${stdInfo}">
+					<!-- Profile Menu -->
+					<div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+						<div class="bg-white border border-bottom-0 shadow-lg">
+							<div class="d-flex p-3 align-items-center">
+								
+								<div class="avatar avatar-lg rounded-circle">
+									<img th:src="${std.stProfile}" title=""
+										alt="">
+								</div>
+							
+								<div class="col ps-3">
+									<h6 class="m-0" th:text="${std.stId}"></h6>
+									<small><a href="/photo/mypageStd"th:text="${std.stName}">이름</a></small>
+								</div>
+								
+							</div>
+							<ul class="list-unstyled mb-0 theme-link">
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/modStd"> <i class="fi-user me-2"></i>사진관정보수정
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/stdManage"> <i class="bi bi-card-checklist"></i>작가관리</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageAoAsk"> <i class="bi-chat-square-dots me-2"></i>문의내역
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageStatsAo"> <i class="bi bi-pie-chart-fill"></i>통계
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>탈퇴
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- End Profile Menu -->
+					<!-- End Profile Menu -->
+					<!-- Content -->
+					<div class="col-lg-8 col-xxl-9">
+						<div class="card mb-5">
+							<div class="card-header py-3">
+								<h5 class="m-0">Profile</h5>
+							</div>
+							<div class="card-body" th:each="std : ${stdInfo}">
+								<div class="row">
+									<div class="col-sm-6 mb-3">
+										<img class="img-fluid border" th:src="${std.stProfile}"
+										 style="width:300px;height:300px" alt="...">
+									</div>
+									<div class="col-sm-6 mb-3">
+										<label class="form-label">아이디</label> 
+											<input type="text"
+											class="form-control" th:value="${std.stId}" readonly>
+										<label class="form-label">이름</label> 
+											<input type="text"
+											class="form-control" th:value="${std.stName}" readonly>
+										<label class="form-label">대표이름</label> 
+											<input type="text"
+											class="form-control" id="exampleInputEmail3"th:value="${std.ceoName}" readonly>
+										<!-- <label class="form-label">일하는 요일</label><br>
+										<label th:text="${ptg.workDay}"></label> -->
+									</div>
+								
+								</div>
+							</div>
+						</div>
+						
+					<!-- End Content -->
+				</div>
+			</div>
+		</div>
+		</div>
+		<!--Table -->
+	</main>
+	<!-- End Main -->
+</body>
+</html>

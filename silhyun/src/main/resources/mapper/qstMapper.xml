@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.qst.map.QstMapper">
+
+	<select id="getAoQstList" resultType="co.yedam.silhyun.qst.vo.QstVO">
+		select q.qst_num, q.ctgr, q.ctgr_num, q.ttl, q.id, q.cntn as cntn, q.qst_date,
+		q.secret_sta , case when  q.rply_sta = 'Y' then '답변완료'
+                                              else '답변대기'
+                                              end as rply_sta  , c.cntn as ansCntn , c.com_num as comNum                                                                                                                                     
+		from qst q left join (select * from commment where ctgr= 'A') c  
+        on q.qst_num = c.ctgr_num
+		where q.ctgr = 'A' <!-- and q.ctgr_num = #{ptgId} -->
+		order by qst_num desc
+	</select>
+
+	<insert id="aoQstInsert">
+		<selectKey keyProperty="qstNum" resultType="String" order="BEFORE">
+			SELECT 
+				nvl(MAX(to_number(qst_num)), 0) + 1 AS "qstNum"
+			FROM QST
+		</selectKey>
+			insert into qst(qst_num
+                    , ctgr
+                    , ctgr_num
+                    , ttl
+                    , id
+                    , cntn
+                    , qst_date
+                    , rply_sta
+                    , secret_sta)
+            values(#{qstNum}
+                    , 'A'
+                    , #{ctgrNum}
+                    , #{ttl}
+                    , #{id}
+                    , #{cntn}
+                    , sysdate
+                    , 'N'
+                    , #{secretSta})
+	</insert>
+	
+	<insert id="aoAnsInsert">
+		
+			begin
+				<selectKey keyProperty="comNum" resultType="String" order="BEFORE">
+					SELECT 
+						nvl(MAX(to_number(com_num)), 0) + 1 AS "comNum"
+					FROM commment
+				</selectKey>
+					insert into commment(com_num
+										 ,ctgr
+										 ,ctgr_num
+										 ,id
+										 ,cntn
+										 ,com_date)
+								values(#{comNum}
+									   ,'A'	
+									   ,#{ctgrNum}
+									   ,#{id}
+									   ,#{cntn}
+									   ,sysdate);
+					update qst set rply_sta = 'Y' 
+					where qst_num = #{ctgrNum};
+			end;
+		
+	</insert>
+	
+	<delete id="aoQstDelete">
+		
+		begin
+		  delete from qst where qst_num = #{qstNum};
+		  
+		  delete from commment where ctgr_num = #{qstNum} 
+		  and not exists (select 1 from qst where qst_num = #{qstNum});
+		end;
+		
+	</delete>
+	
+	<delete id="aoAnsDelete">
+	
+		begin
+			delete from commment where com_num = #{comNum};
+			
+			update qst set rply_sta = 'N'
+			where qst_num = #{qstNum};
+		end;
+		
+	</delete>
+	
+	
+	<update id="aoQstUpdate">
+	
+		update qst 
+		<set>
+			<if test="ttl != null">ttl = #{ttl},</if>
+			<if test="cntn != null">cntn = #{cntn}</if>
+		</set> 
+		where qst_num = #{qstNum}
+		
+	</update>
+	
+	
+	<update id="aoAnsUpdate">
+	
+		update commment set cntn = #{cntn}
+		where com_num = #{comNum}
+		
+	</update>
+	
+
+</mapper>

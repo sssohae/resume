@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<meta charset="UTF-8">
+<title>클래스 관리</title>
+<!-- modal -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+.pagination {
+	display: inline-block;
+}
+
+.pagination a {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+.pagination a.active {
+	background-color: grey;
+	color: white;
+	border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+.container {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+		<!-- Table -->
+	<main layout:fragment="content">
+	<!-- Breadcrumb -->
+		<div class="py-3 bg-gray-100">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-lg-6 my-2">
+						<h1 class="m-0 h4 text-center text-lg-start">ClassManage</h1>
+					</div>
+					<div class="col-lg-6 my-2">
+						<ol
+							class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+							<li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+									class="bi bi-home"></i>마이페이지</a></li>
+							<li class="breadcrumb-item text-nowrap active"
+								aria-current="page">클래스관리</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Breadcrumb -->
+		<div class="py-6">
+			<div class="container">
+				<div class="row" th:each="ptg : ${ptgInfo}">
+					<!-- Profile Menu -->
+					<div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+						<div class="bg-white border border-bottom-0 shadow-lg">
+							<div class="d-flex p-3 align-items-center">
+								<div class="avatar avatar-lg rounded-circle">
+									<img th:src="${ptg.profile}" title=""
+										alt="">
+								</div>
+								<div class="col ps-3">
+									<h6 class="m-0" th:text="${ptg.Id}"></h6>
+									<small><a href="/photo/mypageAo"th:text="${ptg.name}">이름</a></small>
+								</div>
+								
+							</div>
+							<ul class="list-unstyled mb-0 theme-link">
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/modPfAo"> <i class="fi-user me-2"></i>회원정보수정
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resManage"> <i class="bi bi-card-checklist"></i>예약
+										관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/classManage"> <i class="bi-play-btn me-2"></i>클래스
+										관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageAoAsk"> <i
+										class="bi-chat-square-dots me-2"></i>문의내역
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resCalendarAo"> <i class="bi-calendar me-2"></i>캘린더
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" th:href="@{/silhyun/portfolio/{ptgId}(ptgId=${session.id})}">
+										<i class="bi-person-bounding-box me-2"></i>포토폴리오
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/reportFormAo"> <i
+										class="bi bi-exclamation-diamond"></i>신고
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>회원탈퇴
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- End Profile Menu -->
+					<div class="col-lg-8 col-xxl-9">
+						<button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" data-bs-target="#workOption">신청하기</button>
+						<br> <br>
+						<!-- 모달 -->
+						<div class="modal fade" id="workOption">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header bg-primary">
+										<div class="modal-title p-3">
+											<h5 class="m-0 text-white">신청서</h5>
+										</div>
+										&emsp;&emsp; <input type="radio" id="apply" name="apply"
+											value="c" onchange="applyForm('c')"><label
+											class="m-0 text-white">클래스</label> &nbsp;&nbsp; <input
+											type="radio" id="apply" name="apply" value="e"
+											onchange="applyForm('e')"><label
+											class="m-0 text-white">이벤트</label>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<div class="w-100 p-3">
+											<!-- Form START -->
+											<form id="uploadCl" enctype="multipart/form-data">
+												<div id="classApply" style="display: none;">
+													<div class="mb-3">
+														<label class="form-label" for="claTtl">강의명 
+														<input type="text" class="form-control" id="claTtl" name="claTtl"
+															style="width: 200px; height: 45px;" placeholder="강의명"></label>
+														<label class="form-label" for="claPri">가격 <input
+															type="text" class="form-control" id="claPri" name="claPri"
+															style="width: 200px; height: 45px;" placeholder="150000"></label>
+													</div>
+													<div class="mb-3">
+														<label class="form-label" for="claDesct">강의 내용</label>
+														<textarea cols="40" rows="2" class="form-control" name="claDesct"
+															id="claDesct"></textarea>
+													</div>
+													<div class="mb-3">
+														<select name="claCd" id="claCd">
+															<option value="CL1">온라인</option>
+															<option value="CL2">오프라인</option>
+														</select>&nbsp; <label class="form-label" for="ypsn">수강정원 <input
+															type="text" class="form-control" id="ypsn" name="ypsn"
+															style="width: 100px; height: 30px;" placeholder="ex)5"></label>
+														&nbsp; <label class="form-label" for="rcnt">클래스 시간 <input
+															type="text" class="form-control" id="claTime" name="claTime"
+															style="width: 100px; height: 30px;"></label>&nbsp; <label
+															class="form-label" for="rcnt">클래스 날짜 <input
+															type="date" class="form-control" id="claDt" name="claDt"
+															style="width: 100px; height: 30px;"></label>
+													</div>
+													<label class="form-label" for="claTtl">ot영상주소 
+														<input type="text" class="form-control" id="ot" name="ot"
+															style="width: 430px; height: 45px;"></label>
+													<div class="col-sm-6 mb-3">
+														<label for="formFile" class="form-label">썸네일 사진</label> <input
+															class="form-control" type="file" name="file">
+													</div>
+													<input type="hidden"  name="ptgId" th:value="${session.id}"> 
+													<div class="row align-items-center">
+														<div class="col-sm-4">
+															<button type="submit" class="btn btn-dark" onclick="uploadClass()">확인</button>
+														</div>
+													</div>
+												</div>
+
+											</form>
+											<form id="uploadEv" enctype="multipart/form-data">
+
+												<div id="eventApply" style="display: none;">
+													<div class="mb-3">
+														<label class="form-label" for="claTtl">활동지역</label>&emsp;
+														<select name="regionCd" id="regionCd">
+															<option value="01">서울</option>
+															<option value="02">경기</option>
+															<option value="03">인천</option>
+															<option value="04">강원</option>
+															<option value="05">대전/충천</option>
+															<option value="06">대구</option>
+															<option value="07">부산/울산</option>
+															<option value="08">경상</option>
+															<option value="09">광주/전라</option>
+															<option value="10">제주</option>
+														</select>&emsp;&emsp; <label class="form-label" for="claPri">이벤트
+															작품/클래스</label>&nbsp; <select name="ctgr" id="ctgr">
+															<option value="A">작가</option>
+														<!-- 	<option value="S">사진관</option>  사진관페이지에서-->
+														</select>&nbsp;
+													</div>
+													<div class="mb-3">
+													<label class="form-label" for="claTtl">이벤트 타이틀 
+														<input type="text" class="form-control" id="name" name="name"
+															style="width: 430px; height: 35px;"></label>
+														<label class="form-label" for="Eventcntn">이벤트 내용</label>
+														<textarea cols="40" rows="2" class="form-control"
+															id="Eventcntn" name="cntn"></textarea>
+													</div>
+													<div class="mb-3">
+														<label class="form-label" for="cntn">쿠폰 내용 <input
+															type="text" class="form-control" id="couponCntn"
+															name="couponCntn" style="width: 300px; height: 30px;"
+															></label> &nbsp; <label
+															class="form-label" for="discount">할인율 <input
+															type="text" class="form-control" id="discount"
+															name="discount" style="width: 100px; height: 30px;"></label><br>
+														<label class="form-label" for="startDate">시작날짜 <input
+															type="date" class="form-control" id="startDate"
+															name="startDate" style="width: 200px; height: 30px;"></label>
+														&nbsp; <label class="form-label" for="term">기간
+															<input type="text" class="form-control" id="term"
+															name="term" style="width: 200px; height: 30px;">
+														</label>&nbsp;
+													</div>
+													<div class="col-sm-6 mb-3">
+														<label>배너 사진 게시 여부</label>
+														<select name="bnphSta" id="bnphSta">
+															<option value="Y">Y</option>
+															<option value="N">N</option>
+														</select><br>
+														<label for="formFile" class="bnph">배너 사진</label> <input
+															class="form-control" type="file" name="file" id="file">
+													</div>
+													<div class="row align-items-center">
+														<div class="col-sm-4">
+
+															<button type="submit" name="uploadEv"
+																class="btn btn-dark" onclick="uploadEvent()">확인</button>
+
+														</div>
+														<div class="col-sm-4">
+															<input type="button" class="btn btn-dark" value="임시저장">
+														</div>
+														<div class="col-sm-4">
+															<button type="reset" class="btn btn-dark">취소</button>
+														</div>
+													</div>
+
+													<input type="hidden"  name="Id"
+														th:value="${session.id}"> 
+													<!-- <input type="hidden" id="eventNum " name="eventNum" value="100"> -->
+
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--모달끝  -->
+						<!-- <테이블> -->
+						<div>
+							<h1>클래스관리</h1>
+						</div>
+						<div class="table-responsive fs-md mb-4" >
+							<table class="table table-bordered table-hover mb-0">
+								<thead class="text-700 bg-gray-200">
+									<tr>
+										<th class="fw-600">번호</th>
+										<th class="fw-600">강의명</th>
+										<th class="fw-600">강의내용</th>
+										<th class="fw-600">수강일수</th>
+										<th class="fw-600">구분</th>
+										<th class="fw-600 ">총정원</th>
+										<th class="fw-600 ">수강자 조회</th>
+									</tr>
+								</thead>
+								<tbody th:each="clM:${clManage}">
+									<tr>
+										<td class="p-3" th:text="${clM.classNum}" th:value="${clM.classNum}"></td>
+										<td class="p-3" th:text="${clM.claTtl}" th:value="${clM.claTtl}"></td>
+										<td class="p-3" th:text="${clM.claDesct}" ></td>
+										<td class="p-3" th:text="${clM.ydt}" ></td>
+										<td class="p-3" th:text="${clM.claCd}" th:value="${clM.claCd}"></td>
+										<td class="p-3" th:if="${clM.claCd == 'CL1'}" th:text="${clM.ypsn}"></td>
+										<td class="p-3" th:if="${clM.claCd == 'CL2'}">∞</td>
+										<!-- <td class="p-3"><button class="btn btn-mini iqBtn" th:onclick="|location.href='@{/silhyun/mypageAo/classInquiry(classNum=${clM.classNum})}'|">수강자 조회</button></td> -->
+										<td class="p-3"><a class="btn btn-mini iqBtn" th:href="@{/silhyun/mypageAo/classInquiry/{classNum}(classNum=${clM.classNum})}">수강자 조회</a></td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+						<div class="container" style="text-align: center;">
+							<div class="ms-lg-auto">
+								<div class="pagination">
+									<a th:if="${page.prev}" th:href="${page.startPage-1}">&laquo;</a>
+									<a
+										th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}"
+										th:href="${num}"
+										th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+									<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+								</div>
+									<form id="searchFrm" action="/photo/classManage" th:object="${page}">
+
+										<input type="hidden" name="pageNum" th:value="1">
+										<input type="hidden" name="amount" th:value="*{criteria.amount}">
+								</form>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Table -->
+<script type="text/javascript">
+function applyForm(n){
+	if(n == 'c'){
+		document.getElementById('classApply').setAttribute('style','display:block')
+		document.getElementById('eventApply').setAttribute('style','display:none')
+	}else if(n == 'e'){
+		document.getElementById('eventApply').setAttribute('style','display:block')
+		document.getElementById('classApply').setAttribute('style','display:none')
+		
+	}
+} 
+
+//이벤트신청
+ function uploadEvent(){
+	
+	var formData = new FormData($("#uploadEv")[0]);
+	
+	//들어오는거 확인
+	 for(let key of formData.keys()){
+		 console.log(key+"--------------------키")
+	 }
+	 for(let value of formData.values()){
+		 console.log(value+"************value")
+	 }
+	console.log("++++++++++++"+formData);
+	 
+	$.ajax({
+		url:'/applyEvent',
+		method:'POST',
+ 		enctype: 'multipart/form-data',
+		data:formData,
+		processData: false,
+		contentType: false,
+		success:function(result){
+			alert("제출이 성공적으로 되었습니다.");
+		},
+		error:function(reject){
+			alert("전송이 실패하였습니다.");
+		}
+		
+		});
+ }
+ 
+ function uploadClass(){
+	
+	var formData = new FormData($("#uploadCl")[0]);
+	 
+	$.ajax({
+		url:'/applyClass',
+		method:'POST',
+		enctype: 'multipart/form-data',
+		data:formData,
+		processData: false,
+		contentType: false,
+		success:function(result){
+			alert("제출이 성공적으로 되었습니다.");
+		},
+		error:function(reject){
+			alert("전송이 실패하였습니다.");
+		}
+		
+		});
+	
+}
+ 
+ /* let iqBtn= event.target.closest('.iqBtn')//선택한 버튼
+	// console.log(iqBtn);
+	 //두번째 부모의 1번째 자식
+	let classNum = iqBtn.parentNode.parentNode.querySelector('td:nth-child(1)').getAttribute('value'); */
+	
+	//페이징
+	history.replaceState({}, null, location.pathname);
+
+	$(".pagination a").on("click", function(e){
+		e.preventDefault();
+	 	$("#searchFrm").find("input[name='pageNum']").val($(this).attr("href"));
+		//console.log($("#searchFrm").find("input[name='pageNum']").val())
+		
+		//apage($('#searchFrm').seralize()) //form안에있는 name이랑 value값을 들고온다.
+		searchFrm.submit(); //폼태그값을 스트링으로 
+	})
+
+ 
+</script>
+	</main>
+</body>
+</html>

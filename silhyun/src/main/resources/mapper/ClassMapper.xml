@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.classes.map.ClassesMapper">
+
+
+
+<!-- 클래스 메인화면. 기본+조건에 맞는 클래스 리스트 가져오기 -->
+<!-- 테스트 중이라 null값인 데이터들이 있음. 처리했지만 추후 데이터 수정할 것 -->
+
+<select id="getC1List" resultType="map">
+    SELECT c.cla_cd as cCd, c.thni as thni, trunc(AVG(NVL(r.star, 0)),1) AS star, c.cla_ttl as ttl, COALESCE(m.name, '익명') as name, c.cla_dt as cDt,
+    to_char(c.cla_pri, 'FM999,999,999') as cPri, nvl(c.ypsn, 0) as ypsn, COALESCE(c.cla_place, '장소미정') as cPlace, 
+    case 
+        when c.cla_time = '' then '시간미정'
+        when c.cla_time <![CDATA[ < ]]>=12 then '오전 '|| c.cla_time || '시'
+        else '오후 '|| to_char(to_number(c.cla_time)-12) || '시'
+    end as cTime, find_cd(f.fd_cd) AS fCd, c.class_num as cNum
+    FROM class c 
+    LEFT OUTER JOIN member m ON c.ptg_id = m.id
+    LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+    LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+    WHERE c.cla_cd = 'CL1' and c.cfm_cd = 'Y'
+    GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num
+</select>
+
+
+<select id="getC2List" resultType="map">
+SELECT c.cla_cd as cCd, c.thni as thni,trunc(AVG(NVL(r.star, 0)),1) AS star, c.cla_ttl as ttl, COALESCE(m.name, '익명') as name,  c.cla_cnt as cnt, 
+ to_char(c.cla_pri, 'FM999,999,999') as cPri, nvl(c.ypsn, 0) as ypsn, COALESCE(c.cla_place, '장소미정') as cPlace, COALESCE(c.cla_time, '시간미정') as cTime,
+find_cd(f.fd_cd) AS fCd, c.class_num as cNum
+FROM class c 
+LEFT OUTER JOIN member m ON c.ptg_id = m.id
+LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+WHERE c.cla_cd = 'CL2'  and c.cfm_cd = 'Y'
+GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num
+</select>
+
+
+
+<!-- 메인에서 선택값 받아서 검색된 클래스 리스트. 아작스로 보낼 것-->
+<select id="cdtC1List" parameterType="int"  resultType="map">
+    SELECT c.cla_cd as cCd, c.thni as thni, trunc(AVG(NVL(r.star, 0)),1) AS star, c.cla_ttl as ttl, COALESCE(m.name, '익명') as name, c.cla_dt as cDt,
+     to_char(c.cla_pri, 'FM999,999,999') as cPri, nvl(c.ypsn, 0) as ypsn, COALESCE(c.cla_place, '장소미정') as cPlace, 
+    case 
+        when c.cla_time = '' then '시간미정'
+        when c.cla_time <![CDATA[ < ]]>=12 then '오전 '|| c.cla_time || '시'
+        else '오후 '|| to_char(to_number(c.cla_time)-12) || '시'
+    end as cTime, 
+find_cd(f.fd_cd) AS fCd, c.class_num as cNum
+    FROM class c 
+    LEFT OUTER JOIN member m ON c.ptg_id = m.id
+    LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+    LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+    WHERE c.cla_cd = 'CL1'   and c.cfm_cd = 'Y'
+    <if test="param1 == 6">and f.fd_cd = 'B6'</if>
+<if test="param1 == 7">and f.fd_cd = 'B7'</if>
+<if test="param1 == 9">and f.fd_cd = 'B9'</if>
+<if test="param1 == 1">and f.fd_cd IN ('B1','B4')</if>
+    GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num
+</select>
+
+<select id="cdtC2List" parameterType="int"  resultType="map">
+SELECT c.cla_cd as cCd, c.thni as thni,trunc(AVG(NVL(r.star, 0)),1) AS star, c.cla_ttl as ttl, COALESCE(m.name, '익명') as name,  c.cla_cnt as cnt, 
+     to_char(c.cla_pri, 'FM999,999,999') as cPri, nvl(c.ypsn, 0) as ypsn, COALESCE(c.cla_place, '장소미정') as cPlace, COALESCE(c.cla_time, '시간미정') as cTime,
+find_cd(f.fd_cd) AS fCd, c.class_num as cNum
+FROM class c 
+LEFT OUTER JOIN member m ON c.ptg_id = m.id
+LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+WHERE c.cla_cd = 'CL2' and c.cfm_cd = 'Y'
+<if test="param1 == 6">and f.fd_cd = 'B6'</if>
+<if test="param1 == 7">and f.fd_cd = 'B7'</if>
+<if test="param1 == 9">and f.fd_cd = 'B9'</if>
+<if test="param1 == 1">and f.fd_cd IN ('B1','B4')</if>
+GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num
+</select>
+
+
+<!-- 베스트 강의 페이지 -->
+<select id="getBCList" resultType="map">
+SELECT 
+    c.cla_cd AS cCd, 
+    nvl(c.cla_cnt,0) as cnt,
+    c.thni AS thni, 
+    trunc(NVL(AVG(r.star), 0), 1) AS star, 
+    c.cla_ttl AS ttl, 
+    NVL(m.name, '익명') AS name, -- 수정된 부분
+    to_char(c.cla_dt, 'YYYY"년" MM"월" DD"일"') AS cdt, 
+         to_char(c.cla_pri, 'FM999,999,999') AS cPri, 
+    NVL(c.ypsn, 0) AS ypsn, 
+    COALESCE(c.cla_place, '장소미정') AS cPlace, 
+    case 
+        when c.cla_time = '' then '시간미정'
+        when TO_NUMBER(c.cla_time) >= 12 then '오후 '|| TO_CHAR(TO_NUMBER(c.cla_time)-12) || '시'
+        else '오전 '|| c.cla_time || '시'
+    end as cTime,
+    COALESCE(f.fd_cd, '분류미정') AS fCd, 
+    c.class_num AS cNum, 
+    NVL(p.toal, 0) AS total
+FROM class c 
+LEFT OUTER JOIN member m ON c.ptg_id = m.id
+LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+LEFT OUTER JOIN (
+    SELECT ctgr_num, COUNT(*) AS toal
+    FROM payment
+    GROUP BY ctgr_num
+) p ON c.class_num = p.ctgr_num
+where  c.cfm_cd = 'Y'
+GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num, 
+    p.toal
+ORDER BY star DESC
+FETCH FIRST 10 ROWS ONLY
+
+</select>
+
+
+
+
+<!-- 무료 강의 페이지 -->
+<select id="getFCList" resultType="map">
+SELECT 
+    c.cla_cd AS cCd, 
+    nvl(c.cla_cnt, 0) AS cnt,
+    c.thni AS thni,    
+    trunc(NVL(AVG(r.star), 0), 1) AS star, 
+    c.cla_ttl AS ttl, 
+    COALESCE(m.name, '익명') AS name,
+    to_char(c.cla_dt, 'YYYY"년" MM"월" DD"일"') AS cdt, 
+         to_char(c.cla_pri, 'FM999,999,999') AS cPri, 
+    NVL(c.ypsn, 0) AS ypsn, 
+    COALESCE(c.cla_place, '장소미정') AS cPlace, 
+    CASE 
+        WHEN c.cla_time = '' THEN '시간미정'
+        WHEN TO_NUMBER(c.cla_time) >= 12 THEN '오후 ' || TO_CHAR(TO_NUMBER(c.cla_time)-12) || '시'
+        ELSE '오전 ' || c.cla_time || '시'
+    END AS cTime,
+    COALESCE(f.fd_cd, '분류미정') AS fCd, 
+    c.class_num AS cNum, 
+    NVL(p.toal, 0) AS total
+FROM class c 
+LEFT OUTER JOIN member m ON c.ptg_id = m.id
+LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+LEFT OUTER JOIN (
+    SELECT ctgr_num, COUNT(*) AS toal
+    FROM payment
+    GROUP BY ctgr_num
+) p ON c.class_num = p.ctgr_num
+WHERE c.cla_pri = '0'  and c.cfm_cd = 'Y'
+GROUP BY 
+    c.cla_cd, 
+    c.cla_cnt, 
+    c.thni, 
+    c.cla_ttl, 
+    m.name, 
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd, 
+    c.class_num, 
+    p.toal
+</select>
+
+
+
+
+
+<!-- 메인에서 강의클릭했을때 강의 상세페이지 -->
+<select id="selectClass" parameterType="String" resultType="co.yedam.silhyun.classes.vo.ClassesVO">
+select *
+from class 
+where class_num = #{classNum}
+</select>
+
+<!-- 강의 상세페이지에 함께 보낼 정보. 별점평균, 리뷰총수, 구입여부, 찜여부. 여부들은 숫자로 나오기때문에 숫자로 비교-->
+<select id="CPlusInfo" parameterType="String" resultType="map">
+SELECT 
+    (SELECT trunc(NVL(AVG(star), 0), 1) FROM review WHERE ctgr_num = #{classNum}) AS "starAvg",
+    (SELECT COUNT(*) FROM review WHERE ctgr_num = #{classNum}) AS "rvCnt",
+    (SELECT itr FROM photographer WHERE ptg_id = (SELECT ptg_id FROM class WHERE class_num = #{classNum})) AS "itr",
+    (select
+find_cd(fd_cd) AS fdCd
+    from field where ptg_id = (select ptg_id from class where class_num = #{classNum}))AS "fdCd"
+FROM DUAL
+</select>
+
+<select id="CMPlusInfo" parameterType="map" resultType="map">
+SELECT 
+    (SELECT count(ctgr_num) FROM payment WHERE ctgr_num = #{classNum} AND id = #{id} AND ord_sta = 'Y') AS "buyYN",
+    (SELECT count(ctgr_num) FROM zzim WHERE ctgr_num = #{classNum} AND id = #{id} and ctgr ='C') AS "zzimYN"
+from dual
+
+</select>
+
+
+<!-- 강의 상세페이지에 함께 보낼 랜덤추천리스트. -->
+<select id="randomList" parameterType="String"  resultType="map">
+    SELECT  c.cla_cd as cCd, 
+    		c.thni as thni, 
+    		trunc(NVL(AVG(star), 0), 1) as star, 
+    		c.cla_ttl as ttl, COALESCE(m.name, '익명') as name, 
+    		c.cla_dt as cDt,
+         	to_char(c.cla_pri, 'FM999,999,999') as cPri, 
+         	nvl(c.ypsn, 0) as ypsn, 
+         	COALESCE(c.cla_place, '장소미정') as cPlace, 
+	    	case 
+	        when c.cla_time = '' then '시간미정'
+	        when c.cla_time <![CDATA[ < ]]>=12 then '오전 '|| c.cla_time || '시'
+	        else '오후 '|| to_char(to_number(c.cla_time)-12) || '시'
+	  		end as cTime, 
+			find_cd(f.fd_cd) AS fCd, 
+			c.class_num as cNum
+    FROM class c 
+		    LEFT OUTER JOIN member m ON c.ptg_id = m.id
+		    LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+		    LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+    WHERE c.class_num != #{classNum}  and c.cfm_cd = 'Y'
+		    GROUP BY 
+		    c.cla_cd, 
+		    c.cla_cnt, 
+		    c.thni, 
+		    c.cla_ttl, 
+		    m.name, 
+		    c.cla_dt, 
+		    c.cla_pri, 
+		    c.ypsn, 
+		    c.cla_place, 
+		    c.cla_time, 
+		    f.fd_cd, 
+		    c.class_num
+    ORDER BY DBMS_RANDOM.VALUE
+	FETCH FIRST 4 ROWS ONLY 
+</select>
+
+
+
+<!-- 마이페이지에서 들어가는 내 수강강의 리스트  -->
+<select id="getName" parameterType="String" resultType="String">
+SELECT name
+from member
+where id = #{id}
+</select>
+
+<!-- 오프라인 강의 -->
+<select id="myTakeC1" parameterType="String" resultType="map">
+SELECT c.cla_ttl AS "ttl", m.name AS "pName", 
+find_cd(f.fd_cd) AS "fdCd", c.cla_place AS "cPlace",
+       to_char(c.cla_dt, 'YYYY"년" MM"월" DD"일"') AS "cDt", c.class_num as "classNum",
+    CASE
+        WHEN c.cla_time = '' THEN '시간미정'
+        WHEN c.cla_time <![CDATA[ < ]]>=12 THEN '오전 '|| c.cla_time || '시'
+        ELSE '오후 '|| to_char(to_number(c.cla_time)-12) || '시'
+    END AS "cTime",  CEIL(c.cla_dt - sysdate) AS "dDayCnt"
+FROM class c
+INNER JOIN member m ON c.ptg_id = m.id 
+INNER JOIN field f ON c.ptg_id = f.ptg_id
+INNER JOIN payment p ON c.class_num = p.ctgr_num 
+WHERE p.id = #{id} AND c.cla_cd = 'CL1'
+</select>
+
+<!-- 온라인 강의 -->
+<select id="myTakeC2" parameterType="String" resultType="map">
+SELECT c.cla_ttl AS "ttl", m.name AS "pName",
+find_cd(f.fd_cd) AS "fdCd", c.cla_cnt AS "IVCnt", p.ord_date AS "ordDt", c.ydt AS "ydt",
+       p.ord_date + c.ydt AS "dDay", CEIL((p.ord_date + c.ydt) - SYSDATE) AS "dDayCnt",  c.class_num as "classNum",
+       (
+select nvl((sum(inet_time)),0)
+from inetclass
+where class_num = c.class_num) as "timeSum"
+FROM class c
+INNER JOIN member m ON c.ptg_id = m.id 
+INNER JOIN field f ON c.ptg_id = f.ptg_id
+INNER JOIN payment p ON c.class_num = p.ctgr_num 
+WHERE p.id = #{id} AND c.cla_cd='CL2'
+</select>
+
+<!-- 오프라인 강의 세부정보 아작스 -->
+<select id="myC1Ajax" parameterType="String" resultType="map">
+    SELECT c.thni as thni, trunc(AVG(NVL(r.star, 0)),1) AS star, c.cla_ttl as ttl, COALESCE(m.name, '익명') as name,
+    COALESCE(m.tel, '연락처없음') as tel, c.cla_dt as cDt,
+    nvl(c.ypsn, 0) as ypsn, COALESCE(c.cla_place, '장소미정') as cPlace, 
+    case 
+        when c.cla_time = '' then '시간미정'
+        when c.cla_time  <![CDATA[ < ]]>=12 then '오전 '|| c.cla_time || '시'
+        else '오후 '|| to_char(to_number(c.cla_time)-12) || '시'
+    end as cTime, 
+find_cd(f.fd_cd) AS fCd, c.cla_desct as desct
+    FROM class c 
+    LEFT OUTER JOIN member m ON c.ptg_id = m.id
+    LEFT OUTER JOIN field f ON c.ptg_id = f.ptg_id
+    LEFT OUTER JOIN review r ON c.class_num = r.ctgr_num AND r.ctgr = 'C'
+    WHERE c.class_num = #{classNum}
+    GROUP BY  
+    c.thni, 
+    c.cla_ttl, 
+    m.name,
+    m.tel,
+    c.cla_dt, 
+    c.cla_pri, 
+    c.ypsn, 
+    c.cla_place, 
+    c.cla_time, 
+    f.fd_cd,
+    c.cla_desct
+
+</select>
+
+
+
+
+
+<!-- 수강중인 강의의 인강 리스트  -->
+<resultMap id="IVlist" type="java.util.HashMap">
+  <result column="ttl" property="ttl"/>
+  <result column="inetNum" property="inetNum"/>
+  <result column="ittl" property="ittl"/>
+  <result column="itime" property="itime"/>
+  <result column="icount" property="icount"/>
+  <result column="i_state" property="iState"/>
+  <result column="iBack" property="iBack"/>
+  <result column="classNum" property="classNum"/>
+</resultMap>
+
+<select id="getClassIVInfo" parameterType="java.util.Map" resultMap="IVlist">
+SELECT 
+    c.cla_ttl as ttl, 
+    nvl(i.inet_num,'준비중') as inetNum, 
+    nvl(i.inet_ttl,'준비중') as ittl, 
+    nvl(i.inet_time,'준비중') as itime, 
+    (SELECT COUNT(*) FROM inetclass WHERE class_num = #{classNum}) AS icount,
+    nvl(ROUND((w.cumlw_time/(i.inet_time*60)), 3) * 100,0) AS "i_state",
+    (SELECT COUNT(*) FROM inetclass_wtch w2 JOIN inetclass i2 ON i2.class_num = 
+    w2.class_num AND i2.inet_num = w2.inet_num WHERE w2.id = #{id} 
+    AND w2.class_num = #{classNum} AND ROUND((w2.cumlw_time/(i2.inet_time*60)), 3) * 100 >= 70) 
+    AS "iBack",
+    i.class_num as classNum
+FROM 
+    inetclass i
+    LEFT JOIN inetclass_wtch w ON w.class_num = i.class_num AND w.inet_num = i.inet_num AND w.id = #{id}
+    JOIN class c ON c.class_num = i.class_num
+WHERE 
+    i.class_num = #{classNum}
+ORDER BY i.inet_num
+</select>
+
+
+<!-- 수강중인 강의의 인강 비디오(1개 자세히) . classNum, inetNum, id 매개변수 3개 필요 -->
+
+<resultMap id="selectIV" type="java.util.HashMap">
+  <result column="inet_num" property="inetNum"/>
+  <result column="inet_ttl" property="inetTtl"/>
+  <result column="inet_vdo" property="inetVdo"/>
+  <result column="inet_desct" property="inetDesct"/>
+  <result column="ew_time" property="ewTime"/>
+    <result column="class_num" property="classNum"/>
+        <result column="inet_note" property="inetNote"/>
+</resultMap>
+<select id="selectIV" parameterType="map" resultMap="selectIV">
+
+<!-- 시청기록이 없어도 나머지 조건 조합해서 리스트에 뜨도록 수정함 -->
+
+SELECT i.inet_num, i.inet_ttl, i.inet_vdo, i.inet_desct, i.class_num, COALESCE(w.ew_time, '0') as ew_time,
+nvl(i.inet_note,0) as inet_note
+FROM inetclass i 
+LEFT OUTER JOIN inetclass_wtch w ON i.inet_num = w.inet_num AND w.id = #{id} and w.class_num = #{classNum}
+WHERE i.class_num = #{classNum} AND i.inet_num = #{inetNum}
+</select>
+
+
+
+<!-- 강의 보는 중에 정보 보내기.-->
+<insert id="insertWInfo" parameterType="co.yedam.silhyun.classes.vo.InetClassesWtchVO">
+    <selectKey keyProperty="inetwtNum" resultType="int" order="BEFORE">
+    	SELECT CASE WHEN inetwt_num is null THEN (SELECT nvl(max(inetwt_num),0)+1 FROM inetclass_wtch) ELSE inetwt_num END
+		FROM inetclass_wtch RIGHT OUTER JOIN DUAL 
+        ON inet_num = #{inetNum} AND class_num = #{classNum} AND id = #{id}
+    </selectKey>
+    MERGE INTO inetclass_wtch i
+    USING dual
+    ON (i.inet_num = #{inetNum} AND i.class_num = #{classNum} AND i.id = #{id})
+    WHEN NOT MATCHED THEN
+    INSERT (inetwt_num, inet_num, class_num, id, stw_time, ew_time, cumlw_time)
+    VALUES (#{inetwtNum}, #{inetNum}, #{classNum}, #{id}, #{stwTime}, #{ewTime}, #{cumlwTime})
+    WHEN MATCHED THEN
+    UPDATE SET stw_time = #{stwTime}, ew_time = #{ewTime}, cumlw_time = cumlw_time + #{cumlwTime}
+</insert>
+
+	<!-- 찜  -->
+	<!-- 클래스 찜 데이터 확인 -->
+	<select id="cFindZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO" resultType="int">
+		SELECT COUNT(*)
+		FROM ZZIM
+		WHERE ID = #{id}
+		AND CTGR_NUM = #{ctgrNum}
+		AND UPPER(CTGR) = 'C'
+	</select>
+	<!-- 클래스 찜 추가 -->
+	<insert id="cInsertZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO">
+		INSERT INTO ZZIM (ID, CTGR, CTGR_NUM)
+		VALUES (#{id},'C',#{ctgrNum})
+	</insert>
+	
+	<!-- 클래스 찜 삭제  -->
+	<delete id="cDelZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO">
+		DELETE FROM ZZIM 
+		WHERE ID = #{id} 
+		AND CTGR_NUM =#{ctgrNum}
+	</delete>
+
+</mapper>

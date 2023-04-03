@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/dashBoard}">
+
+<body>
+    <div layout:fragment="content">
+
+        <div class="page-breadcrumb bg-white">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <h3 class="page-title">이벤트 관리</h3>
+                </div>
+                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                    <div class="d-md-flex">
+                        <ol class="breadcrumb ms-auto">
+                            <li><a> </a></li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row" id="eventList">
+                <div class="col-sm-12">
+                    <div class="white-box">
+                        <div>
+                            <h5 class="page-title"><input type="checkbox" id="showAEvents"
+                                    onchange="showAllEvents()">종료된 이벤트 포함
+                            </h5>
+                            <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;"><code
+                                    th:text="${eCnt.sysDate}"></code>
+                                &emsp; 진행예정 이벤트: <code th:text="${eCnt.soon}"> </code>&nbsp;진행중인 이벤트: <code
+                                    th:text="${eCnt.ing}"> </code>&nbsp;
+                            </p>
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <div class="table-responsive" id="eList">
+                            <table class="table text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">#</th>
+                                        <th class="border-top-0">이벤트명</th>
+                                        <th class="border-top-0">작가아이디</th>
+                                        <th class="border-top-0">진행일수</th>
+                                        <th class="border-top-0">시작일자</th>
+                                        <th class="border-top-0">내용상세보기</th>
+                                        <th class="border-top-0">배너표시여부</th>
+                                        <th class="border-top-0">쿠폰발행상태</th>
+                                        <th class="border-top-0">진행상태</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="e,sts : ${eList}" th:class="${sts}"
+                                        th:classappend="${e.eventStt == '진행중'} ? 'bg-light' : ''">
+                                        <td th:text="${sts.count}"></td>
+                                        <td th:text="${e.name}"></td>
+                                        <td th:text="${e.id}"></td>
+                                        <td th:text="${e.term} + '일간'"></td>
+                                        <td th:text="${#dates.format(e.startDate,'yyyy/MM/dd')}"></td> 
+                                           <td> <button class="btn btn-warning" type="button" 
+                                           id ="updateBtn"  data-bs-toggle="modal" data-bs-target="#px-quick-view"
+                                           th:attr="onclick=|selectAjax('${e.eventNum}')|">상세보기</button></td>
+                                            <td th:text="${e.bnphSta}"></td>
+                                            <td th:text="${e.cpnPubSta}"></td>                                       
+                                            <td th:text="${e.eventStt}"></td>     
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                           </div>
+								 <div class="table-responsive"  id="eAList" style="display: none">
+                                 	<table class="table text-nowrap">
+	                                    <thead>
+	                                        <tr>
+	                                            <th class="border-top-0">#</th>
+	                                            <th class="border-top-0">이벤트명</th>
+	                                            <th class="border-top-0">작가아이디</th>
+	                                            <th class="border-top-0">진행일수</th>
+	                                            <th class="border-top-0">시작일자</th>
+	                                            <th class="border-top-0">내용상세보기</th> 
+	                                            <th class="border-top-0">배너표시여부</th>
+	                                            <th class="border-top-0">쿠폰발행상태</th>
+	                                            <th class="border-top-0">진행상태</th>
+	                                        </tr>
+	                                    </thead>
+                                    	<tbody>
+										<tr th:each="eA,sts2 : ${eAList}" th:class="${sts2}" th:classappend="${eA.eventStt == '진행중'} ? 'bg-light' : ''">
+                                            <td th:text="${sts2.count}"></td>
+                                            <td th:text="${eA.name}"></td>                                           
+                                            <td th:text="${eA.id}"></td>
+                                            <td th:text="${eA.term} + '일간'"></td>
+                                            <td th:text="${#dates.format(eA.startDate,'yyyy/MM/dd')}"></td>
+                                            <td> <button class="btn btn-warning" type="button" 
+                                            id ="updateBtn"  data-bs-toggle="modal" data-bs-target="#px-quick-view"
+                                            th:attr="onclick=|selectAjax('${eA.eventNum}')|">상세보기</button></td>
+                                            <td th:text="${eA.bnphSta}"></td>
+                                            <td th:text="${eA.cpnPubSta}"></td>                                       
+                                            <td th:text="${eA.eventStt}"></td>     
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+                      
+                      
+                                            
+                                            
+
+<div class="modal-quick-view modal fade" id="px-quick-view" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+		        <div align="right">
+		            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <div class="row" id = "selectBody">
+		</div>
+    		</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+                    
+<script th:inline="javascript"> 
+
+   var showAEvents = document.getElementById("showAEvents");
+   var eList = document.getElementById("eList");
+   var eAList = document.getElementById("eAList");
+   
+   function showAllEvents() {
+     if (showAEvents.checked) {
+    	 eAList.style.display = 'block';
+	    	eList.style.display = 'none';
+     } else {
+    	 eAList.style.display = 'none';
+	    	eList.style.display = 'block';
+     }
+   };
+   
+ 
+function selectAjax(eventNum){
+    var eventNum = eventNum;
+  $.ajax({
+    url: "/admin/eventManageSelect",
+    type: "GET",
+    data: "eventNum=" + eventNum,
+    dataType: 'json'
+  }).then(result =>{
+	  
+	     var eventSelect = result;
+	     
+	  var selectBody = document.getElementById("selectBody");
+	  selectBody.innerHTML = "";
+	
+ 
+	  var appendContent = `
+          <!-- Product Gallery -->
+          <div class="col-lg-6 lightbox-gallery product-gallery">
+          <p><h5><b>*배너</b></h5></p> 
+           <img src="${eventSelect.bnph}" class="img-fluid" title="" alt="">
+          <hr>
+          <h5><b>*썸네일</b></h5>               
+              <img src="${eventSelect.thni}" class="img-fluid" title="" alt="">
+          </div>
+          <!-- End Product Gallery -->
+          <!-- Product Details -->
+          <div class="col-lg-6">                   
+              <div class="product-detail pt-4">
+                  <div class="products-title mb-2">
+                  <h5><b>*이벤트명</b></h5>
+                      <h6>
+                      ${eventSelect.name} 
+                      </h6>                              
+              <hr>
+                      <h5><b>*시작일</b></h5> 
+                      <p>${eventSelect.startDate}</p>
+                      <hr>
+                      <h5><b>*기한</b></h5>
+                      <p>${eventSelect.term}일간 
+                      </p>
+                <hr>  
+                      <h5><b>*이벤트내용</b></h5>
+                      <p> ${eventSelect.cntn}</p>
+ 				 </div>
+              </div>
+          </div>
+	  `;
+	  
+	  
+      document.getElementById("selectBody").innerHTML += appendContent;  
+	  
+	});
+	
+	
+};
+
+
+</script>
+
+</div>
+</body>
+</html>

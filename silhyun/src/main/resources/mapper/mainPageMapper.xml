@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.common.map.MainMapper">
+	<!-- 인기 작가 리스트 -->
+	<select id="getHotPtg" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+			SELECT DISTINCT  NVL(Z.ZZIMSS,0) ZZIMS, P.*,M.NAME,M.PROFILE
+			FROM PHOTOGRAPHER P, MEMBER M,(SELECT CTGR_NUM,COUNT(*) ZZIMSS FROM ZZIM GROUP BY CTGR_NUM) Z
+			WHERE P.PTG_ID = M.ID
+			AND M.ID = Z.CTGR_NUM(+)
+			AND UPPER(P.CFM_CD) ='Y' 
+			ORDER BY 1 DESC
+		<![CDATA[	
+		) A WHERE ROWNUM <= 4) B WHERE RN >= 1
+		 ]]>
+	</select>
+	<!-- 신입 작가 리스트 -->
+	<select id="getNewPtg" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+			SELECT P.*,M.NAME,M.PROFILE
+			FROM PHOTOGRAPHER P, MEMBER M
+			WHERE P.PTG_ID = M.ID
+			AND UPPER(P.CFM_CD)='Y'
+			ORDER BY P.ACCP_DATE DESC
+		<![CDATA[	
+		) A WHERE ROWNUM <= 4) B WHERE RN >= 1
+		 ]]>
+	</select>
+	
+	<!-- 포트폴리오 랜덤 리스트 -->
+	<select id="getPtgPortfolioList" resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT A.PHO_RT, A.PHO_NUM, P.*, NVL(L.LIKESS,0) AS LIKES
+		FROM (SELECT
+		PHO_RT, PHO_NUM, CTGR_NUM
+		FROM PHOTO
+		WHERE PHO_NUM IN (
+		SELECT
+		MIN(TO_NUMBER(PHO_NUM))
+		FROM PHOTO
+		WHERE CTGR = 'P'
+		GROUP BY CTGR_NUM)
+		ORDER BY PHO_NUM) A
+		JOIN PORTFOLIO P ON A.CTGR_NUM = P.PORT_NUM
+		LEFT
+		OUTER JOIN (SELECT PORT_NUM, COUNT(*) AS LIKESS
+		FROM LIKE_PHOTO
+		GROUP BY
+		PORT_NUM) L ON P.PORT_NUM = L.PORT_NUM
+		WHERE P.UP_STA = 'Y'
+		ORDER BY DBMS_RANDOM.VALUE
+	<![CDATA[
+	) A WHERE ROWNUM <= 3) B WHERE RN >= 1
+ 	]]>
+	</select>
+	
+	<!-- 이벤트 배너 리스트 -->
+	<select id="getEventList" resultType="co.yedam.silhyun.event.vo.EventVO">
+		SELECT * FROM EVENT
+		WHERE UPPER(BNPH_STA) ='Y'
+		AND
+		CFM_CD ='Y'
+		ORDER BY START_DATE DESC
+	</select>
+	
+	<!-- 리뷰 리스트 (작가)-->
+	<select id="getReviewA" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT R.CTGR_NUM as "ptgId", R.CNTN,R.STAR,P.*,M.ID,M.PROFILE
+		FROM REVIEW R, PHOTO P,MEMBER M
+		WHERE R.REV_NUM = P.CTGR_NUM
+		AND PHO_NUM IN (SELECT MIN(TO_NUMBER(PHO_NUM))FROM  PHOTO WHERE CTGR ='R' GROUP BY CTGR_NUM)
+		AND R.ID = M.ID
+		AND UPPER(P.CTGR) ='R'
+		AND UPPER(R.CTGR) ='A'
+		ORDER BY R.REV_DATE DESC
+   	<![CDATA[
+	) A WHERE ROWNUM <= 2) B WHERE RN >= 1
+ 	]]>
+	</select>
+		<!-- 리뷰 리스트 (클래스)-->
+	<select id="getReviewC" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT R.CTGR_NUM as "classNum", R.CNTN,R.STAR,P.*,M.ID,M.PROFILE
+		FROM REVIEW R, PHOTO P,MEMBER M
+		WHERE R.REV_NUM = P.CTGR_NUM
+		AND PHO_NUM IN (SELECT MIN(TO_NUMBER(PHO_NUM))FROM  PHOTO WHERE CTGR ='R' GROUP BY CTGR_NUM)
+		AND R.ID = M.ID
+		AND UPPER(P.CTGR) ='R'
+		AND UPPER(R.CTGR) ='C'
+		ORDER BY R.REV_DATE DESC
+   	<![CDATA[
+	) A WHERE ROWNUM <= 2) B WHERE RN >= 1
+ 	]]>
+	</select>
+	<!-- 리뷰 리스트 (별점)-->
+	<select id="getReview" resultType="co.yedam.silhyun.common.vo.ReviewVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT R.CTGR_NUM as "ptgId", R.CTGR as "ctgr", R.CNTN,R.STAR,P.*,M.ID,M.PROFILE
+		FROM REVIEW R, PHOTO P,MEMBER M
+		WHERE R.REV_NUM = P.CTGR_NUM
+		AND PHO_NUM IN (SELECT MIN(TO_NUMBER(PHO_NUM))FROM  PHOTO WHERE CTGR ='R' GROUP BY CTGR_NUM)
+		AND R.ID= M.ID
+		AND UPPER(P.CTGR) ='R'
+		AND R.STAR = 5
+		ORDER BY R.REV_DATE DESC
+	<![CDATA[
+	) A WHERE ROWNUM <= 2) B WHERE RN >= 1
+ 	]]>
+	</select>
+	
+	<!-- 작가 등록된 필드가지고와서 태그로만들기 -->
+	<select id="getFeildList" resultType="co.yedam.silhyun.member.vo.FieldVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT DISTINCT FD_CD,FIND_CD(FD_CD) fldName FROM FIELD
+	<![CDATA[	
+	 	) A WHERE ROWNUM <= 8) B WHERE RN >= 1
+	 	 ]]>
+	</select>
+	
+	<!-- 등록된 필드의 작가 리스트 가지고오기 -->
+	<select id="getTagPtgList" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT P.PTG_ID ,M.NAME,M.PROFILE,F.FD_CD,FIND_CD(F.FD_CD) FLDNAME
+		FROM MEMBER M, PHOTOGRAPHER P,FIELD F
+		WHERE P.PTG_ID = M.ID
+		AND F.PTG_ID = P.PTG_ID
+		AND F.FD_CD = #{fdCd}
+		ORDER BY M.NAME
+	</select>
+	
+	<select id="getPtgPort" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+	SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+			SELECT DISTINCT NVL(Z.ZZIMSS,0) ZZIMS,P.*, M.*,S.ST_NAME,A.PHO_RT, A.PHO_NUM,PT.UP_STA,PT.PORT_DATE,PT.PORT_NUM
+			FROM PHOTOGRAPHER P, MEMBER M,STUDIO S,(SELECT CTGR_NUM,COUNT(*) ZZIMSS FROM ZZIM GROUP BY CTGR_NUM) Z,
+	        (SELECT PHO_RT, PHO_NUM, CTGR_NUM
+			FROM PHOTO
+			WHERE PHO_NUM IN (SELECT MIN(TO_NUMBER(PHO_NUM))
+			FROM PHOTO
+			WHERE UPPER(CTGR) = 'P'
+			GROUP BY CTGR_NUM)
+			ORDER BY PHO_NUM) A, PORTFOLIO PT
+			WHERE P.PTG_ID = M.ID
+	        AND PT.PTG_ID = P.PTG_ID
+	        AND A.CTGR_NUM = PT.PORT_NUM
+		    AND M.ID = Z.CTGR_NUM(+)
+		    AND P.ST_ID = S.ST_ID(+)
+			AND P.PTG_ID = #{ptgId}
+	        AND UPPER(PT.UP_STA)='Y'
+	        ORDER BY PORT_DATE DESC
+ 			<![CDATA[	
+	 	) A WHERE ROWNUM <= 3) B WHERE RN >= 1
+	 	 ]]>
+	
+	</select>
+	
+	
+</mapper>

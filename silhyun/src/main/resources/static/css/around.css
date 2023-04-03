@@ -1,0 +1,238 @@
+/* around 페이지 정렬버튼 */
+.toggleButton {
+	border: solid 1.2px rgb(199, 199, 199);
+	border-radius: 3px;
+	padding: 7px;
+	background-color: rgb(255, 255, 255);
+	float: right;
+	width: 100px;
+	text-align: center;
+	list-style: none;
+	color: black;
+}
+
+.toggleButton:hover {
+	color: rgb(120, 120, 120);
+}
+
+.toggleMenu {
+	border: solid 1px rgb(230, 230, 230);
+	border-radius: 3px;
+	padding: 15px;
+	background-color: rgb(255, 255, 255, 0.95);
+	list-style: none;
+	width: 100px;
+	text-align: center;
+	padding: 8px;
+	display: none;
+	position: absolute;
+	z-index: 10;
+	top: 40px;
+	cursor: pointer;
+}
+/* 정렬아이템마우스오버 */
+.dropdown-item:hover {
+	color: rgb(160, 160, 160);
+}
+
+/* 검색창 */
+.form {
+	position: relative;
+}
+
+.form .bi-search {
+	position: absolute;
+	top: 9px;
+	left: 15px;
+	color: #9ca3af;
+}
+
+.form span {
+	position: absolute;
+	right: 11px;
+	top: 6px;
+	padding: 2px;
+	border-left: 1px solid #d1d5db;
+}
+
+.left-pan {
+	padding-left: 110px;
+}
+
+.left-pan i {
+	padding-left: 120px;
+}
+
+.form-input {
+	width: 20rem;
+	height: 40px;
+	text-indent: 18px;
+	border-radius: 10px;
+}
+
+.form-input:focus {
+	box-shadow: none;
+	border: 1px solid #d1d5db;
+}
+
+/* 둘러보기 태그 버튼 */
+.btn.btn-sm.active {
+	border-radius: 20px;
+	width: 120px;
+}
+
+.shop-top-bar .layout-change .btn {
+	border-radius: 20px;
+	width: 120px;
+}
+
+/* 포트폴리오 사진 list */
+.col-6 {
+	flex: 0 0 auto;
+	width: 33.3%;
+}
+/* 포트폴리오컨테이너? */
+.col-lg-6.lightbox-gallery.sticky-lg-top.sticky-lg-top-header {
+	flex: 0 0 auto;
+	width: 35%;
+}
+/* 작가사세컨테이너 */
+.col-lg-6.ps-lg-5.pt-5.pt-lg-0 {
+	flex: 0 0 auto;
+	width: 65%;
+}
+/* 작가상세예약리뷰버튼 */
+.cart-button.mb-3.d-flex button {
+	border-radius: 2px;
+}
+/* 포트폴리오등록하기버튼 */
+.btn.btn-port.me-3 {
+	background-color: black;
+	color: white;
+	border: none;
+	border-radius: 2px;
+}
+/* 포트폴리오 쪽 조아요치우기 */
+.rating-star.text.small.pb-4 {
+	float: right;
+	width: 20%;
+	text-align: center;
+	font-weight: bolder;
+}
+
+/* 포트폴리오 리스트 사진 마우스 올렸을 때 보이는 정보 */
+.image-container {
+	position: relative;
+	display: inline-block;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: .5s ease;
+	background-color: rgba(0, 0, 0, 0.5);
+	align-items: center;
+	justify-content: center;
+}
+
+.image-container:hover .overlay {
+	opacity: 1;
+}
+
+.overlayText {
+	color: #fff;
+	font-size: 18px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 1;
+}
+/* 포트폴리오 리스트 사진 마우스 올렸을 때 보이는 정보 끝 */
+/* 태그검색 */
+#text-container {
+	position: relative;
+}
+
+#aroundTagList {
+	position: absolute;
+	z-index: 20;
+	top: 100%;
+	left: 0;
+	width: 320px;
+	background-color: white;
+	border: 1px solid rgb(220, 220, 220, 0.9);
+	border-top: none;
+	list-style: none;
+	margin-top: 0;
+	padding-left: 10px;
+}
+
+#aroundTagList li {
+	margin: 10px
+}
+
+#aroundTagList li:hover {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/* 포트폴리오 리스트 이미지 */
+
+/* 둘러보기 */
+.product-card-image {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	padding-bottom: 100%;
+}
+
+.product-card-image .product-media {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(250, 250, 250)
+}
+
+.product-card-image .product-media img {
+	max-width: 100%;
+	/*   max-height: 100%; */
+	object-fit: contain;
+}
+
+/* 상세포트폴리오부분 */
+.col-6.image-container.modalButton {
+	position: relative;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 265px;
+	height: 265px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(250, 250, 250);
+	margin: 4px;
+	padding: 0;
+}
+
+.col-6.image-container.modalButton img {
+	min-width: 100%;
+	/*   max-height: 100%; */
+	object-fit: contain;
+}

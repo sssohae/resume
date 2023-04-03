@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{home/layout}">
+
+<head>
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta name="author" content="pxdraft" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <!-- title -->
+    <title>예약, 결제 완료 창</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Skippy & Prload -->
+        <!-- skippy -->
+        <a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+            <div class="container">
+                <span class="u-skiplink-text">Skip to main content</span>
+            </div>
+        </a>
+        <!-- End skippy -->
+        <!-- Main -->
+        <main>
+            <!-- Breadcrumb -->
+            <div class="py-3 bg-gray-100">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 my-2">
+                            <h1 class="m-0 h4 text-center text-lg-start">주문 완료</h1>
+                        </div>
+                        <div class="col-lg-6 my-2">
+                            <ol class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+                                <li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+                                            class="bi bi-home"></i>Home</a></li>
+                                <li class="breadcrumb-item text-nowrap active" aria-current="page">Profile</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Breadcrumb -->
+            <!-- Table -->
+            <div class="py-6">
+                <div class="container">
+                    <div class="row">
+                        <!-- Content -->
+                        <div class="col-lg-8 col-xxl-9">
+                            <div class="card mb-5">
+                                <div class="card-header py-3">
+                                    <h5 class="m-0">예약 정보</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 mb-3">
+                                            <h5 class="form-label">작가 이름</h5>
+                                            <span class="form ptgName">[[${resInfo[0].name}]]</span>
+                                        </div>
+                                        <div class="col-sm-12 mb-3">
+                                            <h5 class="form-label">쵤영 시간</h5>
+                                            <span class="form shotTime">[[${resInfo[0].shotTime}]]</span>
+                                        </div>
+                                        <div class="col-sm-12 mb-3">
+                                            <h6 class="form-label">촬영 날짜</h6>
+                                            <span class="form shotDate" th:text="${#dates.format(resInfo[0].shotDate, 'yyyy-MM-dd')}">ddds</span>
+                                        </div>
+                                        <div class="col-sm-12 mb-3">
+                                            <h6 class="form-label shotPlace">촬영 장소</h6>
+                                            <span class="form shotPlace">[[${resInfo[0].shotPlace}]]</span>
+                                        </div>
+                                        <div class="col-sm-12 mb-3">
+                                            <h6 class="form-label selectedOP">선택옵션</h6>
+                                            <span class="form selectedOP">[[${resInfo[0].ttl}]]</span>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header py-3">
+                                    <h5 class="m-0">결제 정보</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-sm-12 mb-3">
+                                                <h6 class="form-label opdPri">주문 금액</h6>
+                                                <span class="form opdPri">[[${resInfo[0].ordPri}]]원</span>
+                                            </div>
+                                            <div class="col-sm-12 mb-3">
+                                                <div class="form-group">
+                                                    <h6 class="form-label discPri">할인 금액</h6>
+                                                    <span class="form discPri">[[${resInfo[0].discount}]]원</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 mb-3">
+                                                <h6 class="form-label paymPri">총 결제 금액</h6>
+                                                <span class="form paymPri">[[${resInfo[0].paymPri}]]원</span>
+                                            </div>
+                                            
+                                            <div class="col-sm-12 mb-3">
+                                                <blockquote class="bg-gray-100 p-3 lead fw-400 mt-5 text-dark border-start border-primary border-5">
+                                                     <ol class="list-type-01 list-unstyled pt-2 mb-4">
+                                                    <li><h5>취소 및 환불 규정</h5></li>
+                                                    가. 기본 환불 규정<br>
+                                                    1. 전문가와 의뢰인의 상호 협의하에 청약 철회 및 환불이 가능합니다.<br>
+                                                    2. 섭외, 대여 등 사전 준비 도중 청약 철회 시, 해당 비용을 공제한 금액을 환불 가능합니다.<br>
+                                                    3. 촬영 또는 편집 작업 착수 이후 청약 철회 시, 진행된 작업량 또는 작업 일수를 산정한 금액을 공제한 금액을 환불 가능합니다.<br>
+                                                    <br>
+                                                    <li><h5>환불 가이드라인</h5></li>
+                                                    (1) 기획 단계에서 청약 철회: 총 결제 금액의 최대 80%까지 환불 가능<br>
+                                                    (2) 작업 착수 후 청약 철회: 총 결제 금액의 최대 20%까지 환불 가능<br>
+                                                    (3) 작업 50% 완료 후 청약 철회: 총 결제 금액의 최대 10%까지 환불 가능<br>
+                                                    (4) 작업 100% 완료 후 청약 철회 : 환불 불가<br>
+                                                    <br>
+                                                    나. 전문가 책임 사유<br>
+                                                    1. 소비자 피해 보상 규정에 의거하여 촬영 원본의 멸실 및 재해로 인한 피해 발생 시, 전액 환불합니다.<br>
+                                                    2. 작업 기간 미준수, 작업 태만 및 이에 상응하는 전문가 책임으로 인한 청약 철회 시, 환불 및 촬영 원본 제공이 가능합니다.<br>
+                                                    <br>
+                                                    다. 의뢰인 책임 사유<br>
+                                                    작업이 시작되면 단순 변심 또는 의뢰인 책임 사유로 인한 전액 환불이 불가능합니다.
+                                                    </ol>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <button class="btn w-100 btn-primary" type="button" onclick="location.href='/'">메인으로</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn w-100 btn-primary" type="button">예약내역</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- End Content -->
+                    </div>
+                </div>
+            </div>
+            <!--Table -->
+        </main>
+        <!-- End Main -->
+
+    <!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+    <!-- script start -->
+
+    <!--bootstrap-->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- slick carousel -->
+    <script src="/vendor/swiper/swiper-bundle.min.js"></script>
+    <!-- magnific -->
+    <script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+    <!-- isotope -->
+    <script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/count-down/jquery.countdown.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/jarallax/jarallax-all.js"></script>
+    <!-- Theme Js -->
+    <script src="/js/custom.js"></script>
+    <script src="/js/theme.js"></script>
+    <!-- End script start -->
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.member.map.PtgMapper">
+	<!-- 작가 예약시간 ajax -->
+	<select id="getResTime" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT DISTINCT P.*,
+		       RT.*,
+		       M.NAME,
+		       FIND_CD(RES_TIME) REST,
+			   (SELECT COUNT(*) FROM RESER R WHERE R.SHOT_DATE = TO_DATE(#{redate},'yyyy-mm-dd') AND RT.RES_TIME =R.SHOT_TIME AND R.PTG_ID = P.PTG_ID) RESYN
+		 FROM PHOTOGRAPHER P, RESER_TIME RT, MEMBER M
+		WHERE M.ID = P.PTG_ID
+		  AND P.PTG_ID ＝ RT.PTG_ID
+		  AND P.PTG_ID = #{ptgId}	
+		ORDER BY REST
+	</select>
+	
+	<!-- 예약 페이지 옵셥, 작가 정보 조회 -->
+	<select id="getReser" resultType="co.yedam.silhyun.member.vo.PhotographerVO" parameterType="String">
+		SELECT DISTINCT O.*, P.*, M.*
+		FROM OPTIONS O, PHOTOGRAPHER P, MEMBER M
+		WHERE M.ID = P.PTG_ID
+		AND P.PTG_ID = O.PTG_ID
+		AND P.PTG_ID = #{ptgId}
+		ORDER BY O.PRI 
+	</select>
+	
+	<!-- 작가 상세 페이지 조회 -->
+	<select id="getPtg" resultType="co.yedam.silhyun.member.vo.PhotographerVO" parameterType="String">
+		SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+			SELECT DISTINCT 
+			       NVL(Z.ZZIMSS,0) ZZIMS,
+			       P.*, 
+			       M.*,
+			       S.ST_NAME,
+			       A.PHO_RT, 
+			       A.PHO_NUM,
+			       PT.UP_STA,
+			       PT.PORT_DATE,
+			       PT.PORT_NUM
+			FROM PHOTOGRAPHER P, 
+			     MEMBER M,
+			     STUDIO S,
+			     (SELECT CTGR_NUM,COUNT(*) ZZIMSS FROM ZZIM GROUP BY CTGR_NUM) Z,
+	             (SELECT PHO_RT, PHO_NUM, CTGR_NUM
+					FROM PHOTO
+				   WHERE PHO_NUM IN (  SELECT MIN(TO_NUMBER(PHO_NUM))
+										 FROM PHOTO
+										WHERE UPPER(CTGR) = 'P'
+										GROUP BY CTGR_NUM)
+			       ORDER BY PHO_NUM) A, 
+			       PORTFOLIO PT
+			WHERE P.PTG_ID = M.ID
+	        AND PT.PTG_ID = P.PTG_ID
+	        AND A.CTGR_NUM = PT.PORT_NUM
+		    AND M.ID = Z.CTGR_NUM(+)
+		    AND P.ST_ID = S.ST_ID(+)
+			AND P.PTG_ID = #{ptgId}
+	        AND UPPER(PT.UP_STA)='Y'
+	        ORDER BY PORT_DATE DESC
+ 			<![CDATA[	
+	 	) A WHERE ROWNUM <= 6) B WHERE RN >= 1
+	 	 ]]>
+	</select>
+	
+	<!-- 작가페이지 다중검색 -->
+	<select id="getPtgLsit" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+	 SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		SELECT DISTINCT NVL(Z.ZZIMSS,0) ZZIMS,P.*,M.*
+	    FROM PHOTOGRAPHER P, MEMBER M,(SELECT CTGR_NUM,COUNT(*) ZZIMSS FROM ZZIM GROUP BY CTGR_NUM ORDER BY 2 DESC) Z, FIELD F
+	    WHERE P.PTG_ID = M.ID 
+        AND M.ID = Z.CTGR_NUM(+)
+        AND P.PTG_ID = F.PTG_ID
+        AND UPPER(P.CFM_CD) = 'Y'
+        	<if test="vo.chkArray != null and vo.chkArray.length>0">
+					AND P.REGION_CD in <foreach item="vo.region" collection="vo.chkArray" open="(" close=")" separator="," >
+						#{vo.region}
+					</foreach>
+			</if>
+			<if test="vo.chkfldArray != null and vo.chkfldArray.length>0">
+					AND F.FD_CD in <foreach item="vo.field" collection="vo.chkfldArray" open="(" close=")" separator="," >
+						#{vo.field}
+					</foreach>
+			</if>
+			
+	       	<if test="vo.searchWord != null and vo.searchWord.length>0">
+	       			AND M.NAME LIKE '%'||#{vo.searchWord}||'%'
+	       	</if>
+	    <choose>
+	    	<when test="'new'.equals(vo.searchType)"> ORDER BY P.REGI_DATE DESC</when>
+	    	<when test="'name'.equals(vo.searchType)"> ORDER BY M.NAME</when>
+	    	<when test="'hot'.equals(vo.searchType)"> ORDER BY NVL(Z.ZZIMSS,0) DESC</when>
+	    </choose>
+	<![CDATA[	
+	 	) A WHERE ROWNUM <= #{cri.pageNum} * #{cri.amount}) B WHERE RN > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+	</select>
+	
+	<!-- 작가 리스트 페이지 페이징 -->
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(DISTINCT P.PTG_ID) 
+	    FROM PHOTOGRAPHER P, MEMBER M,(SELECT CTGR_NUM,COUNT(*) ZZIMS FROM ZZIM GROUP BY CTGR_NUM ORDER BY 2 DESC) Z, FIELD F
+	    WHERE P.PTG_ID = M.ID 
+        AND M.ID = Z.CTGR_NUM(+)
+        AND P.PTG_ID = F.PTG_ID
+          AND UPPER(P.CFM_CD) = 'Y'
+        	<if test="vo.chkArray != null and vo.chkArray.length>0">
+					AND P.REGION_CD in <foreach item="vo.region" collection="vo.chkArray" open="(" close=")" separator="," >	#{vo.region}</foreach>
+			</if>
+			<if test="vo.chkfldArray != null and vo.chkfldArray.length>0">
+					AND F.FD_CD in <foreach item="vo.field" collection="vo.chkfldArray" open="(" close=")" separator="," >
+						#{vo.field}
+					</foreach>
+			</if>
+			
+	       	<if test="vo.searchWord != null and vo.searchWord.length>0">
+	       			AND M.NAME LIKE '%'||#{vo.searchWord}||'%'
+	       	</if>
+	</select>
+	<!-- 다중검색 ajax시도  =>지금은 사용X -->
+	<select id="ptgSearchList" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT * FROM( SELECT ROWNUM RN, A.* FROM( 
+		 
+		SELECT DISTINCT P.PTG_ID,M.NAME,M.PROFILE
+		FROM PHOTOGRAPHER P, MEMBER M , FIELD F
+		WHERE
+		P.PTG_ID = M.ID 
+        AND P.PTG_ID = F.PTG_ID
+		
+			<if test="vo.chkArray != null and vo.chkArray.length>0">
+					AND P.REGION_CD in <foreach item="vo.region" collection="vo.chkArray" open="(" close=")" separator="," >
+						#{vo.region}
+					</foreach>
+			</if>
+			<if test="vo.chkfldArray != null and vo.chkfldArray.length>0">
+					AND F.FD_CD in <foreach item="vo.field" collection="vo.chkfldArray" open="(" close=")" separator="," >
+						#{vo.field}
+					</foreach>
+			</if>
+			
+	       	<if test="vo.searchWord != null and vo.searchWord.length>0">
+	       	AND M.NAME LIKE '%'||#{vo.searchWord}||'%'
+	       	</if>
+	       	ORDER BY M.NAME
+	<![CDATA[	
+	 	) A WHERE ROWNUM <= #{cri.pageNum} * #{cri.amount}) B WHERE RN > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+	</select>
+	<!-- 작가 찜 데이터 확인 -->
+	<select id="findZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO" resultType="int">
+		SELECT COUNT(*)
+		FROM ZZIM
+		WHERE ID = #{id}
+		AND CTGR_NUM = #{ctgrNum}
+		AND UPPER(CTGR) = 'A'
+	</select>
+	<!-- 작가 찜 추가 -->
+	<insert id="insertZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO">
+		INSERT INTO ZZIM (ID, CTGR, CTGR_NUM)
+		VALUES (#{id},'A',#{ctgrNum})
+	</insert>
+	
+	<!-- 작가 찜 삭제  -->
+	<delete id="delZzim" parameterType="co.yedam.silhyun.common.vo.ZzimVO">
+		DELETE FROM ZZIM 
+		WHERE ID = #{id} 
+		AND CTGR_NUM =#{ctgrNum}
+	</delete>
+</mapper>

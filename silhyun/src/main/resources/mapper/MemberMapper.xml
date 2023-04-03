@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.member.map.MemberMapper">
+<select id="memeberSelect" resultType="co.yedam.silhyun.member.vo.MemberVO">
+	select id, pwd, name, tel, email, birth_date, gen_cd, rcomr, token, re_token, login_cd,
+	        'ROLE_'|| mem_cd mem_cd, point_sum, profile, join_date
+	        ,(select count(*) from couponhistory where id = #{id} and cpn_sta = 'N') "coupon"
+	  from member
+	where id = #{id}
+</select>
+
+<insert id="memberInsert">
+	Insert into member 
+	(id, pwd, name, tel, email
+	<if test="birthDate != null">, birth_date</if>
+	<if test="genCd != null and genCd != ''">, gen_cd</if>
+	<if test="rcomr != null and rcomr != ''">, rcomr</if>
+	<if test="token != null and token != ''">, token</if>
+	<if test="reToken != null and reToken != ''">, re_token</if>
+	, login_cd
+	<if test="profile != null and profile != ''">, profile</if>
+	)
+	values
+	(#{id}, #{pwd}, #{name}, #{tel}, #{email}
+	<if test="birthDate != null">, #{birthDate}</if>
+	<if test="genCd != null and genCd != ''">, #{genCd}</if>
+	<if test="rcomr != null and rcomr != ''">, #{rcomr}</if>
+	<if test="token != null and token != ''">, #{token}</if>
+	<if test="reToken != null and reToken != ''">, #{reToken}</if>
+     <choose>
+		<when test="loginCd != null and loginCd != ''"> ,#{loginCd} </when>
+		<otherwise> ,'LP' </otherwise>
+	</choose>
+	<if test="profile != null and profile != ''">,#{profile}</if>
+	)
+</insert>
+
+<select id="isidCheck" resultType="boolean">
+	select case when count(id) = 1 then 0 
+	                               else 1 
+	       end as id
+	from member
+	<where>
+		<if test="id != null and id != ''">id = #{id}</if>
+		<if test="email != null and email != ''">email = #{email}</if>
+	</where>
+</select>
+
+<!-- 프사바꾸기 -->
+<!-- 프사바꾸기  -->
+	<update id="updateProfileImage" parameterType="co.yedam.silhyun.member.vo.MemberVO">
+		UPDATE MEMBER
+		SET PROFILE = #{profile}
+		WHERE ID = #{id}
+	</update>
+	
+   <!-- 아이디 비번 찾기  -->
+   <select id="findid" resultType="String">
+		select id
+		from member
+		where name = #{name} and email = #{email}
+	</select>
+	
+	<select id="isPwdChek" resultType="int">
+		select count(*)
+		from member
+		where id = #{id} and email = #{email}
+	</select>
+
+</mapper>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+
+<head>
+
+<title>silhyun</title>
+
+</head>
+<style>
+
+ .container{
+ 	text-align: center;
+ }
+ .col-lg-5.col-xxl-4{
+ border: 1px solid #ddd;
+ padding: 20px
+ }
+ form{
+ 	margin: 20px
+ }
+ hr{
+ 	margin-bottom: 20px;
+ 	margin-top: 20px;
+ }
+ img{
+ 	margin-bottom: 20px;
+ 	margin-top: 20px;
+ }
+</style>
+<body>
+<div layout:fragment="content">
+    <main>
+        <!-- Section 이거 나중에 다시 vue로 만들기 //로그인도-->
+        <section class="section">
+            <div class="container section">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-xxl-4">
+                        <h5 class="h3 mb-4">회원가입 완료</h5>
+                        <form>
+                            <div class="form-group mb-3">
+                            	
+                            </div>
+                            <div>
+                            <img src="/img/joineventcoupon.png">
+                            </div>
+                            <div class="form-group mb-3">
+                        		<span>실현하다의 회원가입이 완료되었습니다. <br> 즉시 사용하실 수 있는 회원가입 쿠폰이 발급되었습니다.</span>
+                            </div>
+                            <hr>
+                            <div class="form-group text-center">
+                                <button type="button" class="btn btn-primary w-100" onclick="location.href='/'">
+                                    홈가기
+                                </button>
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="button" class="btn w-100" onclick="location.href='/login'">
+                                    로그인하기
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Section -->
+    </main>
+</div>
+    </body>
+    
+    </html>

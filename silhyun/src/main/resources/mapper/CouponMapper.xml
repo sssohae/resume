@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.event.map.CouponMapper">
+	<select id="couponSelectList" resultType="co.yedam.silhyun.event.vo.CouponVO">
+		SELECT *
+		FROM coupon
+		ORDER BY start_date DESC
+	</select>
+	
+	<insert id="insertCoupon" parameterType="co.yedam.silhyun.event.vo.CouponHistoryVO">
+		INSERT INTO COUPONHISTORY
+		VALUES(#{id},
+			   #{cpnNum},
+			   'N')
+	</insert>
+	
+	<update id="updateCoupon" parameterType="co.yedam.silhyun.event.vo.CouponHistoryVO">
+		UPDATE COUPONHISTORY 
+		   SET CPN_STA ='Y' 
+		 WHERE ID = #{id}
+		   AND CPN_NUM = #{cpnNum}
+	</update>
+</mapper>

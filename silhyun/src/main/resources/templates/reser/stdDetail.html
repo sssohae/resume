@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{home/layout}">
+
+<head>
+  <!-- metas -->
+  <meta charset="utf-8">
+  <meta name="author" content="pxdraft" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+  <meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+  <!-- title -->
+  <title>작가 디테일 페이지</title>
+  <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+    crossorigin="anonymous"></script>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <!-- CSS Template -->
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    .clearfix:after {
+      content: '';
+      display: block;
+      clear: both;
+      float: none;
+    }
+
+    /* ======== Calendar ======== */
+    .my-calendar {
+      width: 80%;
+      height: 500px;
+      margin: 30px;
+      padding: 20px 20px 10px;
+      text-align: center;
+      font-weight: 800;
+/*       border: 1px solid #ddd; */
+      cursor: default;
+    }
+
+    .my-calendar .clicked-date {
+      border-radius: 25px;
+      margin-top: 36px;
+      float: left;
+      width: 1;
+      text-align: center;
+      padding: 46px 0 26px;
+      background: #ddd;
+    }
+.my-calendar.clearfix {
+    margin-left: 230px;
+}
+table.cal-table {
+    height: 350px;
+
+}
+    .my-calendar .calendar-box {
+      /* float: center; */
+      float: left;
+      width: 58%;
+      height: 500px;
+      padding-left: 30px;
+    }
+
+    .clicked-date .cal-day {
+      /* font-size: 1px; */
+      font-size: 24px;
+
+    }
+
+    .clicked-date .cal-date {
+      /* font-size: 1px; */
+      font-size: 130px;
+    }
+
+    .ctr-box {
+      padding: 0 16px;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .ctr-box .btn-cal {
+      position: relative;
+      float: left;
+      width: 25px;
+      height: 25px;
+      margin-top: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .ctr-box .btn-cal:after {
+      content: '<';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      line-height: 25px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .ctr-box .btn-cal.next {
+      float: right;
+    }
+
+    .ctr-box .btn-cal.next:after {
+      content: '>';
+    }
+
+    .cal-table {
+      width: 100%;
+    }
+
+    .cal-table th {
+      width: 14.2857%;
+      padding-bottom: 5px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .cal-table td {
+      padding: 3px 0;
+      height: 50px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+
+    .cal-table td.day {
+      position: relative;
+      cursor: pointer;
+      color: lightgray;
+    }
+
+    .cal-table td.today {
+      background: #ffd255;
+      border-radius: 50%;
+      color: #fff;
+    }
+
+    .cal-table td.day-active {
+      background: #fff;
+      border-radius: 50%;
+      color: lightgray;
+    }
+
+    .cal-table td.has-event:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: #FFC107;
+    }
+
+    .res-yes{
+      background-color: black;
+    }
+    .res-no{
+      background-color: lightgray;
+    }
+   
+  </style>
+</head>
+<body>
+  <div layout:fragment="content">
+    <!-- Skippy & Prload -->
+    <!-- skippy -->
+    <!-- <input id="pthVal" type="hidden" th:text="__${ptgId}__"> -->
+    <a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+      <div class="container">
+        <span class="u-skiplink-text">Skip to main content</span>
+      </div>
+    </a>
+    <!-- End skippy -->
+    <!-- End Size Chart  -->
+
+    <div class="wrapper">
+      <!-- Main -->
+      <main>
+        <!-- Page Title -->
+        <div class="bg-no-repeat bg-cover bg-right-center position-relative">
+          <div class="position-absolute top-0 end-0 start-0 bottom-0 opacity-3 bg-dark"></div>
+          <!-- Header Height Bar -->
+          <div class="header-height-bar border-bottom opacity-3"></div>
+          <div class="container py-6 position-relative">
+            <div class="row align-items-center">
+              <div class="col-lg-6 my-2">
+                <h1 class="m-0 h4 text-center text-lg-start text-white">🍓 [[${std[0].stName}]] 🍓</h1>
+              </div>
+              <div class="col-lg-6 my-2">
+                <ol class="breadcrumb breadcrumb-light m-0 small justify-content-center justify-content-lg-end">
+                  <li class="breadcrumb-item"><a class="text-nowrap" href="/">Home</a></li>
+                  <li class="breadcrumb-item text-nowrap active" aria-current="page">예약하기</li>
+                  <li class="breadcrumb-item text-nowrap active" aria-current="page">사진관</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Page Title -->
+        <!-- Product Details -->
+        <section class="product-details-02 py-6">
+         <div class="container">
+           <div class="row">
+             <!-- Product Gallery -->
+             <div class="col-lg-7 lightbox-gallery product-gallery">
+               <!--큰 사진-->
+               <div class="swiper swiper_gallery_v">
+                 <div class="swiper-wrapper">
+                   <div class="swiper-slide">
+                     <div class="pd-gallery-slide">
+                       <img th:src="${std[0].stProfile}" class="img-fluid" title="" alt="" style="width: 600px;height: 600px">
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+              </div>
+              <!-- End Product Gallery -->
+              <!-- Product Details -->
+              <div class="col-lg-5 ps-lg-5">
+                <div class="product-detail pt-4 pt-lg-0">
+                  <div class="products-title-box">
+                    <div class="products-title">
+                      <h4 class="h4">[[${std[0].stName}]]</h4>
+                    </div>
+
+                  </div>
+                  <div class="product-description">
+                    <pre><p style="height: 400px;">[[${std[0].stItr}]]</p></pre>
+                    <h7>[[${std[0].addr}]] [[${std[0].detAddr}]]</h7>
+                    <h6>Tel. [[${std[0].tel}]]</h6>
+                    
+                  </div>
+
+                  <div class="product-detail-actions d-flex flex-wrap">
+                    <div class="cart-button">
+                      
+                    </div>
+                  </div>
+                  <div class="product-metas small">
+
+                    <p class="theme-link m-0">
+                      <label class="m-0 text-dark fw-500 w-100">Share:</label>
+                      <a class="icon icon-sm bg-primary text-white rounded me-1" href="#">
+                        <i class="bi bi-facebook"></i>
+                      </a>
+                      <a class="icon icon-sm bg-primary text-white rounded me-1" href="#">
+                        <i class="bi bi-twitter"></i>
+                      </a>
+                      <a class="icon icon-sm bg-primary text-white rounded me-1" href="#">
+                        <i class="bi bi-instagram"></i>
+                      </a>
+                      <a class="icon icon-sm bg-primary text-white rounded me-1" href="#">
+                        <i class="bi bi-linkedin"></i>
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <form>
+                <input type="hidden" name="stId" th:value="${std[0].stId}">
+                <input type="hidden" name="workDay" th:value="${std[0].workDay}">
+              </form>
+              <!-- End Product Details -->
+            </div>
+          </div>
+        </section>
+        <!-- End Product Details -->
+        <!-- Product Tabs -->
+        <section class="product-detail-tab-02">
+          <div class="container">
+            <div class="product-tabs">
+              <ul class="nav product-nav-tabs-02" id="myTab_02" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a href="#" class="nav-link active" id="pd_description_tab_02" data-bs-toggle="tab"
+                    data-bs-target="#pd_description_02" role="tab" aria-controls="pd_description_02"
+                    aria-selected="true">Description</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a href="#" class="nav-link" id="pd_information_tab_02" data-bs-toggle="tab"
+                    data-bs-target="#px_information_02" role="tab" aria-controls="px_information_02"
+                    aria-selected="false">소속 작가들</a>
+                </li>
+
+              </ul>
+
+              <div class="tab-content" id="myTab_02Content">
+                <div class="tab-pane fade show active" id="pd_description_02" role="tabpanel"
+                  aria-labelledby="pd_description_tab_02">
+                  <!--Description 사진관 위치 -->
+                  <div class="row">
+                    <div id="map" style="width:100%;height:450px;"></div>
+                  </div>
+                </div>
+                <!--소속 작가들-->
+                <div class="tab-pane fade" id="px_information_02" role="tabpanel"
+                  aria-labelledby="pd_information_tab_02" style="text-align: center;">
+                  <div class="row">
+                    <div class="container">
+                      <div class="my-calendar clearfix">
+                      <div class="clicked-date" style="display: none;">
+                        <div class="cal-day"></div>
+                        <div class="cal-date"></div>
+                      </div>
+                      <!--<div class="my-calendar clearfix">-->
+                        <div class="calendar-box">
+                          <div class="ctr-box clearfix">
+                            <button type="button" title="prev" class="btn-cal prev">
+                            </button>
+                            <span class="cal-month"></span>
+                            <span class="cal-year"></span>
+                            <button type="button" title="next" class="btn-cal next">
+                            </button>
+                          </div>
+                          <table class="cal-table">
+                            <thead>
+                              <tr>
+                                <th id="일">
+                                  <font color="#F79DC2">일
+                                </th>
+                                <th id="월">월</th>
+                                <th id="화">화</th>
+                                <th id="수">수</th>
+                                <th id="목">목</th>
+                                <th id="금">금</th>
+                                <th id="토">
+                                  <font color="skyblue">토
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody class="cal-body"></tbody>
+                          </table>
+                          <div>
+                            <ul style="list-style-type: none; display: block;" > 
+                              <li style="display: inline-block;"><span class="res-yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span>  예약 가능</span></li>
+                              <li style="display: inline-block;"><span class="res-no">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  예약 불가능</li>
+                            </ul>
+
+                          </div>
+                        </div>
+                      </div>
+                      <!-- // .my-calendar -->
+                    </div>
+                  </div><br>
+                  <div class="row ptgList">
+
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- End Product Tabs -->
+      </main>
+      <!-- End Main -->
+
+    </div>
+    <!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+    <!-- script start -->
+    <!-- jquery -->
+    <!-- <script src="/js/jquery-3.5.1.min.js"></script> -->
+    <!--bootstrap-->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- slick carousel -->
+    <script src="/vendor/swiper/swiper-bundle.min.js"></script>
+    <!-- magnific -->
+    <script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+    <!-- isotope -->
+    <script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/count-down/jquery.countdown.min.js"></script>
+    <!-- count-down -->
+    <script src="/vendor/jarallax/jarallax-all.js"></script>
+    <!-- Theme Js -->
+    <script src="/js/custom.js"></script>
+    <script src="/assets/js/theme.js"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <!-- End script start -->
+    
+    <script type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f642b2ceb9400f8a6d704533bb711dd6&libraries=services"></script>
+    <script>
+      var addr = $('.product-description').find('h7').text();
+      var stName = $('.products-title').find('h4').text();
+      console.log(addr);
+      console.log(stName);
+      var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+          center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+          level: 2 // 지도의 확대 레벨
+        };
+
+      // 지도를 생성합니다    
+      var map = new kakao.maps.Map(mapContainer, mapOption);
+
+      // 주소-좌표 변환 객체를 생성합니다
+      var geocoder = new kakao.maps.services.Geocoder();
+
+      // 주소로 좌표를 검색합니다
+      geocoder.addressSearch(addr, function (result, status) {
+
+        // 정상적으로 검색이 완료됐으면 
+        if (status === kakao.maps.services.Status.OK) {
+
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+          // 결과값으로 받은 위치를 마커로 표시합니다
+          var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+
+          // 인포윈도우로 장소에 대한 설명을 표시합니다
+          var infowindow = new kakao.maps.InfoWindow({
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${stName}</div>`
+          });
+          infowindow.open(map, marker);
+
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          map.setCenter(coords);
+        }
+      });
+    </script>
+    <script>
+      const init = {
+        monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+          'November', 'December'
+        ],
+        dayList: ['일', '월', '화', '수', '목', '금', '토'],
+        today: new Date(), // 오늘 날짜
+        monForChange: new Date().getMonth(),
+        activeDate: new Date(),
+        getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+        getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+        nextMonth: function () { // 다음 버튼을 클릭 ->  해당하는 달을 1 증가시킨 후 그 숫자를 새로 가져온 날짜 객체 d에 d.setMonth()
+          let d = new Date();
+          d.setDate(1); //5월 31일에 nextMonth 함수를 실행시켜 달만 6월로 바꿔줄 경우 6월에는 30일까지밖에 없으므로 자동으로 7월 1일로 변경될 수 있
+          d.setMonth(++this.monForChange);
+          this.activeDate = d;
+          return d;
+        },
+        prevMonth: function () { //이전 버튼 클릭
+          let d = new Date();
+          d.setDate(1);
+          d.setMonth(--this.monForChange);
+          this.activeDate = d;
+          return d;
+        },
+        addZero: (num) => (num < 10) ? '0' + num : num,
+        activeDTag: null,
+        getIndex: function (node) {
+          let index = 0;
+          while (node = node.previousElementSibling) {
+            index++;
+          }
+          return index;
+        }
+      };
+
+      const $calBody = document.querySelector('.cal-body');
+      const $btnNext = document.querySelector('.btn-cal.next');
+      const $btnPrev = document.querySelector('.btn-cal.prev');
+
+      function loadDate(date, dayIn) {
+        document.querySelector('.cal-date').textContent = date;
+        document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+      }
+
+      function loadYYMM(fullDate) { //동적으로 달력의 일자 출력 / 처음 캘린더 로드할때/ 달력에서 이전,이후 버튼을 클릭할때 실행됨 
+        let yy = fullDate.getFullYear();
+        let mm = fullDate.getMonth();
+        let firstDay = init.getFirstDay(yy, mm);
+        let lastDay = init.getLastDay(yy, mm);
+        let markToday; // 달력의 년도/월이 오늘 날짜의 년도/월과 일치하면 오늘 날짜의 일자를 할당
+
+        if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+          markToday = init.today.getDate();
+        }
+        
+        //오늘 기준 월
+        //let
+
+
+        document.querySelector('.cal-month').textContent = init.monList[mm];
+        document.querySelector('.cal-year').textContent = yy;
+
+        let trtd = '';
+        let startCount;
+        let countDay = 0;
+        for (let i = 0; i < 6; i++) { //한달에 있는 한 주 
+          trtd += '<tr class="week">';
+          for (let j = 0; j < 7; j++) { //한주에 들어있는 일
+            if (i === 0 && !startCount && j === firstDay.getDay()) { //날짜가 처음 시작하면 startCount을 1로 변경
+              startCount = 1;
+            }
+            if (!startCount) {
+              trtd += `<td>`
+            } else {
+              let dayList = ['일', '월', '화', '수', '목', '금', '토']
+              let fullDate = yy + '.' + init.addZero(mm + 1) + '.' + init.addZero(countDay + 1);
+              let today = new Date(yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1)).getDay()
+              trtd += '<td class="day';
+              trtd += (markToday && markToday === countDay + 1) ? ' today" ' : '"'; //countDay 변수가 markToday 값과 일치하면 td에 today 클래스
+              trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}" id="${dayList[today]}">` //id="${item}"
+            }
+            trtd += (startCount) ? ++countDay : '';
+            if (countDay === lastDay.getDate()) { //날짜 세는 것이 끝나면 startCount변수를 다시 0으로 초기화
+              startCount = 0;
+            }
+            trtd += '</td>';
+          }
+          trtd += '</tr>';
+        }
+        $calBody.innerHTML = trtd;
+      }
+
+      function createNewList(val) {
+        let id = new Date().getTime() + '';
+        let yy = init.activeDate.getFullYear();
+        let mm = init.activeDate.getMonth() + 1;
+        let dd = init.activeDate.getDate();
+        const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+        let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+
+        let eventData = {};
+        eventData['date'] = date;
+        eventData['memo'] = val;
+        eventData['complete'] = false;
+        eventData['id'] = id;
+        init.event.push(eventData);
+        $todoList.appendChild(createLi(id, val, date));
+      }
+
+      loadYYMM(init.today);
+      loadDate(init.today.getDate(), init.today.getDay());
+
+      $btnNext.addEventListener('click', () => {  //다음 버튼 클릭하면 발생하는 이벤트
+        
+        loadYYMM(init.nextMonth())
+        makeResultPtg()
+      
+      }); 
+      $btnPrev.addEventListener('click', () => {  //이전 버튼 클릭하면 발생하는 이벤트
+        loadYYMM(init.prevMonth())
+        makeResultPtg()
+      });
+
+      $calBody.addEventListener('click', (e) => {  //날자 클릭하면 발생하는 event
+        if (e.target.classList.contains('day')) {
+          if (init.activeDTag) {
+            init.activeDTag.classList.remove('day-active');
+          }
+          let day = Number(e.target.textContent);
+          loadDate(day, e.target.cellIndex);
+          e.target.classList.add('day-active');
+          init.activeDTag = e.target;
+          init.activeDate.setDate(day);
+          reloadTodo();  
+        }
+      });
+
+      function reloadTodo(e) { //예약가능하지않은 날짜 클릭시 경고창 띄우기
+        if ($('div.row.ptgList') != null) {
+              $('div.row.ptgList').children().remove()
+              alert("해당 날짜에 예약 가능한 작가가 없습니다.")
+            }
+      }
+
+      //ajax호출해서 근무 가능한 날짜 보여주기 , 날짜 누르면 하단에 작가 리스트 띄우기
+      var stId = $("input[name='stId']").val();
+      $(function(){
+        makeResultPtg()
+      })
+        
+      function makeResultPtg(){  //근무 가능한 요일 받아와서 달력에 보여주기
+        $.ajax({
+          url: '/ajaxStdList/' + stId,
+          datatype: "json"
+        }).then(result => {
+          var workD = []
+          $(result).each(function (idx, item) {
+            let arr = item.workDay.split(",")  //db의 값 , 를 기준으로 자르고 배열에 담아주기
+            $(arr).each(function (a, b) {
+              workD.push(b)
+            })
+          })
+          let day = ($('.cal-table').find('th').text())
+          let setWorkD = [...new Set(workD)]; // 배열 값 중복 제거
+          $(setWorkD).each(function (idx, item) {
+            $('.week').find(`td[id=${item}]`).css('color', 'black').on('click', function (e) {  
+              e.stopPropagation()
+              if ($('div.row.ptgList') != null) {
+                $('div.row.ptgList').children().remove()
+              }
+              $(result).each(function(a,b){
+                $('div.row.ptgList').append(
+                  `<div class="col-lg-4">
+                  <div class="position-relative hover-scale">
+                      <div class="hover-scale-in">
+                          <a href="/silhyun/ptgDetail/${b.id}"> <img class="w-100" src="${b.profile}" title="" alt="" style="width: 200px; height: 400px; padding: 10px;">
+                      ${b.name}</a>
+                      </div>
+                  </div>
+              </div>`
+                )
+              })//end 근무 가능한 작가 list
+            }) //end 근무 가능한 요일에 검정색 주고 click이벤트 달기 
+          })  //end 작가가 지정한 근무가능 요일 반복문
+          //회색 글자 날짜 선택시 예약 가능한 작가 없다고 메시지 띄우기
+        }).then(error => console.log(error))
+      }
+    </script>
+  </div>
+</body>
+
+</html>

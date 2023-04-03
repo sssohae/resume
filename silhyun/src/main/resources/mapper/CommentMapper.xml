@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.common.map.CommentMapper">
+	
+	<!-- 댓글 리스트 -->
+	<select id="getCommentList" resultType="co.yedam.silhyun.common.vo.CommentVO" parameterType="String">
+		select c.com_num, c.dep, c.id, c.cntn, c.com_date, c.grp, c.ctgr, c.ctgr_num, (select count(*) from commment d where d.grp = c.com_num and d.com_num != d.grp ) as rep_cnt, m.profile
+		from commment c join member m
+		on c.id = m.id
+		where ctgr_num = #{portNum}
+		and ctgr = 'P'
+		order by grp desc, dep , com_num
+	
+	</select>
+	
+	<insert id="commentInsert">
+		<selectKey keyProperty="comNum" resultType="String" order="BEFORE">
+			SELECT 
+				nvl(MAX(to_number(com_num)), 0) + 1 AS "comNum"
+			FROM commment
+		</selectKey>
+
+	     insert into commment(com_num
+                    , ctgr
+                    , ctgr_num
+                    , dep
+                    , grp
+                    , id
+                    , cntn
+                    , com_date)
+            values(#{comNum}
+                    , 'P'
+                    , #{ctgrNum}
+                    , #{dep}
+                    <choose>
+						<when test="grp != null and grp != ''">, #{grp} </when>
+						<otherwise> ,#{comNum} </otherwise>
+					</choose>
+                    , #{id}
+                    , #{cntn}
+                    , sysdate)
+                    
+	 </insert>    
+	 
+	 <delete id="commentDelete" >
+	 	delete from commment where grp=#{grp}
+	 	<!-- 댓글 삭제시 해당 그룹의 대댓글까지 모두 삭제 -->
+	 </delete>
+	 
+	 <delete id="replyDelete">
+	 	delete from commment where com_num = #{comNum}
+	 	<!-- 대댓글 삭제시 해당 대댓글만 삭제 -->
+	 </delete>
+<!-- 	
+	 <update id="commentUpdate">
+	 
+	 </update>
+	 
+	 <insert id="replyInsert">
+	 
+	 </insert>
+	 
+	 
+	 <update id="replyUpdate">
+	 
+	 </update> -->
+	 	 
+</mapper>

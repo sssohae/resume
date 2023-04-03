@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+
+
+<head>
+<!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description"
+	content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>ShopApp - eCommerce Bootstrap 5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/img/favicon.ico">
+<!-- CSS Template -->
+<link href="/css/theme.css" rel="stylesheet">
+<link href="/css/around.css" rel="stylesheet">
+<link href="/css/modal.css" rel="stylesheet">
+<style>
+.ptg-inf {
+	display: flex;
+}
+
+.rating-star {
+	position: relative;
+	left: 50%;
+}
+
+.rating-star i {
+	font-size: 22px;
+}
+
+.rating-star small {
+	font-size: 15px;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+
+
+		<!-- Main -->
+		<main>
+			<!-- Product Details -->
+			<section class="product-details py-6">
+				<div class="container">
+					<div class="row align-items-start">
+
+						<!-- Product Details -->
+						<div
+							class="col-lg-6 lightbox-gallery sticky-lg-top sticky-lg-top-header">
+
+							<div class="product-detail" id="ptgInfo">
+								<div class="ptg-inf">
+									<div class="ptg-inf-1">
+										<div class="products-brand pb-2">
+											<span>사진관~ 없으면 프리렌서</span>
+										</div>
+										<div class="products-title mb-2">
+											<h4 class="h4">이름~</h4>
+										</div>
+									</div>
+									<div class="rating-star text small pb-4">
+										<i class="bi-heart-fill active"></i>
+										<p>
+											<small>찜수~</small>
+										</p>
+									</div>
+
+								</div>
+
+								<!-- 작가프로필 사진 -->
+								<div class="mb-3">
+									<a class="gallery-link"> <img src="" class="img-fluid"
+										title="" alt="">
+									</a>
+								</div>
+								<div class="products-brand pb-2" id="fieldAppend"></div>
+								<div class="product-description">
+									<p>사진사스스로소개~</p>
+								</div>
+
+								<div class="product-detail-actions d-flex flex-wrap pt-3">
+									<div class="cart-button mb-3 d-flex">
+									<div class="hiddenloginId" style="display:none;">[[${session.id}]]</div>
+									<div class="hiddenptgId" style="display:none;">[[${portfolioVO.ptgId}]]</div>
+										<button class="btn btn-dark me-3 ShowReview">리뷰 보기</button>
+
+										<button type="button" class="btn btn-dark me-3 Reser">예약하러가기</button>
+
+									</div>
+								</div>
+								<div class="product-info-buttons nav pt-4">
+									<a href="${ptgInfo[0].inst}"> <i
+										class="bi bi-instagram ms-auto"> </i>instagram
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- End Product Details -->
+
+
+
+						<!-- Product Gallery -->
+						<div class="col-lg-6 ps-lg-5 pt-5 pt-lg-0">
+							<div class="product-info-buttons nav pt-4">
+								<a th:onclick="|location.href='@{/silhyun/portfolioInsert?ptgId={ptgId}(ptgId=${portfolioVO.ptgId})}'|" class="ms-auto">
+									
+									<button class="btn btn-port me-3" th:if="${session.id == portfolioVO.ptgId}">
+										Portfolio<i class="bi-plus-lg"></i>
+									</button>
+								</a>
+							</div>
+							<br>
+							<div class="row g-2" id="ptgPortList">
+								<!-- 작가별 포트폴리오 리스트 사진 붙일곳 -->
+							</div>
+							<!-- End Product Gallery -->
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+			<div class='isModal'>
+				<div class="modalBlacklayer">
+					<div class="modalCloseButton">X</div>
+					<div class="modalContainer">
+						<div class="modalLeftbox">
+							<div class="modalSlider">
+								<!-- 이미지들어가는자리 -->
+							</div>
+							<div class="bi-chevron-compact-left modalArrow modalprev"></div>
+							<div class="bi-chevron-compact-right modalArrow modalNext"></div>
+						</div>
+						<div class="modalRightBox">
+							<div class="modalTopSection">
+								<div class="mTopSectionInfo">
+									<!-- 모달해더 -->
+								</div>
+									<div class="menuButton" th:if="${session.id == portfolioVO.ptgId}">
+									<i class="bi-three-dots"></i>
+									<form id="goUpdatePort" action="/silhyun/portfolioUpdate">
+										<ul class="menuButtonlist">
+											<li style="display: none"><input type="hidden"
+												name='portNum' value=""><input type="hidden"
+												name='ptgId' value=""></li>
+											<li class="menuButton-item"><button type="button"
+													class="menuButton-item update">수정하기</button></li>
+											<li class="menuButton-item portDelBtn">삭제하기</li>
+										</ul>
+									</form>
+								</div>
+							</div>
+							<div class="modalMiddleSection">
+								<div class="scroll-box">
+									<div class="mMiddleInfo">
+										<!-- 내용들어가는자리 -->
+									</div>
+									<hr>
+									<div class="mMiddleComment"></div>
+								</div>
+							</div>
+							<div class="modalBottomSection">
+								<div class="modalBottomInfo">
+									<!-- 모달푸터 -->
+								</div>
+								<div class="modalBottomInput">
+									<input type="text" id="contact-message" name="message"
+										placeholder="댓글을 작성하세요." style="padding-left: 20px;">
+									<button type="button" id="send">입력</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+		</main>
+
+
+
+		<script src="/js/portfolio.js"></script>
+		<!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+		<!-- script start -->
+		<!-- jquery -->
+		<script src="/js/jquery-3.5.1.min.js"></script>
+		<!--bootstrap-->
+		<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- slick carousel -->
+		<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+		<!-- magnific -->
+		<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+		<!-- isotope -->
+		<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/jarallax/jarallax-all.js"></script>
+		<!-- Theme Js -->
+		<script src="/js/custom.js"></script>
+		<script src="/js/theme.js"></script>
+		<!-- End script start -->
+	</div>
+</body>
+
+</html>

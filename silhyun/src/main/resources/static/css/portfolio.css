@@ -1,0 +1,205 @@
+/* ===========================모달창관련? */
+/* 모달 뒷부분 검정 레이아웃 */
+#modalP.modal-overlay {
+	width: 100%;
+	height: 100%;
+	position: fixed; /* 모달창이 화면에 고정됨 */
+	left: 0;
+	top: 0;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: rgba(1, 1, 1, 0.8);
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+	backdrop-filter: blur(1.5px);
+	-webkit-backdrop-filter: blur(1.5px);
+	/* 	border-radius: 10px; */
+	/* 	border: 1px solid rgba(255, 255, 255, 0.18); */
+	z-index: 9000;
+}
+/* 모달 내용 컨테이너 */
+#modalP .modal-window {
+	background-color: white;
+	box-shadow: 0 8px 32px 0 rgba(153, 153, 153, 0.37);
+	/* 	backdrop-filter: blur(13.5px); */
+	/* 	-webkit-backdrop-filter: blur(13.5px); */
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	width: 70%;
+	max-width: 1000px; /* 모달창 최대 너비 */
+	height: 100%;
+	position: fixed;
+	top: 0%;
+	bottom: 0%;
+	padding: 10px;
+	margin: 0% auto; /* 모달창이 수직 가운데에 위치함 */
+}
+
+#modalP .close-area {
+	display: inline;
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+	color: gray;
+}
+
+#modalP .content {
+	margin-top: 20px;
+	padding: 0px 10px;
+	color: gray;
+}
+/* modal{ */
+/* 	position: fixed; */
+/* } */
+/* ===========================모달창관련? */
+
+/* ---------------------------모달안에 */
+/* 모달해더고정 */
+.modalHeader {
+	position: absolute;
+	top: 0;
+	height: 5rem;
+	background-color: white;
+	border-bottom: solid 1px rgb(200, 200, 200) !important;
+	background-color: white;
+	display: block !important;
+}
+/* 모달푸터고정 */
+.modalFooterP {
+	position: absolute;
+	bottom: 0; /* 부모 요소의 맨 아래쪽에 위치 */
+	left: 0;
+	width: 100%;
+	height: 8rem; /* h1의 높이 */
+	background-color: white;
+	left: 0;
+	width: 100%;
+	display: block !important;
+}
+/* 댓글이랑 내용 리스트쪽 */
+#modalConListP {
+	/* 	overflow-y: auto; */
+	height: calc(100% -13rem); /* h1의 높이 */
+	display: block !important;
+}
+/* 모달사진쪽size */
+#modalPicP {
+	width: 60% !important;
+	padding: 0%;
+}
+
+/* 모달내용쪽size */
+#modalConP {
+	width: 40% !important;
+	position: relative;
+}
+
+#modalProfileBoxP {
+	border-top: none !important;
+}
+/* 일단모달쪽에 사진크기조정임 */
+/* .min-vh-85{ */
+/*   min-height: 100% !important; */
+/*   min-width: 100% !important; */
+/*      display: flex; */
+/*     justify-content: center; */
+/* } */
+/* 댓글 리스트 프로필사진 */
+.review-box .review-image {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+/* 댓글간격 */
+.d-flex.review-box.border-top.mt-4.pt-4 {
+	margin-top: 0.8rem;
+}
+/* 댓글닉네임 글씨조정 */
+.comNick {
+	font-weight: bolder;
+	color: black;
+}
+/* 스크롤바숨김 */
+.product-description::-webkit-scrollbar {
+	display: none;
+}
+
+/* 댓글 마진,선 없애기 */
+.mt-8.border.p-4 {
+	margin-top: 0px !important;
+	border: none !important;
+	padding: 0px !important;
+}
+
+/* ---------------------------모달안에 */
+
+
+
+
+
+/* 하트조아요누르기 */
+.heart-icon {
+	cursor: pointer;
+	display: inline-block;
+	font-size: 24px;
+	transition: transform 0.2s, font-size 0.2s, color 0.2s;
+	margin-left: 9px;
+	margin-right: 7px;
+}
+
+.heart-icon .bi-heart {
+	color: #ddd;
+	transition: color 0.2s;
+}
+
+.heart-icon .bi-heart-fill {
+	color: red;
+	transform: scale(1.2);
+	font-size: 25px;
+}
+/* 하트조아요누르기 */
+/* 댓글아이콘크기맞추고어쩌구저쩌구 */
+.repeat-icon {
+	cursor: pointer;
+	display: inline-block;
+	font-size: 24px;
+	transition: transform 0.2s, font-size 0.2s, color 0.2s;
+	margin-left: 9px;
+	margin-right: 15px;
+}
+
+.repeat-icon .bi-repeat {
+	color: #ccc;
+}
+/* 포트폴리오 리스트 사진 마우스 올렸을 때 보이는 정보 */
+.image-container {
+	position: relative;
+	display: inline-block;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: .5s ease;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.image-container:hover .overlay {
+	opacity: 1;
+}
+
+.overlayText {
+	color: #fff;
+	font-size: 18px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 1;
+}
+/* 포트폴리오 리스트 사진 마우스 올렸을 때 보이는 정보 끝 */

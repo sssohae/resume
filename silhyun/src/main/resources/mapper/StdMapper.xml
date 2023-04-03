@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.member.map.StdMapper">
+	
+	<select id="getStdList"
+		resultType="co.yedam.silhyun.member.vo.StudioVO">
+		SELECT * FROM( SELECT ROWNUM RN, A.* FROM(
+		SELECT DISTINCT S.*,M.PROFILE
+		FROM STUDIO S,MEMBER M
+		WHERE M.ID = S.ST_ID
+		AND
+		UPPER(S.CFM_CD) = 'Y'
+		<if test="vo.chkArray != null and vo.chkArray.length>0">
+			AND S.REGION_CD IN
+			<foreach item="vo.regionCd" collection="vo.chkArray" open="("
+				close=")" separator=",">
+				#{vo.regionCd}
+			</foreach>
+		</if>
+		<if test="vo.searchWord != null and vo.searchWord.length>0">
+			AND S.ST_NAME LIKE '%'||#{vo.searchWord}||'%'
+		</if>
+
+		<choose>
+			<when test="'new'.equals(vo.searchType)">ORDER BY S.ACCP_DATE DESC</when>
+			<when test="'name'.equals(vo.searchType)">ORDER BY S.ST_NAME</when>
+			<otherwise>ORDER BY S.ST_ID DESC</otherwise>
+		</choose>
+	<![CDATA[	
+	 	) A WHERE ROWNUM <= #{cri.pageNum} * #{cri.amount}) B WHERE RN > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(DISTINCT S.ST_ID)
+		FROM STUDIO S,MEMBER M
+		WHERE M.ID =
+		S.ST_ID
+		AND UPPER(S.CFM_CD) = 'Y'
+		<if test="vo.chkArray != null and vo.chkArray.length>0">
+			AND S.REGION_CD IN
+			<foreach item="vo.regionCd" collection="vo.chkArray" open="("
+				close=")" separator=",">
+				#{vo.regionCd}
+			</foreach>
+		</if>
+		<if test="vo.searchWord != null and vo.searchWord.length>0">
+			AND S.ST_NAME LIKE '%'||#{vo.searchWord}||'%'
+		</if>
+		<choose>
+			<when test="'new'.equals(vo.searchType)">ORDER BY S.ACCP_DATE DESC</when>
+			<when test="'name'.equals(vo.searchType)">ORDER BY S.ST_NAME</when>
+			<otherwise>ORDER BY S.ST_ID DESC</otherwise>
+		</choose>
+	</select>
+
+	<select id="getStd"
+		resultType="co.yedam.silhyun.member.vo.StudioVO"
+		parameterType="String">
+		SELECT DISTINCT S.*, P.*,M.NAME,M.PROFILE
+		FROM STUDIO S,
+		PHOTOGRAPHER P, MEMBER M
+		WHERE M.ID = P.PTG_ID
+		AND S.ST_ID = P.ST_ID
+		AND
+		S.ST_ID = #{stId}
+		AND UPPER(S.CFM_CD) = 'Y'
+	</select>
+	<select id="stdlistget"
+		resultType="co.yedam.silhyun.member.vo.StudioVO">
+		SELECT *
+		FROM STUDIO
+		WHERE ST_ID=#{stId}
+
+	</select>
+
+	<select id="getReserList"
+		resultType="co.yedam.silhyun.member.vo.StudioVO">
+		SELECT DISTINCT M.NAME, M.PROFILE ,M.ID,P.WORK_DAY, S.*
+		FROM MEMBER M, PHOTOGRAPHER P, STUDIO S
+		WHERE M.ID = P.PTG_ID
+		AND
+		P.ST_ID = S.ST_ID
+		AND S.ST_ID = #{STID}
+	</select>
+
+	<select id="ptgList" parameterType="PhotographerVO"
+		resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT *
+		FROM PHOTOGRAPHER
+		WHERE ST_ID=#{stId}
+		ORDER BY
+		REGI_DATE DESC
+	</select>
+
+	<update id="ptgdel"  parameterType="co.yedam.silhyun.member.vo.PhotographerVO">
+		UPDATE PHOTOGRAPHER
+		<set>
+			ST_ID = '0',
+			PTG_CD = 'S'
+		</set>
+		WHERE PTG_ID = #{ptgId}
+	</update> 
+	
+	<!-- 프사바꾸기  -->
+	<update id="updatestProfileImage" parameterType="co.yedam.silhyun.member.vo.StudioVO">
+		UPDATE STUDIO
+		SET ST_PROFILE = #{stProfile}
+		WHERE ST_ID = #{stId}
+	</update>
+
+</mapper>

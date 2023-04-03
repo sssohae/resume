@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/dashBoard}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<body>
+
+    <div layout:fragment="content">
+
+        <div class="page-breadcrumb bg-white">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <h3 class="page-title">탈퇴 관리</h3>
+                </div>
+                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                    <div class="d-md-flex">
+                        <ol class="breadcrumb ms-auto">
+                            <li><a> </a></li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row" id="memberList">
+                <div class="col-sm-12">
+                    <div class="white-box">
+                        <div>
+                            <h3 class="box-title">탈퇴 회원</h3>
+                            <form id="searchFrm" action="/admin/quitManage" th:object="${page}"
+                                class="app-search d-none d-md-block me-3">
+                                <ul style="list-style:none;float:right;">
+                                    <li>
+                                        <select name="type" style="width:120px;height:30px;font-size:16px;border:none;">
+                                            <option value="all" th:selected="*{criteria.type == 'all'}">전체</option>
+                                            <option value="id" th:selected="*{criteria.type == 'id'}">아이디</option>
+                                            <option value="quitDate" th:selected="*{criteria.type == 'quitDate'}">탈퇴일
+                                            </option>
+                                            <option value="quitCd" th:selected="*{criteria.type == 'quitCd'}">탈퇴사유
+                                            </option>
+                                            <option value="detaResn" th:selected="*{criteria.type == 'detaResn'}">상세사유
+                                            </option>
+                                        </select>
+                                        <input type="text" name="keyword" th:value="*{criteria.keyword}"
+                                            placeholder="Search..." class="form-control mt-0"
+                                            style="display:inline-block;width:300px;height:30px;font-size:16px;">
+                                        <input type="hidden" name="pageNum" th:value="*{criteria.pageNum}">
+                                        <input type="hidden" name="amount" th:value="*{criteria.amount}">
+                                        <button class="btn btn-dark">검색</button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+
+                        <br>
+                        <hr>
+                        <form id="quitMFrm" method="post" action="/deleteQuitM">
+                            <div class="table-responsive">
+                                <table class="table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">#번호</th>
+                                            <th class="border-top-0">멤버아이디</th>
+                                            <th class="border-top-0">탈퇴일</th>
+                                            <th class="border-top-0">탈퇴사유</th>
+                                            <th class="border-top-0">탈퇴상세사유</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="mem,sts : ${list}" th:Class="${sts}">
+                                            <td
+                                                th:text="${page.total-(page.criteria.pageNum-1)*page.criteria.amount-sts.index}">
+                                            </td>
+                                            <td th:text="${mem.id}" th:value="${mem.id}" id="id" th:name="id"></td>
+                                            <td th:text="${#dates.format(mem.quitDate,'yyyy/MM/dd')}" th:value="${mem.quitDate}"></td>
+                                            <td th:text="${mem.quitCd}" th:value="${mem.quitCd}"></td>
+                                            <td th:text="${mem.detaResn}" th:value="${mem.detaResn}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+	
+                        <div align="center">
+                             <div class="pagination">
+                                <a th:if="${page.prev}" th:href="${page.startPage-1}" style="color:black;float:left;padding:8px16px;text-decoration:none">&laquo;</a>
+                                <a th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}" th:href="${num}"
+                                    th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+                                <a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+                            </div>
+                            <form id="actionFrm" action="/admin/quitManage" th:object="${page}">
+                                <input type="hidden" name="pageNum" th:value="*{criteria.pageNum}">
+                                <input type="hidden" name="amount" th:value="*{criteria.amount}">
+                                <input type="hidden" name="type" th:value="*{criteria.type}">
+                                <input type="hidden" name="keyword" th:value="*{criteria.keyword}">
+                            </form>
+                        </div>
+                      </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div class="white-box">
+                                <h3 class="box-title">탈퇴 사유 통계</h3>
+                            <div align="center">
+                                <canvas id="myChart" width="1200" height="400"></canvas>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script th:inline="javascript">
+var list = /*[[${gtGraph}]]*/ []; // 컨트롤러에서 가져온 List<Map<String,String>> list 값
+
+    // labels와 data 배열 초기화
+    var labels = [];
+    var data = [];
+
+    // list의 각 Map에서 key와 value를 labels와 data 배열에 추가
+    list.forEach(function(map) {
+        for (var key in map) {
+            labels.push(key);
+            data.push(map[key]);
+        }
+    });
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(100, 100, 100, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(25, 25, 25, 0.5)',
+                ],
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: false,
+        }
+    });
+      
+</script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>        
+<script th:inline="javascript">
+history.replaceState({}, null, location.pathname);
+
+$(".pagination a").on("click", function(e){
+	e.preventDefault();
+	console.log($("#actionFrm").find("input[name='pageNum']").val())
+ 	$("#actionFrm").find("input[name='pageNum']").val($(this).attr("href"));
+	
+	actionFrm.submit();
+})
+
+	console.log($('input[type="checkbox"]:checked').val())
+	
+$('#searchFrm button').on("click", function(e){
+	console.log('click')
+	
+	
+	$('#searchFrm').find("input[name='pageNum']").val(1);
+	e.preventDefault();
+	searchFrm.submit();
+});
+
+
+</script>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

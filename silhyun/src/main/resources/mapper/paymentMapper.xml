@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.order.map.PaymentMapper">
+	
+	<insert id="paymentInsert">
+		<selectKey keyProperty="ordNum" resultType="String" order="BEFORE">
+			SELECT NVL(MAX(TO_NUMBER(ORD_NUM)),0) +1 AS "ordNum"
+			FROM PAYMENT
+		</selectKey>
+			INSERT INTO PAYMENT (ORD_NUM,CTGR,CTGR_NUM,ID,RES_NUM,ORD_MTHD
+			<if test="uCpNum != null and uCpNum != ''">,U_CP_NUM</if>
+			<if test="uPoint != null and uPoint != ''">,U_POINT</if>
+			,ORD_STA,ORD_DATE,PAYM_PRI,ORD_PRI)
+			VALUES(#{ordNum},'A',#{ctgrNum},#{id},#{resNum},'TO'
+			<if test="uCpNum != null and uCpNum != ''">,#{uCpNum}</if>
+			<if test="uPoint != null and uPoint != ''">,#{uPoint}</if>
+			,'Y',sysdate, #{paymPri},#{ordPri})
+	</insert>
+	
+	<insert id="claPaymentInsert">
+		<selectKey keyProperty="ordNum" resultType="String" order="BEFORE">
+			SELECT NVL(MAX(TO_NUMBER(ORD_NUM)),0) +1 AS "ordNum"
+			FROM PAYMENT
+		</selectKey>
+			INSERT INTO PAYMENT (ORD_NUM,CTGR,CTGR_NUM,ID,RES_NUM,ORD_MTHD
+			<if test="uCpNum != null and uCpNum != ''">,U_CP_NUM</if>
+			<if test="uPoint != null and uPoint != ''">,U_POINT</if>
+			,ORD_STA,ORD_DATE,PAYM_PRI,ORD_PRI)
+			VALUES(#{ordNum},'C',#{ctgrNum},#{id}, null,'TO'
+			<if test="uCpNum != null and uCpNum != ''">,#{uCpNum}</if>
+			<if test="uPoint != null and uPoint != ''">,#{uPoint}</if>
+			,'Y',sysdate, #{paymPri},#{ordPri})
+	</insert>
+	
+	<select id="getPaymentInfo" resultType="co.yedam.silhyun.order.vo.PaymentVO">
+		SELECT R.SHOT_DATE, M.NAME, P.SHOT_PLACE, FIND_CD(R.SHOT_TIME) SHOT_TIME, FIND_OP(O.OP_NUM) TTL, 
+		PM.ORD_PRI, PM.PAYM_PRI, NVL((PM.ORD_PRI-PM.PAYM_PRI),0) DISCOUNT
+		FROM RESER R JOIN PHOTOGRAPHER P
+		ON R.PTG_ID = P.PTG_ID
+		JOIN MEMBER M
+		ON P.PTG_ID = M.ID
+		JOIN SELECTED_OP O 
+		ON O.RES_NUM2 = R.RES_NUM
+		JOIN PAYMENT PM
+		ON PM.RES_NUM = R.RES_NUM
+		WHERE R.ID = #{id}
+		ORDER BY TO_NUMBER(R.RES_NUM) DESC
+	</select>
+</mapper>

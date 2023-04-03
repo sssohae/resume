@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.member.map.RegisterMapper">
+	<select id="getMember" parameterType="co.yedam.silhyun.member.vo.MemberVO" resultType="co.yedam.silhyun.member.vo.MemberVO">
+		SELECT *
+		FROM MEMBER
+		WHERE ID = #{id}
+	</select>
+
+	<insert id="ptgRegiInsert">
+		INSERT INTO PHOTOGRAPHER
+		VALUES(#{ptgId},null,#{regionCd},sysdate,#{crn},'S',null,null,#{inst},'O',null,null)
+	</insert>
+	
+	<insert id="ptgFldRegiInsert">
+		INSERT INTO FIELD
+		VALUES(#{fdCd},#{ptgId})
+	 </insert>
+
+	<insert id="stdRegiInsert">
+	INSERT INTO STUDIO
+			VALUES(#{stId},#{regionCd},#{stName},#{addr},null,#{ceoName},'O',#{crn},null,null,null,#{detAddr},#{zipAddr},sysdate,'G',null,null)
+	</insert>
+</mapper>

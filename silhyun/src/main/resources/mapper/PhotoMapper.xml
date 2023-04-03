@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.common.map.PhotoMapper">
+<select id="photoList" resultType="co.yedam.silhyun.common.vo.PhotoVO">
+	select * 
+	from photo
+	<where>
+	<if test="ctgrNum != null and ctgrNum != ''">ctgr = #{ctgr} 
+													and ctgr_num = #{ctgrNum}
+													and used = 'Y'</if>
+	<if test="ctgrNum == null">used = 'N'</if>
+	</where>
+</select>
+
+<insert id="photoInsert">
+	<selectKey keyProperty="phoNum" resultType="String" order="BEFORE">
+		SELECT 
+			nvl(MAX(to_number(pho_num)), 0) + 1 AS "phoNum"
+		FROM photo
+	</selectKey>
+	insert into photo
+	values(#{phoNum}, #{ctgr}, #{ctgrNum}, #{phoRt}, #{thumbnail}, 'Y')
+</insert>
+
+<delete id="photoDelete">
+	update photo
+	set used = 'N'
+	<where>
+	<if test="phoNum != null and phoNum != ''">pho_num = #{phoNum}</if>
+	<if test="phoNum == null">ctgr = #{ctgr} and ctgr_num = #{ctgrNum}</if>
+	</where> 
+	
+</delete>
+
+<insert id="ptgRegiInsert">
+	<selectKey keyProperty="phoNum" resultType="String" order="BEFORE">
+		SELECT 
+			NVL(MAX(TO_NUMBER(PHO_NUM)), 0) + 1 AS "phoNum"
+		FROM PHOTO
+	</selectKey>
+	INSERT INTO PHOTO
+	VALUES(#{phoNum}, #{ctgr}, #{ctgrNum}, #{phoRt},null,'Y')
+</insert>
+
+<delete id="photoAllDelete">
+     delete from photo
+     where used = 'N'
+</delete>
+
+</mapper>

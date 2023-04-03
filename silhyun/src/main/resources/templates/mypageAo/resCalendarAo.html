@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+<head>
+<script
+	src="
+https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js
+"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js"
+	integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+	crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="/img/favicon.ico">
+<style>
+/* ======== Calendar ======== */
+.my-calendar {
+	width: 100%;
+	height: 400px;
+	/*           margin: 30px; */
+	padding: 20px 20px 10px;
+	text-align: center;
+	font-weight: 800;
+	border: 1px solid #ddd;
+	cursor: default;
+}
+
+.my-calendar .clicked-date {
+	border-radius: 25px;
+	margin-top: 1;
+	float: left;
+	width: 1;
+	text-align: center;
+	padding: 46px 0 26px;
+	background: #ddd;
+}
+
+.my-calendar .calendar-box {
+	width: 100%;
+	height: 400px;
+}
+
+.clicked-date .cal-day {
+	/* font-size: 1px; */
+	font-size: 24px;
+}
+
+.clicked-date .cal-date {
+	/* font-size: 1px; */
+	font-size: 130px;
+}
+
+.ctr-box {
+	padding: 0 16px;
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+
+.ctr-box .btn-cal {
+	position: relative;
+	float: left;
+	width: 25px;
+	height: 25px;
+	margin-top: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+.ctr-box .btn-cal:after {
+	content: '<';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	line-height: 25px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.ctr-box .btn-cal.next {
+	float: right;
+}
+
+.ctr-box .btn-cal.next:after {
+	content: '>';
+}
+
+.cal-table {
+	width: 100%;
+}
+
+.cal-table th {
+	width: 14.2857%;
+	padding-bottom: 5px;
+	font-size: 16px;
+	font-weight: 900;
+}
+
+.cal-table td {
+	padding: 3px 0;
+	height: 50px;
+	font-size: 15px;
+	vertical-align: middle;
+}
+
+.cal-table td.day {
+	position: relative;
+	cursor: pointer;
+	color: rgb(0, 0, 0);
+}
+
+.cal-table td.today {
+	background: #ffd255;
+	border-radius: 50%;
+	color: #fff;
+}
+
+.cal-table td.day-active {
+	background: #ff8585;
+	border-radius: 50%;
+	color: #fff;
+}
+
+.cal-table td.has-event:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 4px;
+	background: #FFC107;
+}
+
+.res-yes {
+	background-color: black;
+}
+
+.res-no {
+	background-color: lightgray;
+}
+
+.form-check-input {
+	width: 20px;
+	height: 20px;
+	margin-bottom: 7px;
+}
+
+.form-check-label {
+	font-weight: bold;
+}
+
+#selectDate {
+	font-size: larger;
+	font-weight: bolder;
+}
+
+#selectTime {
+	font-size: larger;
+	font-weight: bolder;
+}
+
+td.reser {
+  width: 100px; /* 너비를 고정할 크기로 지정 */
+  height: 50px; /* 높이를 고정할 크기로 지정 */
+  padding: 10px; /* 셀 내부 여백 설정 */
+}
+
+</style>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content">
+		<!-- Table -->
+		<div class="py-6">
+			<div class="container">
+				<div class="row" th:each="ptg : ${ptgInfo}">
+					<!-- Profile Menu -->
+					<div class="col-lg-4 pb-4 pb-lg-0 col-xxl-3  pe-xxl-5">
+						<div class="bg-white border border-bottom-0 shadow-lg">
+							<div class="d-flex p-3 align-items-center">
+								<div class="avatar avatar-lg rounded-circle">
+									<img th:src="${ptg.profile}" title="" alt="">
+								</div>
+								<div class="col ps-3">
+									<h6 class="m-0" th:text="${ptg.Id}"></h6>
+									<small><a href="/photo/mypageAo" th:text="${ptg.name}">이름</a></small>
+								</div>
+							
+							</div>
+							<ul class="list-unstyled mb-0 theme-link">
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/modPfAo"> <i class="fi-user me-2"></i>회원정보수정
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resManage"> <i class="bi bi-card-checklist"></i>예약
+										관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/classManage"> <i class="bi-play-btn me-2"></i>클래스
+										관리
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/mypageAoAsk"> <i
+										class="bi-chat-square-dots me-2"></i>문의내역
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/resCalendarAo"> <i class="bi-calendar me-2"></i>캘린더
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" th:href="@{/silhyun/portfolio/{ptgId}(ptgId=${session.id})}">
+										<i class="bi-person-bounding-box me-2"></i>포토폴리오
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3"
+									href="/photo/reportFormAo"> <i
+										class="bi bi-exclamation-diamond"></i>신고
+								</a></li>
+								<li class="border-bottom mb-0"><a
+									class="nav-link-style d-flex align-items-center p-3" href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>회원탈퇴
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-8 col-xxl-9">
+						<div class="products-title mb-2">
+							<div class="my-calendar clearfix">
+
+								<div class="clicked-date" style="display: none;">
+									<div class="cal-day"></div>
+									<div class="cal-date"></div>
+								</div>
+								<!--<div class="my-calendar clearfix">-->
+								<div class="calendar-box">
+									<div class="ctr-box clearfix">
+										<button type="button" title="prev" class="btn-cal prev">
+										</button>
+										<span class="cal-month"></span> <span class="cal-year"></span>
+										<button type="button" title="next" class="btn-cal next">
+										</button>
+									</div>
+
+									<table class="cal-table">
+										<thead>
+											<tr>
+												<th id="일"><font color="#F79DC2">일 </th>
+												<th id="월">월</th>
+												<th id="화">화</th>
+												<th id="수">수</th>
+												<th id="목">목</th>
+												<th id="금">금</th>
+												<th id="토"><font color="skyblue">토 </th>
+											</tr>
+										</thead>
+										<tbody class="cal-body"></tbody>
+									</table>
+								</div>
+							</div>
+							<!-- 마이캘린더 끝 -->
+							<div class="product-description selectedOp">
+								<div class="card">
+									<div class="card-body">
+										<ul class="list-unstyled m-0 p-0">
+											<h5 class="me-2 border-bottom">예약 내역</h5>
+											<li class="pb-3 mb-3 border-bottom">
+												<div class="row align-items-center selectOP">
+													<div class="col-8 selectOP">
+														<!-- Remove -->
+														<!-- <a class="small link-danger ms-auto" href="#!">
+																	<i class="bi bi-x"></i> Remove
+																</a> -->
+													</div>
+												</div>
+												<div class="product-description timeTable"
+													style="margin-bottom: 3px;">
+													<!-- 여기에 시간 붙임 -->
+												</div>
+												<div class="reserList">
+													<!--리스트 붙일생각  -->
+												</div>
+											</li>
+										</ul>
+									</div>
+									<form>
+										<input type="hidden" name="ptgId" th:value=${session.id}> <input
+											type="hidden" name="workDay" th:value="${workDay.workDay}">
+									</form>
+								</div>
+
+
+							</div>
+						</div>
+
+					</div>
+					<!-- End Profile Menu -->
+				</div>
+			</div>
+		</div>
+		<!-- End Table -->
+		<script>
+		const init = {
+	              monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+	                'November', 'December'
+	              ],
+	              dayList: ['일', '월', '화', '수', '목', '금', '토'],
+	              today: new Date(), // 오늘 날짜
+	              monForChange: new Date().getMonth(),
+	              activeDate: new Date(),
+	              getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+	              getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+	              nextMonth: function () { // 다음 버튼을 클릭 ->  해당하는 달을 1 증가시킨 후 그 숫자를 새로 가져온 날짜 객체 d에 d.setMonth()
+	                let d = new Date();
+	                d.setDate(1); //5월 31일에 nextMonth 함수를 실행시켜 달만 6월로 바꿔줄 경우 6월에는 30일까지밖에 없으므로 자동으로 7월 1일로 변경될 수 있
+	                d.setMonth(++this.monForChange);
+	                this.activeDate = d;
+	                return d;
+	              },
+	              prevMonth: function () { //이전 버튼 클릭
+	                let d = new Date();
+	                d.setDate(1);
+	                d.setMonth(--this.monForChange);
+	                this.activeDate = d;
+	                return d;
+	              },
+	              addZero: (num) => (num < 10) ? '0' + num : num,
+	              activeDTag: null,
+	              getIndex: function (node) {
+	                let index = 0;
+	                while (node = node.previousElementSibling) {
+	                  index++;
+	                }
+	                return index;
+	              }
+	            };
+		const $calBody = document.querySelector('.cal-body');
+        const $btnNext = document.querySelector('.btn-cal.next');
+        const $btnPrev = document.querySelector('.btn-cal.prev');
+  
+        function loadDate(date, dayIn) {
+          document.querySelector('.cal-date').textContent = date;
+          document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+        }
+  
+        function loadYYMM(fullDate) { //동적으로 달력의 일자 출력 / 처음 캘린더 로드할때/ 달력에서 이전,이후 버튼을 클릭할때 실행됨 
+          let yy = fullDate.getFullYear();
+          let mm = fullDate.getMonth();
+          let firstDay = init.getFirstDay(yy, mm);
+          let lastDay = init.getLastDay(yy, mm);
+          let markToday; // 달력의 년도/월이 오늘 날짜의 년도/월과 일치하면 오늘 날짜의 일자를 할당
+  
+          if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+            markToday = init.today.getDate();
+          }
+  
+          document.querySelector('.cal-month').textContent = init.monList[mm];
+          document.querySelector('.cal-year').textContent = yy;
+  
+          let trtd = '';
+          let startCount;
+          let countDay = 0;
+          for (let i = 0; i < 6; i++) { //한달에 있는 한 주 
+            trtd += '<tr class="week">';
+            for (let j = 0; j < 7; j++) { //한주에 들어있는 일
+              if (i === 0 && !startCount && j === firstDay.getDay()) { //날짜가 처음 시작하면 startCount을 1로 변경
+                startCount = 1;
+              }
+              if (!startCount) {
+                trtd += `<td>`
+              } else {
+                let dayList = ['일', '월', '화', '수', '목', '금', '토']
+                let fullDate = yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1);
+                let today = new Date(yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1)).getDay()
+                trtd += '<td class="day';
+                trtd += (markToday && markToday === countDay + 1) ? ' today" ' :
+                '"'; //countDay 변수가 markToday 값과 일치하면 td에 today 클래스
+                trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}" id="${dayList[today]}">` //id="${item}"
+              }
+              trtd += (startCount) ? ++countDay : '';
+              if (countDay === lastDay.getDate()) { //날짜 세는 것이 끝나면 startCount변수를 다시 0으로 초기화
+                startCount = 0;
+              }
+              trtd += '</td>';
+            }
+            trtd += '</tr>';
+          }
+          $calBody.innerHTML = trtd;
+        }
+        
+        function createNewList(val) {
+            let id = new Date().getTime() + '';
+            let yy = init.activeDate.getFullYear();
+            let mm = init.activeDate.getMonth() + 1;
+            let dd = init.activeDate.getDate();
+            const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+            let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+    
+            let eventData = {};
+            eventData['date'] = date;
+            eventData['memo'] = val;
+            eventData['complete'] = false;
+            eventData['id'] = id;
+            init.event.push(eventData);
+            $todoList.appendChild(createLi(id, val, date));
+          }
+    
+          loadYYMM(init.today);
+          loadDate(init.today.getDate(), init.today.getDay());
+    
+          $btnNext.addEventListener('click', () => loadYYMM(init.nextMonth())); //다음 버튼 클릭하면 발생하는 이벤트
+          $btnPrev.addEventListener('click', () => loadYYMM(init.prevMonth())); //이전 버튼 클릭하면 발생하는 이벤트
+    
+          $calBody.addEventListener('click', (e) => { //날자 클릭하면 발생하는 event
+            if (e.target.classList.contains('day')) {
+              if (init.activeDTag) {
+                init.activeDTag.classList.remove('day-active');
+              }
+              let day = Number(e.target.textContent);
+              loadDate(day, e.target.cellIndex);
+              e.target.classList.add('day-active');
+              init.activeDTag = e.target;
+              init.activeDate.setDate(day);
+              reloadTodo();
+            }
+          });
+          
+          
+          //달력에 작가 예약 가능한 요일 까만색으로 만들기  -> 그 안에서 아작스 불러서 처리하기(예약 가능한 시간)
+			let ptgReYnDate = $("input[name='workDay']").val()
+			var arr = ptgReYnDate.split(',')
+			console.log(arr)
+			
+			$(arr).each(function(idx,item){
+				$('.week').find(`td[id=${item}]`).css('color', 'black').on('click',function(e){
+					e.stopPropagation()
+					if($('#selectDate') != null){  
+						$('#selectDate').children().remove()
+						$('.reserList').children().remove()		//달력클릭했을경우 예약자 정보 삭제
+                    }
+					$('#selectDate').text($(this).attr('data-fdate'))
+                    if( $('.product-description.timeTable') !=null){
+						$('.product-description.timeTable').children().remove()
+                    }
+
+					function leadingZeros(n, digits) {
+						var zero = '';
+						n = n.toString();
+						
+						if (n.length < digits) {
+							for (i = 0; i < digits - n.length; i++)
+							zero += '0';
+						}
+						return zero + n;
+					}	
+					
+					$('.product-description.timeTable').append(
+                        `<div class="card">
+                            <div class="card-header py-3 d-flex align-items-center">
+                                <h5 class="m-0">예약리스트</h5>
+                            </div>
+                            <div class="card-body time"></div>
+						</div>`
+                    )
+					//ajax호출해서 선택가능한 시간 , 날짜 누르면 달력 하단에 예약 가능시간 띄우기
+					const ptgId = $("input[name='ptgId']").val();
+					console.log(ptgId)
+					var redate =$(this).attr('data-fdate')					
+					console.log(redate);						//얘는 정상작동
+					//작가가 등록한 시간 아작스 호출
+					$.ajax({
+						url: '/ajaxResTime/' + ptgId +"/"+ redate,
+             			datatype: "json"
+					}).then(result =>{
+						//console.log(result)
+						$(result).each(function(idx,item){
+							console.log(result)
+							//console.log(item.resyn) 예약이 잇으면 1/없으면 0
+							let cdNameBtn = `<button class="btn btn-primary timeList" id="${item.resyn}" th:value="${item.resTime}" timeCD="${item.resTime}" redate="${redate}" >${item.rest}</button>`
+							$('.card-body.time').append(cdNameBtn)
+								})
+					}).then(error => console.log(error))
+					
+			//📌시간 클릭하면 예약자 리스트 나오기 
+            $('.product-description.timeTable').on('click','.timeList',function(){ 
+            	// '.card' 요소가 이미 추가되어 있는 경우, 추가X
+            	  if ($('.reserList').find('.card').length > 0) {
+            	    return;
+            	  }
+            	
+            	$('.reserList').append(
+            			
+                        `<div class="card">
+                            <div class="card-header py-3 d-flex align-items-center">
+                                <h5 class="m-0">예약자 정보</h5>
+                            </div>
+                            <div class="card-body reserInfo"></div>
+						</div>`
+                    );
+                    if( $('.product-description.timeTable') !=null){
+						$('.product-description.timeTable').children().remove()
+                    }
+            	  if( $('.reserList') ==null){
+						$('.reserList').children().remove()	//예약자정보가 쌓이지 않게 하기 위해
+                  }
+            	  
+            	var timeBtn= event.target.closest('.timeList')//선택한 버튼 정보
+			
+            	//그냥들고오면 리스트 없애면서 사라지는것 같아서 redate 다시 정의함(버튼에 redate 값 붙여놈)
+            	var redate=timeBtn.getAttribute('redate');			
+		  		var shotTime=timeBtn.getAttribute('timecd');
+            	const ptgId = $("input[name='ptgId']").val();
+            			
+            	  //ajax호출 예약자정보
+            	    $.ajax({
+            		   url:'/ajaxResInfo/'+ptgId+"/"+redate+"/"+shotTime,
+            		   method : 'post',
+            		   data:JSON.stringify({
+            			   ptgId:ptgId,
+            			   shotTime: shotTime,
+            			   redate:redate
+            		   }),
+            		   contentType: "application/json",
+            		   datatype: "json"}).then(result=>{
+            			 if(result.length==0){
+            				 
+            			  $('.card-body.reserInfo').append('<p>예약이 없습니다.</p>');
+            			 }else{
+            		  $(result).each(function(idx,item){
+            			   console.log(item);	//표에 만들 정보들
+            			   let reserInfoTable = ` 
+            			 <div>
+            			<table class="table table-bordered table-hover mb-0">
+            			 <thead class="text-700 bg-gray-200">
+            			 <tr>
+							<th class="fw-600">아이디</th>
+							<th class="fw-600">이름</th>
+							<th class="fw-600">옵션</th>
+							<th class="fw-600">예약한 날짜</th>
+							<th class="fw-600 ">이메일</th>
+							<th class="fw-600">전화번호</th>
+            			 </tr>
+            			 </thead>
+            			 <tbody>
+            			 <tr>
+            		        <td class="p-3 reser">${item.id}</td>
+            		        <td class="p-3 reser">${item.name}</td>
+            		        <td class="p-3 reser">${item.ttl}</td>
+            		        <td class="p-3 reser">${item.regiDate}</td>
+            		        <td class="p-3 reser">${item.email}</td>
+            		        <td class="p-3 reser">${item.tel}</td>
+            		      </tr>
+            		      </tbody>
+            		  	</table>
+            		      </div>
+            		    `;
+            			$('.card-body.reserInfo').append(reserInfoTable);
+            			
+            		  });
+            		   }
+            			}).catch(error => console.log(error));
+            		
+            				}) ;
+          		 })
+			})
+	
+		 
+        
+		</script>
+	</main>
+</body>
+</html>

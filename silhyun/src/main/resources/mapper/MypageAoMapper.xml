@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.mypage.map.MypageAoMapper">
+<!-- 페이징  -->		
+	<select id="getReserList"
+		resultType="int">
+		SELECT COUNT(*)
+		  FROM RESER
+		 WHERE ptg_id=#{ptgId}
+	</select>
+	
+	<select id="selectReserList"
+		resultType="co.yedam.silhyun.order.vo.ReserVO">
+	   select * from( select rownum rn, a.* from( 
+			 
+	   SELECT *
+		FROM RESER
+		WHERE ptg_id=#{ptgId}
+		ORDER BY shot_date DESC
+		
+		<![CDATA[	
+	 	) a where rownum <= #{cri.pageNum} * #{cri.amount}) b where rn > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+	</select>
+<!-- 근무요일 들고오기용  -->
+	<select id="selectWorkDay" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+	 SELECT *
+	   FROM photographer
+	  WHERE ptg_id= #{id}
+	</select>
+<!-- 일하는시간 들고오기  -->	
+	<select id="getResTime" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+		SELECT DISTINCT P.*,
+		       RT.*,
+		       M.NAME,
+		       FIND_CD(RES_TIME) REST,
+		       (SELECT COUNT(*) FROM RESER R WHERE R.SHOT_DATE = TO_DATE(#{redate},'yyyy-mm-dd') AND RT.RES_TIME =R.SHOT_TIME AND R.PTG_ID = P.PTG_ID) RESYN
+		       
+		 FROM PHOTOGRAPHER P, 
+		      RESER_TIME RT, 
+		      MEMBER M
+		      
+		WHERE M.ID = P.PTG_ID
+		  AND P.PTG_ID ＝ RT.PTG_ID
+		  AND P.PTG_ID = #{ptgId}	
+		ORDER BY REST
+	</select>
+	
+<!-- 페이징  -->	
+	<select id="totalClassList" resultType="int">
+		SELECT COUNT(*)
+		  FROM CLASS
+		 WHERE PTG_ID = #{ptgId}		
+	</select>
+
+	<select id="classList" resultType="co.yedam.silhyun.classes.vo.ClassesVO">
+		SELECT * FROM( select rownum rn, a.* from( 
+		SELECT *
+		  FROM CLASS
+		 WHERE PTG_ID = #{ptgId}
+	  ORDER BY ACCP_DT DESC
+		<![CDATA[	
+	 	) a where rownum <= #{cri.pageNum} * #{cri.amount}) b where rn > (#{cri.pageNum}-1) * #{cri.amount}
+	 ]]>
+		
+	</select>
+		
+	<select id="getPhotoinfo"
+		resultType="co.yedam.silhyun.member.vo.MemberVO">
+		SELECT m.id, m.name, m.pwd, m.email, m.tel, p.work_day,
+		       m.profile
+		  FROM MEMBER m
+		INNER JOIN PHOTOGRAPHER p ON m.id = p.ptg_id
+		 WHERE m.id = #{id}
+	</select>
+	
+<!-- ptg정보 들고오기  -->
+	<select id="ptgSelect" resultType="co.yedam.silhyun.member.vo.MemberVO">
+		SELECT *
+		  FROM MEMBER m
+		INNER JOIN PHOTOGRAPHER p ON m.id = p.ptg_id
+		 WHERE m.id = #{ptgId}
+
+	</select>
+<!-- 근무 시간  -->
+	 <select id="ptgRestime" resultType="co.yedam.silhyun.member.vo.ReserTimeVO">
+		SELECT R.RES_TIME
+		  FROM PHOTOGRAPHER p , RESER_TIME r
+		 WHERE p.ptg_id = r.ptg_id
+		   AND r.ptg_id = #{ptgId}
+	</select>
+	<!-- <select id="ptgRestime" resultType="co.yedam.silhyun.member.vo.ReserTimeVO">
+		SELECT find_cd(res_time) as res_time
+		  FROM reser_time
+		 WHERE ptg_id=#{ptgId}
+	</select> -->
+<!-- 이벤트 요청 -->	
+	<insert id="applyEvent"
+		parameterType="co.yedam.silhyun.event.vo.EventVO">
+		<!-- <selectKey keyProperty="eventNum" resultType="String"> select dbms_random.string('A', 
+			5) as eventNum from dual </selectKey> -->
+		INSERT INTO EVENT (event_num, 
+		                   Id,
+		                   name, 
+		                   start_date, 
+		                   cntn,term, 
+		                   bnph, 
+		                   bnph_sta,
+		                   region_cd)
+		                   
+		           VALUES (#{eventNum}, 
+		        		   #{id},
+		        		   #{name},
+		        		   #{startDate}, 
+		        		   #{cntn}, 
+		        		   #{term},
+		        		   #{bnph},
+		        		   #{bnphSta},
+						   #{regionCd})
+	</insert>
+	
+	<insert id="applyECoupon"
+		parameterType="co.yedam.silhyun.event.vo.CouponVO">
+		INSERT INTO COUPON(ctgr, 
+						   cntn, 
+						   discount, 
+						   start_date,
+						   event_num,
+						   cpn_num,
+						   ctgr_num,
+						   cpn_cd)
+					VALUES(#{ctgr},
+						   #{cntn},
+						   #{discount},
+						   #{startDate},
+						   #{eventNum},
+						   #{cpnNum},
+						   #{ctgrNum},
+						   #{cpnCd})
+	</insert>
+<!-- 클래스 요청 -->	
+	<insert id="applyClass"
+		parameterType="co.yedam.silhyun.classes.vo.ClassesVO">
+		<selectKey keyProperty="classNum" resultType="String" order="BEFORE">
+			SELECT
+				nvl(MAX(to_number(class_num)), 0) + 1 AS "classNum"
+			FROM CLASS
+		</selectKey>
+		INSERT INTO CLASS (class_num,
+						   ptg_id,
+						   cla_ttl,
+						   cla_pri,
+						   cla_desct,
+						   cla_cd,
+						   ypsn,
+						   cla_time,
+						   cla_dt,
+						   thni,
+						   ot)
+				   VALUES (#{classNum},
+						   #{ptgId},
+						   #{claTtl},
+						   #{claPri},
+						   #{claDesct},
+						   #{claCd},
+						   #{ypsn},
+						   #{claTime},
+						   #{claDt},
+						   #{thni},
+						   #{ot})
+	</insert>
+
+	<!-- 옵션 설정 -->
+	<insert id="insertOption"
+		parameterType="co.yedam.silhyun.member.vo.OptionsVO">
+		<selectKey keyProperty="opNum" resultType="String" order="BEFORE">
+			SELECT
+			nvl(MAX(to_number(op_num)), 0) + 1 AS "opNum"
+			FROM OPTIONS
+		</selectKey>
+		INSERT INTO OPTIONS(op_num, 
+							ptg_id, 
+							ttl, 
+							cntn,
+							pri)
+					 VALUES(#{opNum},
+					        #{ptgId},
+					        #{ttl},
+					        #{cntn},
+					        #{pri})
+	</insert>
+
+<!-- 작가 예약시간 수정  -->
+	<delete id="deleteReserTime" parameterType="co.yedam.silhyun.member.vo.ReserTimeVO">
+		DELETE
+		  FROM RESER_TIME
+		 WHERE PTG_ID= #{id}
+	</delete>
+<!-- 작가 예약시간 수정  -->
+<insert id="insertReserTime" parameterType="co.yedam.silhyun.member.vo.ReserTimeVO">
+    INSERT INTO RESER_TIME(res_time,
+     					   ptg_id)
+    				VALUES(#{resTime},
+    					   #{ptgId})
+ 
+</insert>
+<!-- 작가 정보 수정  -->
+	<update id="ptgInfoUpdate"
+		parameterType="co.yedam.silhyun.member.vo.MemberVO">
+		UPDATE Member
+		<set>
+			<if test="name != null and !name.equals('')">NAME = #{name},</if>
+			<if test="pwd != null and !pwd.equals('')">PWD = #{pwd},</if>
+			<if test="email != null and !email.equals('')">Email = #{email},</if>
+			<if test="tel != null and ! tel.equals('')">TEL = #{tel},</if>
+			<if test="birthDate != null and !birthDate.equals('')">birth_date = #{birthDate}</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+	<update id="updateWorkday" parameterType="co.yedam.silhyun.member.vo.PhotographerVO">
+	UPDATE PHOTOGRAPHER
+		<set>
+			<if test="shotPlace != null and !shotPlace.equals('')">SHOT_PLACE = #{shotPlace},</if>
+			<if test="itr != null and !itr.equals('')">ITR = #{itr},</if>
+			<if test="workDay != null">WORK_DAY = #{workDay}</if>
+		</set>
+	WHERE PTG_ID=#{ptgId}
+	</update>
+
+<!-- 예약 캘린더 확인  -->
+<select id="getResInfo" resultType="co.yedam.silhyun.member.vo.PhotographerVO">
+	SELECT DISTINCT p.res_num, r.res_cd, r.regi_date, o.ttl, p.ord_date, m.id, m.name, m.email, m.tel
+	  FROM payment p, reser r, selected_op s, options o, member m, photographer ph
+	 WHERE p.res_num = r.res_num
+	   AND r.id = m.id
+	   AND p.id = m.id
+	   AND s.op_num = o.op_num
+	   AND r.ptg_id = ph.ptg_id
+	   AND o.ptg_id = #{ptgId}
+	   AND r.shot_time = #{shotTime}
+	   AND r.shot_date =to_date(#{redate},'yyyy/MM/dd')
+</select>
+
+<!-- 클래스 수강자 조회 -->
+<select id="clMemInfo" resultType="co.yedam.silhyun.member.vo.MemberVO">
+   SELECT P.ID, 
+          M.NAME, 
+          M.EMAIL, 
+          M.TEL, 
+          C.CLA_TTL
+	 FROM PAYMENT P ,MEMBER M, CLASS C
+	WHERE P.ID = M.ID
+	  AND P.CTGR='C'
+	  AND P.CTGR_NUM= C.CLASS_NUM
+	  AND CTGR_NUM = #{classNum}
+</select>
+
+<!-- 대표사진설정 -->
+<update id="uploadPhoto" parameterType="co.yedam.silhyun.order.vo.ReserVO">
+		UPDATE RESER
+		<set>
+			<if test="mainP != null and !mainP.equals('')">MAIN_P = #{mainP}</if>
+		</set>
+		WHERE RES_NUM = #{resNum}
+</update>
+
+
+</mapper>

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/dashBoard}">
+
+<body>
+	<div layout:fragment="content">
+
+		<div class="page-breadcrumb bg-white">
+			<div class="row align-items-center">
+				<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+					<h3 class="page-title">종합 승인 관리</h3>
+				</div>
+				<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+					<div class="d-md-flex">
+						<ol class="breadcrumb ms-auto">
+							<li><a> </a></li>
+						</ol>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="white-box">
+
+						<div id="ptgAccept">
+							<div>
+								<span>
+									<input type="button" class="box-title" style="background-color:white;border:none;"
+										value="기록가" th:attr="onclick=|openPtgList()|">
+									&nbsp;<input type="button" class="box-title"
+										style="background-color:white;border:none;color:grey;" value="사진관"
+										th:attr="onclick=|openStdList()|">
+									&nbsp;<input type="button" class="box-title"
+										style="background-color:white;border:none;color:grey;" value="클래스"
+										th:attr="onclick=|openClassList()|">
+									&nbsp;<input type="button" class="box-title"
+										style="background-color:white;border:none;color:grey;" value="이벤트"
+										th:attr="onclick=|openEventList()|">
+									<br>
+								</span>
+								<p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+									<code th:text="${needCfm.sysdate}"></code>&nbsp; 승인 대기
+									&emsp;기록가:<code th:text="${needCfm.pCfm}"></code>
+									&nbsp;사진관:<code th:text="${needCfm.sCfm}"></code>
+									&nbsp;클래스:<code th:text="${needCfm.cCfm}"></code>
+									&nbsp;이벤트:<code th:text="${needCfm.eCfm}"></code>
+								</p>
+							</div>
+							<br>
+							<hr>
+							<div class="table-responsive">
+								<table class="table text-nowrap">
+									<thead>
+										<tr>
+											<th class="border-top-0" style="width: 50px">#</th>
+											<th class="border-top-0" style="width: 150px">작가아이디</th>
+											<th class="border-top-0" style="width: 150px">사진관아이디</th>
+											<th class="border-top-0">지역</th>
+											<th class="border-top-0">사업자등록번호</th>
+											<th class="border-top-0">촬영장소</th>
+											<th class="border-top-0">인스타주소</th>
+											<th class="border-top-0">근무가능요일</th>
+											<th class="border-top-0" style="width: 150px">승인신청일자</th>
+											<th class="border-top-0" style="width: 80px">승인처리</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="ptg, sts: ${ptgList}" th:Class="${sts}">
+											<td th:text="${sts.count}"></td>
+											<td th:text="${ptg.ptgId}"></td>
+											<td th:text="${ptg.stId}"></td>
+											<td th:text="${ptg.regionCd}"></td>
+											<td th:text="${ptg.crn}"></td>
+											<td th:text="${ptg.shotPlace}"></td>
+											<td th:text="${ptg.inst}"></td>
+											<td th:text="${ptg.workDay}"></td>
+											<td th:text="${#dates.format(ptg.regiDate,'yyyy/MM/dd')}"></td>
+                                            <td><button type="button" class="btn btn-info"  id ="ptgAcceptBtn"  data-bs-toggle="modal" data-bs-target="#ptgAcceptModal" style="color:white;" 
+                                            th:attr="onclick=|ptgSelectAjax('${ptg.ptgId}')|" >처리</button>
+                                        </tr>
+                                    </tbody>
+                                </table>                                
+                            </div>
+                          </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                     <div  id="stdAccept" style="display: none">
+                       <div>
+                        	<span>
+                     <input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="기록가" th:attr="onclick=|openPtgList()|">
+  					&nbsp;<input type="button" class="box-title" style="background-color:white;border:none;" value="사진관" th:attr="onclick=|openStdList()|">
+  					 &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="클래스" th:attr="onclick=|openClassList()|">
+                       &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="이벤트" th:attr="onclick=|openEventList()|">
+                            <br>
+                            </span>
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    <code th:text="${needCfm.sysdate}"></code>&nbsp; 승인 대기
+                                    &emsp;기록가:<code th:text="${needCfm.pCfm}"></code>
+                                    &nbsp;사진관:<code th:text="${needCfm.sCfm}"></code>
+                                    &nbsp;클래스:<code th:text="${needCfm.cCfm}"></code>
+                                    &nbsp;이벤트:<code th:text="${needCfm.eCfm}"></code>
+                                </p>
+                        </div>
+	               <br>
+					<hr>
+                            <div class="table-responsive">
+                                <table class="table text-nowrap" >
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0" style="width: 50px">#</th>
+                                            <th class="border-top-0" style="width: 150px">사진관아이디</th>
+                                            <th class="border-top-0">사진관이름</th>
+                                            <th class="border-top-0">지역</th>
+                                            <th class="border-top-0">사업자등록번호</th>
+                                            <th class="border-top-0">사진관주소</th>
+                                            <th class="border-top-0">사진관상세주소</th>
+                                            <th class="border-top-0">TEL</th>
+                                            <th class="border-top-0" style="width: 150px">승인신청일자</th>
+                                            <th class="border-top-0" style="width: 80px">승인처리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="std, sts2: ${stdList}" th:Class="${sts2}">
+                                            <td th:text="${sts2.count}"></td>
+                                            <td th:text="${std.stId}"></td>
+                                            <td th:text="${std.stName}"></td>
+                                            <td th:text="${std.regionCd}"></td>
+                                            <td th:text="${std.crn}"></td>
+                                            <td th:text="${std.addr}"></td>
+                                            <td th:text="${std.detAddr}"></td>
+                                            <td th:text="${std.tel}"></td>      
+                                            <td th:text="${#dates.format(std.regiDate,'yyyy/MM/dd')}"></td>
+                                            <td><button type="button" class="btn btn-info"  id ="stdAcceptBtn"  data-bs-toggle="modal" data-bs-target="#stdAcceptModal" style="color:white;" 
+                                            th:attr="onclick=|stdSelectAjax('${std.stId}')|" >처리</button>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                       
+                            </div>
+                               </div>
+                            
+                               <div  id="classAccept" style="display: none">
+                        	 <div>
+                        <span>
+                     <input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="기록가" th:attr="onclick=|openPtgList()|">
+  					&nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="사진관" th:attr="onclick=|openStdList()|">
+  					 &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;" value="클래스" th:attr="onclick=|openClassList()|">
+                       &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="이벤트" th:attr="onclick=|openEventList()|">
+                            <br>
+                            </span>
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    <code th:text="${needCfm.sysdate}"></code>&nbsp; 승인 대기
+                                    &emsp;기록가:<code th:text="${needCfm.pCfm}"></code>
+                                    &nbsp;사진관:<code th:text="${needCfm.sCfm}"></code>
+                                    &nbsp;클래스:<code th:text="${needCfm.cCfm}"></code>
+                                    &nbsp;이벤트:<code th:text="${needCfm.eCfm}"></code>
+                                </p>
+                        </div>	
+	               <br>
+				   <hr>
+                            <div class="table-responsive">
+                                <table class="table text-nowrap" >
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0" style="width: 50px">#</th>
+                                            <th class="border-top-0" style="width: 150px">작가아이디</th>
+                                            <th class="border-top-0">클래스제목</th>
+                                            <th class="border-top-0">클래스장소</th>
+                                            <th class="border-top-0">클래스일시</th>
+                                            <th class="border-top-0">클래스구분</th>
+                                            <th class="border-top-0">클래스금액</th>
+                                            <th class="border-top-0" style="width: 150px">승인신청일자</th>
+                                            <th class="border-top-0" style="width: 80px">승인처리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+						                <tr th:each="c, sts3: ${classList}" th:Class="${sts3}">
+                                            <td th:text="${sts3.count}"></td>
+                                            <td th:text="${c.ptgId}"></td>
+                                            <td th:text="${c.claTtl}"></td>
+                                            <td th:text="${c.claPlace}"></td>
+                                            <td th:text="${c.claDt}+'/'+${c.claTime}"></td>
+                                            <td th:text="${c.claCd}"></td>
+                                            <td th:text="${c.claPri}+'원'"></td>
+                                            <td th:text="${#dates.format(c.regiDate,'yyyy/MM/dd')}"></td>
+                                            <td><button type="button" class="btn btn-info"  id ="classAcceptBtn"  data-bs-toggle="modal" data-bs-target="#classAcceptModal" style="color:white;" 
+                                            th:attr="onclick=|classSelectAjax('${c.classNum}')|" >처리</button>
+                                        </tr>
+                                    </tbody>
+                                </table>   
+                            </div>
+                               </div>
+                            
+                            <div  id="eventAccept" style="display: none">
+                            	<div>
+                            <span>
+                     <input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="기록가" th:attr="onclick=|openPtgList()|">
+  					&nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="사진관" th:attr="onclick=|openStdList()|">
+  					 &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;color:grey;" value="클래스" th:attr="onclick=|openClassList()|">
+                       &nbsp;<input type="button" class="box-title" style="background-color:white;border:none;" value="이벤트" th:attr="onclick=|openEventList()|">
+                            <br>
+                            </span>
+                                <p class="text-muted" style="float:left; font-size:16px; margin-top:3px;">
+                                    <code th:text="${needCfm.sysdate}"></code>&nbsp; 승인 대기
+                                    &emsp;기록가:<code th:text="${needCfm.pCfm}"></code>
+                                    &nbsp;사진관:<code th:text="${needCfm.sCfm}"></code>
+                                    &nbsp;클래스:<code th:text="${needCfm.cCfm}"></code>
+                                    &nbsp;이벤트:<code th:text="${needCfm.eCfm}"></code>
+                                </p>
+                        </div>
+	
+	               <br>
+				   <hr>
+
+                            <div class="table-responsive">
+                                <table class="table text-nowrap" >
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0" style="width: 50px">#</th>
+                                            <th class="border-top-0" style="width: 150px">작가아아디</th>
+                                            <th class="border-top-0">이벤트명</th>
+                                            <th class="border-top-0">진행일수</th>
+                                            <th class="border-top-0">시작일자</th>
+                                            <th class="border-top-0">배너표시여부</th>
+                                            <th class="border-top-0">쿠폰발행상태</th>
+                                            <th class="border-top-0" style="width: 150px">승인신청일자</th>
+                                            <th class="border-top-0" style="width: 80px">승인처리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="e, sts4 : ${eList}" th:Class="${sts4}">
+                                            <td th:text="${sts4.count}"></td>
+                                            <td th:text="${e.id}"></td>
+                                            <td th:text="${e.name}"></td>
+                                            <td th:text="${e.term} + '일간'"></td>
+                                            <td th:text="${#dates.format(e.startDate,'yyyy년MM월dd일')}"></td>
+                                            <td th:text="${e.bnphSta}"></td>
+                                            <td th:text="${e.cpnPubSta}"></td> 
+                                            <td th:text="${#dates.format(e.regiDate,'yyyy/MM/dd')}"></td>
+                                            <td><button type="button" class="btn btn-info"  id ="eventAcceptBtn"  data-bs-toggle="modal" data-bs-target="#eventAcceptModal" style="color:white;" 
+                                            th:attr="onclick=|eventSelectAjax('${e.eventNum}')|" >처리</button>
+                                        </tr>
+                                    </tbody>
+                                </table>     
+                            </div>
+                           </div> 
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+ <!-- ptgCfrm from  -->
+<div class="modal fade" id="ptgAcceptModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id ="ptgBody">
+        </div>
+    </div>
+</div>
+<!-- End ptgCfrm from  -->
+
+ <!-- stdCfrm from  -->
+<div class="modal fade" id="stdAcceptModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id ="stdBody">
+        </div>
+    </div>
+</div>
+<!-- End ptgCfrm from  -->
+
+ <!-- classCfrm from  -->
+<div class="modal fade" id="classAcceptModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id ="classBody">
+        </div>
+    </div>
+</div>
+<!-- End ptgCfrm from  -->
+                
+                
+<!-- eventCfrm from  -->
+<div class="modal fade" id="eventAcceptModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id ="evnetBody">
+        </div>
+    </div>
+</div>
+<!-- End eventCfrm from  -->  
+                
+
+                
+</div>
+         
+         
+<script th:inline="javascript">
+		const ptgAccept = document.getElementById("ptgAccept");
+	    const stdAccept = document.getElementById("stdAccept");
+	    const classAccept = document.getElementById("classAccept");
+	    const eventAccept = document.getElementById("eventAccept");
+	    
+		function openPtgList(){
+			ptgAccept.style.display = 'block';
+			stdAccept.style.display = 'none';
+			classAccept.style.display = 'none';
+			eventAccept.style.display = 'none';
+	    };
+	    
+		function openStdList(){		
+			ptgAccept.style.display = 'none';
+			stdAccept.style.display = 'block';
+			classAccept.style.display = 'none';
+			eventAccept.style.display = 'none';
+	    };
+	    
+		function openClassList(){		
+			ptgAccept.style.display = 'none';
+			stdAccept.style.display = 'none';
+			classAccept.style.display = 'block';
+			eventAccept.style.display = 'none';
+	    };
+	    
+		function openEventList(){		
+			ptgAccept.style.display = 'none';
+			stdAccept.style.display = 'none';
+			classAccept.style.display = 'none';
+			eventAccept.style.display = 'block';
+	    };
+	
+	    
+	    
+       
+	    function ptgSelectAjax(ptgId){
+	        var ptgId = ptgId;
+	        $.ajax({
+	          url: "/admin/ptgSelect",
+	          type: "GET",
+	          data: "ptgId=" + ptgId,
+	          dataType: 'json'
+	        }).then(result =>{
+	      	  
+	      	     var ptgSelect = result;
+	      	console.log("아작스로 받은 작가세부인포"+ptgSelect)   
+	      		console.log(ptgSelect) 
+	      	  var ptgBody = document.getElementById("ptgBody");
+	      	ptgBody.innerHTML = "";
+	      	
+	       
+	      	  var appendContent = `
+	       
+	              <div class="modal-header bg-primary">
+	                  <div class="modal-title p-3">
+	                      <h5 class="m-0 text-white"></h5>
+	                     <p class="m-0 text-white">${ptgSelect.ptgId}님의 기록가 승인신청서</p>
+	                  </div>
+	                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	              </div>
+	              <div class="modal-body">
+	                  <div class="w-100 p-3">
+	                      <!-- Form START -->
+	                      <form>
+	                        <div class="mb-3">
+	                           <img  src="${ptgSelect.profile}" style="width: 440px"  alt="">                          
+	                          </div> 
+	                          <div class="mb-3">
+	                              <b>작가아이디</b>
+	                              <p>${ptgSelect.ptgId}</p>
+	                          </div>     
+                             	<div class="mb-3">
+	                              <b>사진관아이디</b>
+	                              <p>${ptgSelect.stId}</p>
+	                          </div>      
+	                               <div class="mb-3">
+	                              <b>지역/촬영장소</b>
+	                              <p>${ptgSelect.regionCd}/${ptgSelect.shotPlace}</p>
+	                          </div>
+	                               <div class="mb-3">
+	                              <b>자기소개</b>
+	                              <p>${ptgSelect.itr}</p>
+	                          </div>
+	                               <div class="mb-3">
+	                              <b>근무가능요일</b>
+	                              <p>${ptgSelect.workDay}</p>
+	                          </div>
+                              <div class="row align-items-center">
+	                    
+	                          <button type="submit" class="btn btn-info" style="width: 220px;color: white;"
+	                        	    onclick="ptgAcceptAjax('${ptgSelect.ptgId}')">승인</button>  	                                  
+                                <button type="submit" class="btn btn-dark" style="width: 220px"
+                              	  onclick="noPtgAcceptAjax('${ptgSelect.ptgId}')">반려</button>
+	                          </div>
+	                      </form>
+	                  </div>
+	              </div>
+	    
+	      	  `;
+	      	  
+	      	  
+	            document.getElementById("ptgBody").innerHTML += appendContent;  
+	      	  
+	      	});	      	
+	      	
+	      };
+	      
+	      function ptgAcceptAjax(ptgId){
+	    	  console.log("html에 있는 아작스"+ptgId)
+	    	  $.ajax({
+	    	    url: "/admin/ptgAccept",
+	    	    type: "POST",
+	    	    data: "ptgId=" + ptgId,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    console.log(msg)
+	    	    
+	    	  });
+	    	};
+	    	
+	      function noPtgAcceptAjax(ptgId){
+	    	  console.log("html에 있는 no아작스"+ptgId)
+	    	  $.ajax({
+	    	    url: "/admin/noPtgAccept",
+	    	    type: "POST",
+	    	    data: "ptgId=" + ptgId,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    console.log(msg)
+	    	    
+	    	  });
+	    	};
+	   
+	    	
+	    	//Std==============================================
+	    		
+	    		  
+	    function stdSelectAjax(stId){
+	        var stId = stId;
+	        $.ajax({
+	          url: "/admin/stdSelect",
+	          type: "GET",
+	          data: "stId=" + stId,
+	          dataType: 'json'
+	        }).then(result =>{
+	      	  
+	      	     var stdSelect = result;
+	      	console.log("아작스로 받은 작가세부인포"+stdSelect)   
+	      		console.log(stdSelect) 
+	      	  var stdBody = document.getElementById("stdBody");
+	      	stdBody.innerHTML = "";
+	      	
+	       
+	      	  var appendContent2 = `
+	       
+	              <div class="modal-header bg-primary">
+	                  <div class="modal-title p-3">
+	                      <h5 class="m-0 text-white"></h5>
+	                     <p class="m-0 text-white">${stdSelect.stId}님의 사진가 승인신청서</p>
+	                  </div>
+	                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	              </div>
+	              <div class="modal-body">
+	                  <div class="w-100 p-3">
+	                      <!-- Form START -->
+	                      <form>       
+	                          <input type="hidden" class="form-control" id="id" name="id">
+	                        <div class="mb-3">
+	                           <img  src="${stdSelect.profile}" style="width: 440px"  alt="">                          
+	                          </div> 
+	                          <div class="mb-3">
+	                              <b>사진관아이디</b>
+	                              <p>${stdSelect.stId}</p>
+	                          </div>     
+	                          
+                           	<div class="mb-3">
+                            <b>사진관이름</b>
+                            <p>${stdSelect.stName}(연락처:${stdSelect.tel})</p>
+                        </div>      
+                             <div class="mb-3">
+                            <b>지역</b>
+                            <p>${stdSelect.regionCd}</p>
+                        </div>
+                        <div class="mb-3">
+                        <b>주소/상세주소</b>
+                        <p>${stdSelect.addr}/${stdSelect.detAddr}</p>
+                    </div>
+                             <div class="mb-3">
+                            <b>사진관소개</b>
+                            <p>${stdSelect.stItr}</p>
+                        </div>
+                        <div class="row align-items-center">
+	                          <button type="submit" class="btn btn-info" style="width: 220px;color: white;"
+	                        	    onclick="stdAcceptAjax('${stdSelect.stId}')">승인</button>  	                                  
+                                <button type="submit" class="btn btn-dark" style="width: 220px"
+                              	  onclick="noStdAcceptAjax('${stdSelect.stId}')">반려</button>
+                              	  </div>
+	                      </form>
+	                  </div>
+	              </div>
+	    
+	      	  `;
+	      	  	  
+	            document.getElementById("stdBody").innerHTML += appendContent2;  
+	      	  
+	      	});	      	
+	      	
+	      };
+	      
+	      function stdAcceptAjax(stId){
+	    	  console.log("html에 있는 아작스"+stId)
+	    	  $.ajax({
+	    	    url: "/admin/stdAccept",
+	    	    type: "POST",
+	    	    data: "stId=" + stId,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    console.log(msg)
+	    	    
+	    	  });
+	    	};
+	    	
+	      function noStdAcceptAjax(stId){
+	    	  console.log("html에 있는 no아작스"+stId)
+	    	  $.ajax({
+	    	    url: "/admin/noStdAccept",
+	    	    type: "POST",
+	    	    data: "stId=" + stId,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    console.log(msg)
+	    	    
+	    	  });
+	    	};
+	   
+	    	
+	    	//calss===========================================
+		    
+	    		 function classSelectAjax(classNum){
+	        var classNum = classNum;
+	        $.ajax({
+	          url: "/admin/classSelect",
+	          type: "GET",
+	          data: "classNum=" + classNum,
+	          dataType: 'json'
+	        }).then(result =>{
+	      	  
+	      	     var classSelect = result;
+	      	console.log("아작스로 받은 클래스 세부인포"+classSelect)   
+	      		console.log(classSelect) 
+	      	  var classBody = document.getElementById("classBody");
+	      	classBody.innerHTML = "";
+	      	
+	       
+	      	  var appendContent3 = `
+	       
+	              <div class="modal-header bg-primary">
+	                  <div class="modal-title p-3">
+	                      <h5 class="m-0 text-white"></h5>
+	                     <p class="m-0 text-white">${classSelect.ptgId}님의 사진가 승인신청서</p>
+	                  </div>
+	                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	              </div>
+	              <div class="modal-body">
+	                  <div class="w-100 p-3">
+	                      <!-- Form START -->
+	                      <form>       
+	                          <input type="hidden" class="form-control" id="id" name="id">
+	                        <div class="mb-3">
+	                           <img  src="${classSelect.thni}" style="width: 440px"  alt="">                          
+	                          </div> 
+	                          <div class="mb-3">
+	                              <b>작가아이디</b>
+	                              <p>${classSelect.ptgId}</p>
+	                          </div>
+	                          <div class="mb-3">
+                              <b>클래스제목</b>
+                              <p>${classSelect.claTtl}</p>
+                          </div>  
+                          <div class="mb-3">
+                          <b>클래스제목</b>
+                          <p>${classSelect.claDesct}</p>
+                      </div>  
+                  <div class="mb-3">
+                  <b>OT영상 주소</b>
+                  <p>${classSelect.ot}</p>
+              </div>  
+                  
+                          <div class="mb-3">
+                          <b>클래스구분</b>
+                          <p>${classSelect.claCd}</p>
+                      </div>  
+                      <div class="mb-3">
+                      <b>클래스가격</b>
+                      <p>${classSelect.claPri}원</p>
+                  </div>  
+                  <div style="display: ${classSelect.claCd === '현장' ? 'block' : 'none'}">
+                  <div class="mb-3">
+                      <b>클래스장소</b>
+                      <p>${classSelect.claPlace}</p>
+                  </div>  
+                  <div class="mb-3">
+                      <b>클래스일시</b>
+                      <p>${classSelect.claDt}/${classSelect.claTime}</p>
+                  </div>  
+                  <div class="mb-3">
+                      <b>클래스정원</b>
+                      <p>총 ${classSelect.ypsn}명</p>
+                  </div>  
+              </div>
+              
+              <div style="display: ${classSelect.claCd === '온라인' ? 'block' : 'none'}">
+              <div class="mb-3">
+                  <b>인강 갯수</b>
+                  <p>총 ${classSelect.claCnt}강</p>
+              </div>  
+          </div>
+
+                        <div class="row align-items-center">
+                          <button type="submit" class="btn btn-info" style="width: 220px;color: white;"
+                          onclick="classAcceptAjax('${classSelect.classNum}')">승인</button>  	                                  
+                          <button type="submit" class="btn btn-dark" style="width: 220px"
+                           onclick="noClassAcceptAjax('${classSelect.classNum}')">반려</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+  
+	      	  `;
+	      	  
+	      	  
+	            document.getElementById("classBody").innerHTML += appendContent3;  
+	      	  
+	      	});	      	
+	      	
+	      };
+	      
+	      function classAcceptAjax(classNum){
+	    	  $.ajax({
+	    	    url: "/admin/classAccept",
+	    	    type: "POST",
+	    	    data: "classNum=" + classNum,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    
+	    	  });
+	    	};
+	    	
+	      function noClassAcceptAjax(classNum){
+	    	  $.ajax({
+	    	    url: "/admin/noClassAccept",
+	    	    type: "POST",
+	    	    data: "classNum=" + classNum,
+	    	    dataType: 'text'
+	    	  }).then(msg =>{
+	    	    alert(msg);
+	    	    
+	    	  });
+	    	};
+	   
+		    
+	    		
+    		//event=============================================
+		    	function eventSelectAjax(eventNum){
+		    	    var eventNum = eventNum;
+		    	  $.ajax({
+		    	    url: "/admin/eventManageSelect",
+		    	    type: "GET",
+		    	    data: "eventNum=" + eventNum,
+		    	    dataType: 'json'
+		    	  }).then(result =>{
+		    		  
+		    		  console.log("아작스로 받은 결과"+result)
+		    		  console.log(result)
+		    		     var eventSelect = result;
+		    		     
+		    		  var evnetBody = document.getElementById("evnetBody");
+		    		  evnetBody.innerHTML = "";
+		    		
+		    	 
+		    		  var appendContent4 = `
+		    		  
+		    	             <div class="modal-header bg-primary">
+		                  <div class="modal-title p-3">
+		                      <h5 class="m-0 text-white"></h5>		                    
+		                     <p class="m-0 text-white">${eventSelect.id}님의 이벤트 승인신청서</p>		                    
+		                  </div>
+		                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		              </div>
+		              <div class="modal-body">
+		                  <div class="w-100 p-3">
+		                      <!-- Form START -->
+		                      <form>            
+		                        <div class="mb-3">
+		  	    	          <h5><b>*배너</b></h5>
+			    	           <img src="${eventSelect.bnph}" class="img-fluid" title="" alt="">
+			    	          <hr>
+			    	          <h5><b>*썸네일</b></h5>               
+			    	              <img src="${eventSelect.thni}" class="img-fluid" title="" alt="">
+			    	          </div>
+			    	          <hr>
+		                          <div class="mb-3">
+		                              <b>이벤트명</b>
+		                              <p>${eventSelect.name}</p>
+		                          </div>     
+		                          <div class="mb-3">
+	                              <b>시작일</b>
+	                              <p>${eventSelect.startDate}</p>
+	                          </div>     
+
+	                          <div class="mb-3">
+                              <b>기한</b>
+                              <p>${eventSelect.term}일간</p>
+                          </div>     
+
+                          <div class="mb-3">
+                          <b>이벤트내용</b>
+                          <p> ${eventSelect.cntn}</p>
+                      </div>                  
+		                          
+	                              <div class="row align-items-center">
+		                          <button type="submit" class="btn btn-info" style="width: 220px;color: white;"
+		                        	    onclick="eventAcceptAjax('${eventSelect.eventNum}')">승인</button>  	                                  
+	                                <button type="submit" class="btn btn-dark" style="width: 220px"
+	                              	  onclick="noEventAcceptAjax('${eventSelect.eventNum}')">반려</button>
+		                              </div>
+		                      </form>
+		                  </div>
+		              </div>
+
+		    		  `;
+		    		  
+		    		  
+		    	      document.getElementById("evnetBody").innerHTML += appendContent4;  
+		    		  
+		    		});
+		    		
+		    		
+		    	};
+		    	
+		    	
+		    	
+			      function eventAcceptAjax(eventNum){
+			    	  console.log("html에 있는 아작스"+eventNum)
+			    	  $.ajax({
+			    	    url: "/admin/eventAccept",
+			    	    type: "POST",
+			    	    data: "eventNum=" + eventNum,
+			    	    dataType: 'text'
+			    	  }).then(msg =>{
+			    	    alert(msg);
+			    	    console.log(msg)
+			    	    
+			    	  });
+			    	};
+			    	
+			      function noEventAcceptAjax(eventNum){
+			    	  console.log("html에 있는 no아작스"+eventNum)
+			    	  $.ajax({
+			    	    url: "/admin/noEventAccept",
+			    	    type: "POST",
+			    	    data: "eventNum=" + eventNum,
+			    	    dataType: 'text'
+			    	  }).then(msg =>{
+			    	    alert(msg);
+			    	    console.log(msg)
+			    	    
+			    	  });
+			    	};
+			   
+		    	</script>
+	      
+                  
+</div>
+</body>
+</html>

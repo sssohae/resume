@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../../../Desktop/vueloaderTest"
+		},
+		{
+			"path": "../../../../../../../../Desktop/vueRouterTest"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "vueRouterTest"
+	}
+}

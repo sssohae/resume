@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+
+<head>
+	<title>로그인</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3 style="text-align: center;">비밀번호 재확인</h3>
+    
+    <div style="text-align: center;">
+        <div id="account" style="display: inline-block; border: 1px solid black; width: 500px; margin-bottom: 20px;">
+          <label for="username" style="padding-top: 20px;">아이디 :</label>
+          <input type="text" id="username" name="username" th:value="${member.id}" readonly style="border: 0 solid black;"><br><br>
+          <label for="password"> 비밀번호 :</label>
+          <input type="password" id="password" name="password"><br><br>
+        </div>
+        <div id="subBtn" style="text-align: center; margin-bottom: 40px;">
+          <button type="button" value="" id="checkPwd" style="border:none; background-color: white; margin-right: 50px;" onclick="">확인</button>
+          <button type="button" value="" id="cancelBtn" style="border:none; background-color: white;">취소</button>
+        </div>
+      </div>
+
+    
+	<script>
+// 		$('#checkPwd').click(function(){
+// 			const checkPassword = $('#password').val();
+// 			if(!checkPassword || checkPassword.trim() === ""){
+// 				alert("비밀번호를 입력하세요.");
+// 			} else {
+// 				$.ajax({
+// 					type: 'GET',
+// 					url: '/'
+// 				})
+// 			}
+// 		})
+	</script>
+	</div>
+</body>
+</html>

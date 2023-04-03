@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{home/layout}">
+
+<head>
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta name="author" content="pxdraft" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+    <!-- title -->
+    <title>결제까지왔다리</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+</head>
+<script>
+  
+</script>
+<body>
+    <div layout:fragment="content">
+        <!-- Skippy & Prload -->
+        <!-- skippy -->
+        <a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+            <div class="container">
+                <span class="u-skiplink-text">Skip to main content</span>
+            </div>
+        </a>
+        <!-- End skippy -->
+        <!-- 
+    ========================
+        Wrapper 
+    ========================
+    -->
+        <div class="wrapper">
+            <!-- heder height -->
+            <div class="header-height-bar"></div>
+            <!-- Main -->
+            <main>
+                <!-- Breadcrumb -->
+                <div class="py-3 bg-gray-100">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 my-2">
+                                <h1 class="m-0 h4 text-center text-lg-start">😆결제하기</h1>
+                            </div>
+                            <div class="col-lg-6 my-2">
+                                <ol
+                                    class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+                                    <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i
+                                                class="bi bi-home"></i>Home</a></li>
+                                    <li class="breadcrumb-item text-nowrap active" aria-current="page">결제</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Breadcrumb -->
+                <!-- Table -->
+                <div class="py-6">
+                    <div class="container">
+                        <div class="row flex-row-reverse">
+                            <!-- sidebar -->
+                            <div class="col-lg-5 ps-lg-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul class="list-unstyled m-0 p-0">
+                                            <li class="pb-3 mb-3 border-bottom">
+                                                <div class="row align-items-center">
+                                                   
+                                                    <div class="col-8">
+                                                        <!-- Title -->
+                                                        <p class="mb-1">
+                                                            <a class="text-dark fw-500 opTtl" th:id="${classesVO.classNum}" href="#">선택한 클래스 : [[${classesVO.claTtl}]]</a><br>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-unstyled m-0">
+                                            <li class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="me-2 text-body">총 서비스 금액</h6><span
+                                                    class="text-end resPri">[[${reserVO.resPri}]]</span>
+                                            </li>
+                                            <li class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="me-2 text-body">쿠폰 할인</h6><span
+                                                    class="text-end cpnPri">-</span>
+                                            </li>
+                                            <li class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="me-2 text-body">포인트 사용</h6><span
+                                                    class="text-end pointPri">-</span>
+                                            </li>
+                                            <li
+                                                class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+                                                <h6 class="me-2">Total</h6><span
+                                                    class="text-end text-dark totalM">얼마원</span>
+                                            </li>
+                                        </ul>
+                                        <label class="form-check-label" for="chbox" >
+                                            <input type="checkbox" class="form-check-input" id="chbox" name="orderOK">&nbsp;&nbsp;<span class="text-danger">*</span> 주문 내용을 확인하였으며, 결제에 동의합니다.(필수)</label>
+                                        <button style="margin-top: 10px;" type="button" class="btn btn-primary w-100" onclick="requestPay()" disabled>결제하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-7" >
+                                <div class="card">
+                                    <div class="card-header bg-transparent py-3">
+                                        <h6 class="m-0 h5">쿠폰 / 포인트</h6>
+                                    </div>
+                                    <div class="card-body" style="padding: 30px;">
+                                        <ul class="list-unstyled">
+                                            <li class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="me-2 text-body">🎁 쿠폰</h6>
+                                                <div class="mb-3">
+                                                    <select th:if="${!#lists.isEmpty(cpnInfo)}" class="form-select dis" name="discount" required="" style="width: 500px">
+                                                        <option value="">사용가능한 쿠폰</option>
+                                                        <option th:each="cpn :${cpnInfo}" th:text="${cpn.cntn}" th:value="${cpn.discount}" th:selected="${cpn.cpnNum}==${reserVO.cpnNum}" th:id="${cpn.cpnNum}"></option>
+                                                    </select>
+                                                        <select th:if="${#lists.isEmpty(cpnInfo)}" class="form-select dis" name="discount" required="" style="width: 500px">
+                                                        	<option>사용가능한 쿠폰이 없습니다.</option>
+                                                        </select>
+                                                  
+                                                    <div class="invalid-feedback">Please choose your country!</div>
+                                                </div>
+                                            </li><li>
+                                            <div class="pt-2 pb-3 mb-3">
+                                                <div class="d-flex">
+                                                    <input type="text" placeholder="사용할 포인트를 입력하세요"
+                                                        class="form-control form-control-sm useP" style="height: 50px;">
+                                                       <button type="button" class="btn btn-primary btn-sm ms-2 aapP">Apply</button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                            <li class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="me-2 text-body">💰 사용가능한 포인트</h6>
+                                                 <span class="text-end pointSum" th:if="${pointInfo[0].pointSum}!=0">[[${pointInfo[0].pointSum}]]원</span>
+                                                <span class="text-end pointSum" th:if="${pointInfo[0].pointSum}==0">0원</span>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion accordion-alt pt-4" id="payment-methods">
+                                    <div class="card mb-3 shadow-none border">
+                                        <div class="card-header p-0 position-relative bg-transparent">
+                                            <div class="form-check m-3" data-bs-toggle="collapse"
+                                                data-bs-target="#credit-card">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                    id="flexRadioDefault1" checked>
+                                                <label class="form-check-label h6 m-0 w-100 stretched-link"
+                                                    for="flexRadioDefault1">
+                                                    통합 결제
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <p class="m-0 pt-3">현금영수증(사업자지출증빙) / 신용카드 매입전표는  매입세액공제 사용이 불가능합니다.
+                                        [매입세액공제 안내]<br>
+                                        현금영수증 / 신용카드 영수증은 개인 소득 공제용으로만 사용하실 수 있습니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <form>
+                            <input type="hidden" name="id" th:value="${session.id}">
+                            <input type="hidden" name="resPri" th:value="${reserVO.resPri}">
+                        </form>
+                    </div>
+                </div>
+                <!--Table -->
+            </main>
+            <!-- End Main -->
+
+        </div>
+        <!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+        <!-- script start -->
+        <!-- jquery -->
+        <!-- <script src="/js/jquery-3.5.1.min.js"></script> -->
+        <!--bootstrap-->
+        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- slick carousel -->
+        <script src="/vendor/swiper/swiper-bundle.min.js"></script>
+        <!-- magnific -->
+        <script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+        <!-- isotope -->
+        <script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+        <!-- count-down -->
+        <script src="/vendor/count-down/jquery.countdown.min.js"></script>
+        <!-- count-down -->
+        <script src="/vendor/jarallax/jarallax-all.js"></script>
+        <!-- Theme Js -->
+        <script src="/js/custom.js"></script>
+        <script src="/js/theme.js"></script>
+        <!-- End script start -->
+        <script>
+
+            //상품 가격 넣기
+            let numPri = Number($('.text-end.resPri').text()).toLocaleString();
+            $('.text-end.resPri').text(numPri+'원')
+
+            //상품 제목 자르기
+            let opTtl = $('.text-dark.fw-500.opTtl').text().replace(',','')
+                function cutByMaxStr(str, maxLength) {  
+                if (str == undefined || str == null) {
+                    return '';
+                }
+
+                if (str.length > maxLength) {
+                    str = str.substring(0, maxLength) + '...'; 
+                    // str을 maxLength 길이만큼 자르고 '.....' 을 뒤에 붙인다
+                }
+                return str;
+                 }
+            let text = cutByMaxStr(opTtl,25)
+            console.log(text)
+            $('.text-dark.fw-500.opTtl').text(text)
+            
+            //사용가능한 포인트
+            let resp = $('.text-end.resPri').text().replace(/[^0-9]/g,'')
+            let resp2=  Number(resp).toLocaleString()
+            let totalIng = $('.text-end.text-dark.totalM').text()
+              console.log(resp2)
+              $('.m-0.text-muted.w-100.d-block.resP').text(resp2+'원')
+              //$('.text-end.resPri').text(resp2+'원')
+             
+              $('.text-end.text-dark.totalM').text(resp2+'원')  //총가격
+              
+            //쿠폰 적용한 할인 금액
+             let discount = 0;
+             $('.form-select').on('change',function(){
+                 discount = $(this).val()
+                 console.log(discount)
+                 let cpnM = (parseInt(resp) * (parseInt(discount) * 0.01))
+                 console.log(resp)
+                 console.log(resp2)
+                 console.log(cpnM)
+                
+                  $('.text-end.cpnPri').text('-'+Number(cpnM).toLocaleString()+'원')
+                  $('.text-end.text-dark.totalM').text(Number(resp-cpnM).toLocaleString()+'원')   //Totla금액
+                
+              })
+              //포인트 적용
+              $('.aapP').on('click',function(){
+                  let useP = $('.useP').val()
+                  let SumP = $('.pointSum').text().replace(/[^0-9]/g,'')
+                  if(parseInt(SumP) > parseInt(useP)){
+                      $('.text-end.pointPri').text('-'+Number(useP).toLocaleString()+'원')
+                      $('.pointSum').text(Number(SumP-useP).toLocaleString()+'원')  //사용가능한 포인트
+                      
+                      //let realtotal = $('.text-end.text-dark.totalM').text().replace(/[^0-9]/g,'') - Number(useP)
+                      let realtotal = $('.text-end.text-dark.totalM').text().replace(/[^0-9]/g,'') - Number(useP)
+                      console.log(realtotal)
+                      console.log(Number(realtotal).toLocaleString()+'원')
+                      $('.text-end.text-dark.totalM').text(Number(realtotal).toLocaleString()+'원') //Totla금액
+
+                  }else{
+                    alert('사용가능한 포인트를 초과하였습니다.')
+                    console.log($('.useP').val())
+                    $('.useP').val('')
+                  }
+            
+              })
+
+            //토탈 금액
+           let paymPri = Number(0)  //총금액
+           let uPoint = Number(0)
+           let uCpNum = null;
+           let savePo = Number(0)
+           //체크박스 클릭해야지 결제버튼 클릭 가능
+           $(document).ready(function(){
+               $("#chbox").change(function(){
+                   if($("#chbox").is(":checked")){
+                       console.log("체크박스 체크했음");
+                       $('.btn.btn-primary.w-100').attr("disabled", false)
+                       paymPri=  Number($('.text-end.text-dark.totalM').text().replace(/[^0-9]/g,''))  //아작스에서 사용할 할인 적용 된 결제금액
+                     
+                       uPoint = Number($('.useP').val())  //사용 포인트 
+                    
+                       uCpNum = $('.dis :selected').attr('id')  //사용하는 쿠폰 번호
+                       savePo = parseInt(paymPri * 0.01)
+                       console.log("적립예정 포인트 => "+ savePo)
+                       
+                    }else{
+                        console.log("체크박스 체크 해제");
+                        $('.btn.btn-primary.w-100').attr("disabled", true)
+                    }
+               
+                });
+            });
+
+            //reser테이블에 insert되는 데이터
+            let id = $('input[name="id"]').val()     //회원 아이디     
+            let ptgId = $('input[name="ptgId"]').val()  //작가 아이디
+            let classNum = $('.text-dark.fw-500.opTtl').attr('id')
+            let pname = $('.text-dark.fw-500.opTtl').text()  //상품 이름   
+            let ordPri = Number($('.text-end.resPri').text().replace(/[^0-9]/g,''))  //주문 가격 (할인 적용전)
+            let usePo = uPoint
+    
+            //결제
+        const IMP = window.IMP; // 생략 가능
+        IMP.init("imp42851556"); // 예: imp00000000a
+            function requestPay() {
+                IMP.request_pay({
+                pg: 'html5_inicis',  //이니시스 코드
+                pay_method: "card",   ///결제 팝업창 형태
+                merchant_uid: 'merchant_' + new Date().getTime(),   // 주문번호 -> 매퍼에서 증가하도록
+                name: pname,  //제품이름
+                amount: paymPri,                         // 숫자 타입
+                buyer_email: "silhyun@silhyun.kr",
+                buyer_name: "실현하다",  //판매자 이름
+                buyer_tel: "1231-1231",  
+                buyer_addr: "예담직업전문학교",
+                buyer_postcode: "0327"
+                }, function (rsp) { // callback
+                if (rsp.success) {
+                    // 결제 성공 시 로직
+                    let obj={
+                    		id:id,                        
+                            ctgrNum:classNum,
+                            uCpNum:uCpNum,
+                            resNum:'',
+                            uPoint:uPoint,
+                            paymPri:paymPri,
+                            ordPri:ordPri,
+
+                            savePo:savePo,
+                            usePo:uPoint,
+                            
+                            imp_uid: rsp.imp_uid
+                        }
+                        console.log(obj)
+                    $.ajax({
+                        url: "/pay/paymentInsert",
+                        method: "post",
+                        data:obj
+                        
+                       //고유ID
+                    }).then((data) => {
+                        // 서버 결제 API 성공시 로직
+                        alert("정상적으로 결제되었습니다.")
+                        location.href = "/silhyun/myPage/myClasses"  //결제가 완료되면 마이 클래스로 이동
+                    })
+                } else {
+                    // 결제 실패 시 로직
+                    alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
+                }
+
+                });
+            }
+            
+            
+        </script>
+    </div>
+</body>
+
+</html>

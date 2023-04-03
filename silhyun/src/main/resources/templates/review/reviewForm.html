@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+  <link href="/css/star.css" rel="stylesheet"/>
+<style>
+  textarea {
+    width: 100%;
+    height: 25em;
+    border: none;
+    resize: none;
+  }
+  #grey {
+  	background-color: #b96f4a;
+  	color: white;
+  	text-align: center;
+  }
+  #myform{
+  	border: 1px;
+  }
+  #btn{
+  	text-align: center;
+  }
+  
+   #fileBtn{
+   	display: none;
+   }
+   img {
+   	width: 130px;
+   	height: 130px;
+   }
+   p{
+		color : #999;
+		font-size:.9em;
+	}
+	
+  #attZone{
+	width: 100%;
+	min-height:130px;
+	padding:10px;
+	border:1px solid #D2D6D6;
+	}
+#attZone:empty:before{
+	content : attr(data-placeholder);
+	color : #999;
+	font-size:.9em;
+}
+</style>
+<body>
+<div id="reviews">
+<div class="container col-9">
+	<form class="mb-3" id="myform" action="/silhyun/review"> 
+		<select name="ordNum" class="form-select" id="ordList">
+			<option value="">결제정보 선택</option>
+			<option th:each="o : ${ord}" th:value="${o.ordNum}" th:if="${o.findOp} != null">[[${o.ordNum}]]) [[${o.findOp}]]</option>
+			<option th:each="o : ${ord}" th:value="${o.ordNum}" th:if="${o.claTtl} != null">[[${o.ordNum}]]) [[${o.claTtl}]]</option>
+		</select><br>
+		<div id="ordInfoZone"></div><br>
+		<div id="grey">
+				<span class="text-bold">별점을 선택해주세요</span><br>
+			<fieldset>
+				<input type="radio" name="star" value="5" id="rate1"><label
+					for="rate1">★</label>
+				<input type="radio" name="star" value="4" id="rate2"><label
+					for="rate2">★</label>
+				<input type="radio" name="star" value="3" id="rate3"><label
+					for="rate3">★</label>
+				<input type="radio" name="star" value="2" id="rate4"><label
+					for="rate4">★</label>
+				<input type="radio" name="star" value="1" id="rate5"><label
+					for="rate5">★</label>
+			</fieldset>
+		</div>	
+		
+		<table class="table table-border">
+			<tr>
+				<td>
+					<textarea class="form-control" name="cntn" placeholder="2200자 이하 내용입력" maxlength="2200"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div id="zone">
+						<button type="button" class="btn btn-outline-secondary btn-sm" onclick="fileUpAction()">사진선택</button>
+						<input type='file' id='fileBtn' multiple='multiple' accept="image/*"/>
+					<div id='attZone' data-placeholder='사진은 총 6장만 업로드 가능합니다.'></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+
+		<input type="hidden" name="id" id="userid" th:value="${session.id}"> <!-- 섹션이나 시큐리티 아이디값 -->
+		<input type="hidden" name="ctgr" id="revctgr" th:value="${ctgr}"> 
+      	<input type="hidden" name="ctgrNum" id="revctgrNum" th:value="${id}">  <!-- 이전 페이지 작가아이디 -->
+      	<div id="btn">
+	      	<button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertReview()">작성</button>
+	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="backBtn">뒤로가기</button> 
+      	</div>
+	</form>
+<script src="/js/review/filedrop.js"></script>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.silhyun.portfolio.map.AroundMapper">
+
+	<!-- <select id="getAroundList" -->
+	<!-- resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO"> -->
+	<!-- SELECT PO.*,PH.* -->
+	<!-- FROM PORTFOLIO PO, PHOTO PH -->
+	<!-- WHERE PO.PORT_NUM = PH.CTGR_NUM -->
+	<!-- </select> 원래 이걸로 mapper햇움 -->
+	<select id="getAroundList"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO">
+		SELECT A.PHO_RT, A.PHO_NUM, P.*,M.PROFILE, NVL(L.LIKESS,0) AS LIKES
+		FROM (SELECT
+		PHO_RT, PHO_NUM, CTGR_NUM
+		FROM PHOTO
+		WHERE PHO_NUM IN (
+		SELECT
+		MIN(TO_NUMBER(PHO_NUM))
+		FROM PHOTO
+		WHERE CTGR = 'P'
+		GROUP BY CTGR_NUM)
+		ORDER BY PHO_NUM) A
+		JOIN PORTFOLIO P ON A.CTGR_NUM = P.PORT_NUM
+		LEFT OUTER JOIN (SELECT PORT_NUM, COUNT(*) AS LIKESS
+		FROM LIKE_PHOTO
+		GROUP BY
+		PORT_NUM) L ON P.PORT_NUM = L.PORT_NUM
+        LEFT OUTER JOIN MEMBER M ON M.ID =P.PTG_ID
+		WHERE P.UP_STA = 'Y'
+		ORDER BY DBMS_RANDOM.VALUE
+	</select>
+
+
+	<select id="aroundTagList"
+		resultType="co.yedam.silhyun.portfolio.vo.PortfolioVO">
+		select*
+		From (SELECT A.PHO_RT, A.PHO_NUM, P.*, NVL(L.LIKESS,0) AS LIKES
+		FROM (
+		SELECT PHO_RT, PHO_NUM, CTGR_NUM
+		FROM PHOTO
+		WHERE PHO_NUM IN (
+		SELECT MIN(TO_NUMBER(PHO_NUM))
+		FROM PHOTO
+		WHERE CTGR = 'P'
+		GROUP BY CTGR_NUM
+		)
+		ORDER BY PHO_NUM
+		) A
+		JOIN PORTFOLIO P ON A.CTGR_NUM = P.PORT_NUM
+		LEFT OUTER JOIN (
+		SELECT PORT_NUM, COUNT(*) AS LIKESS
+		FROM LIKE_PHOTO
+		GROUP BY PORT_NUM
+		) L ON P.PORT_NUM = L.PORT_NUM
+		WHERE P.UP_STA = 'Y')
+		<if test="tagCntn != null and tagCntn.length>0">
+			WHERE CNTN LIKE '%'||#{tagCntn}||'%'
+		</if>
+		ORDER BY DBMS_RANDOM.VALUE
+	</select>
+
+	<select id="tagList"
+		resultType="co.yedam.silhyun.portfolio.vo.TagVO">
+		SELECT *
+		FROM TAG
+		ORDER BY DBMS_RANDOM.VALUE
+	</select>
+	
+	<select id="searchTags" parameterType="string" resultType="string">
+    SELECT tag_cntn FROM tag
+    WHERE tag_cntn LIKE CONCAT(#{tag}, '%')
+    ORDER BY tag_cntn ASC
+</select>
+
+
+</mapper>

@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+
+<head>
+<!-- metas -->
+<meta charset="utf-8">
+<meta name="author" content="pxdraft" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+<meta name="description"
+	content="ShopApp - eCommerce Bootstrap 5 Template" />
+<!-- title -->
+<title>ShopApp - eCommerce Bootstrap 5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/img/favicon.ico">
+<!-- CSS Template -->
+<!-- <link href="/css/theme.css" rel="stylesheet"> -->
+<link href="/css/around.css" rel="stylesheet">
+
+<!-- 자체어쩌구-->
+<link href="/css/modal.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.3.js"
+	integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+	crossorigin="anonymous"></script>
+<!-- 자체어쩌구 -->
+</head>
+
+<body>
+	<div layout:fragment="content">
+
+		<!-- Main -->
+		<main>
+			<!-- Breadcrumb -->
+			<div class="py-3 bg-gray-100">
+				<div class="container-fluid px-xxl-8">
+					<div class="row align-items-center">
+						<div class="col-lg-6 my-2">
+							<h1 class="m-0 h4 text-center text-lg-start">둘러보기</h1>
+						</div>
+						<div class="col-lg-6 my-2">
+							<ol
+								class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+								<li class="breadcrumb-item"><a class="text-nowrap" href="#"><i
+										class="bi bi-home"></i>Home</a></li>
+								<li class="breadcrumb-item text-nowrap active"
+									aria-current="page">Product</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Breadcrumb -->
+			<!-- Shop -->
+			<section class="py-6">
+				<div class="container-fluid px-xxl-8">
+					<div class="row">
+						<!-- Sidebar -->
+						<div
+							class="col shop-sidebar-option-04 d-none d-lg-block mb-auto sticky-lg-top sticky-lg-top-header">
+							<!-- Categories -->
+							<div class="shop-categories-list">
+								<div class="shop-attr-body">
+									<ul class="nav nav-level-1 flex-column">
+										<li class="nav-item"><a href="#" class="nav-link">둘러보기</a>
+										</li>
+
+									</ul>
+									<ul class="nav flex-column">
+										<li class="nav-item"><a href="#" class="nav-link active">둘러보기</a>
+										</li>
+										<li class="hiddenIdlogin" style="display: none">[[${session.id}]]</li>
+									</ul>
+								</div>
+							</div>
+							<!-- End Categories -->
+						</div>
+						<!-- End Sidebar -->
+						<!-- Product Box -->
+						<div class="col-lg-8 col-xl-9">
+
+							<!-- 검색창 -->
+							<div class="col-md-6">
+
+								<div class="form">
+									<i class="bi-search"></i> <input type="text"
+										class="form-control form-input" id="aroundTagSearch"
+										placeholder="태그검색">
+									<ul id="aroundTagList"></ul>
+								</div>
+							</div>
+							<br>
+							<!-- 검색창 끝-->
+
+
+							<!-- 태그버튼 -->
+							<div class="shop-top-bar d-flex pb-3">
+								<div class="layout-change">
+									<!-- 태그자리 -->
+								</div>
+
+								<!-- 태그버튼 -->
+								<div class="shortby-dropdown ms-auto">
+									<div class="standLineButton">
+										<div class="dropdown">
+											<a class="toggleButton" role="button">정렬</a>
+											<ul class="toggleMenu">
+												<li><a class="dropdown-item">최신순</a></li>
+												<li><a class="dropdown-item">좋아요순</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+
+								<!-- 태그버튼 -->
+
+							</div>
+
+							<!-- 사진붙이는 태그 -->
+							<div class="row g-3" id="rowg-3">
+
+
+								<!-- 첨에 들어갔을 때 포트폴리오 저장된 사진 보여주는 ~ Product Box -->
+
+
+								<!-- 사진 자리~~ -->
+
+							</div>
+
+						</div>
+						<!-- End Product Box -->
+					</div>
+				</div>
+			</section>
+			<!-- End Shop -->
+		</main>
+		<!-- End Main -->
+
+
+
+		<!-- 모달 시작 -->
+		<div class='isModal'>
+			<div class="modalBlacklayer">
+				<div class="modalCloseButton">X</div>
+				<div class="modalContainer">
+					<div class="modalLeftbox">
+						<div class="modalSlider">
+							<!-- 이미지들어가는자리 -->
+						</div>
+						<div class="bi-chevron-compact-left modalArrow modalprev"></div>
+						<div class="bi-chevron-compact-right modalArrow modalNext"></div>
+					</div>
+					<div class="modalRightBox">
+						<div class="modalTopSection">
+							<div class="mTopSectionInfo">
+								<!-- 모달해더 -->
+							</div>
+							<div class="menuButton">
+								<!--<div class="menuButton" th:if="${session.id == portfolioVO.ptgId}"> -->
+								<i class="bi-three-dots"></i>
+								<form id="goUpdatePort" action="/silhyun/portfolioUpdate">
+									<ul class="menuButtonlist">
+										<li style="display: none"><input type="hidden"
+											name='portNum' value=""><input type="hidden"
+											name='ptgId' value=""></li>
+										<li class="menuButton-item"><button type="button"
+												class="menuButton-item update">수정하기</button></li>
+										<li class="menuButton-item portDelBtn">삭제하기</li>
+									</ul>
+								</form>
+							</div>
+						</div>
+						<div class="modalMiddleSection">
+							<div class="scroll-box">
+								<div class="mMiddleInfo">
+									<!-- 내용들어가는자리 -->
+								</div>
+								<hr>
+								<div class="mMiddleComment">
+									<ul class="list-unstyled pt-4 commentBox">
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="modalBottomSection">
+							<div class="modalBottomInfo">
+								<!-- 모달푸터 -->
+							</div>
+							<div class="modalBottomInput">
+								<input type="text" id="contact-message" name="message"
+									placeholder="    댓글을 작성하세요.">
+								<button type="button" id="send">입력</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 모달 끝 -->
+
+		<!-- js -->
+		<!-- 		포트폴리오리스트띄우는 -->
+		<script th:inline="javascript">
+		
+		/*<![CDATA[*/
+			var loginUserId =/*[[${session.id}]]*/
+			var portfolio = /*[[${portfolioList}]]*/	
+			/*]]>*/
+
+			
+					
+		$("div#rowg-3").children().remove();//먼저 깔끔희~
+		StandLine(portfolio);//첫페이지 포트폴리오 리스트
+		recentStand(portfolio);//최신순
+		likeStand(portfolio);//조아용
+		
+		
+
+		$(document).ready()
+		//태그 5개만 가져오긔~~~~~~
+		$.ajax({
+            url: "/silhyun/tagList",
+             type: "get",
+             dataType: 'json',
+         })
+         .then(data => {
+   			for(i=0; i<5 && i<data.length; i++){
+         	var taag=`<a class="btn btn-sm" href="#" align="center"> <i
+				class="bi-hash">${data[i].tagCntn}</i>
+				</a> `
+        	$('div .layout-change').append(taag);
+   			}
+         });
+		
+		//만든 태그 버튼에 그룹이벤트 주기.
+		$('div .layout-change').on('click','a',function(){
+			$('div .layout-change .active').removeClass('active');
+			$(this).addClass('active')
+			var tagCntn=$(this).children().text();		
+			//해당태그포트폴리오가져오기
+			$.ajax({
+                      url: "/silhyun/aroundTagList",
+                      data:{tagCntn: tagCntn}
+                   })
+           .then(res => {
+        	   console.log(res);
+                   	//이전에 리스트 먼저 지워주기
+                    $("div#rowg-3").children().remove();	
+                   	StandLine(res);
+            		recentStand(res);
+            		likeStand(res); 		                 
+            })
+		})
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		//사진 클릭하해서 포트폴리오 번호 가져오기 ~>모달
+		$('.row.g-3').on('click','.col-sm-6.col-lg-3',function(){
+		//$("div .col-sm-6.col-lg-3").click(function() {	
+			var portNum = $(this).children('div .portInfo').text(); 
+			
+		// 해당 번호 가진 배열 찾기
+			var selectedPortfolio = portfolio.find(function(findPortfolio) {
+				return findPortfolio.portNum === portNum;
+			});
+		
+		
+		
+		/////
+		//해당포트폴리오 하트 출력
+		$.ajax({
+			url: `/silhyun/isLiked/${loginUserId}/${portNum}`,
+		}).then(heart => {
+			if (heart) {
+				if ($(".heart-icon").hasClass("bi-heart")) {
+					$(".heart-icon").removeClass("bi-heart").addClass("bi-heart-fill");
+				}
+			} else {
+				if ($(".heart-icon").hasClass("bi-heart-fill")) {
+					$(".heart-icon").removeClass("bi-heart-fill").addClass("bi-heart");
+				}
+			}
+		});
+		////////////////////////////기본모달 구성 완료
+		
+		
+		
+		//해당 포트폴리오번호에 맞는 사진 리스트 가져와서 넣어주기 (((1)))시작
+		$.ajax({
+			url: `/silhyun/detailPortfolioPhoto/${portNum}`,
+			dataType: 'json',
+		})
+			.then(dataModalPhoto => {
+				console.log(dataModalPhoto)//0
+				$(".modalSlider").empty();
+				var firstImg = true;
+				for (let i = 0; i < dataModalPhoto.length; i++) {
+					if (firstImg) {
+						var modalPhoto = `<img class='active' src="${dataModalPhoto[i].phoRt}" alt="img${i + 1}">`
+						$(".modalSlider").append(modalPhoto);//만든사진 붙이기
+						firstImg = false;
+					} else {
+						var modalPhoto2 = `<img src="${dataModalPhoto[i].phoRt}" alt="img${i + 1}">`
+						$(".modalSlider").append(modalPhoto2);//만든사진 붙이기
+					}
+					var images = $('.modalSlider img');
+
+					let imgIndex = images.filter('.active').index();//이미지 인덱스 찾기.
+					if (imgIndex === 0) {
+						$('.modalprev').css("display", "none"); //처음화면이전 버튼 비활성화
+					}
+					$('.modalNext').on('click', function() {
+						if (imgIndex === images.length - 1) {
+							$('.modalNext').css("display", "none"); // 다음 버튼 비활성화
+						} else {
+							$('.modalprev').css("display", "block");
+						}
+						images.eq(imgIndex).removeClass('active');//현재이미지에 active빼기
+						imgIndex++;//인덱스 추가.
+						if (imgIndex === images.length - 1) {
+							$('.modalNext').css("display", "none");
+						}
+						images.eq(imgIndex).addClass('active');//다음이미지에 active추가
+					});
+
+					// 다시 이전 버튼을 클릭하면 다음 버튼을 다시 활성화
+					$('.modalprev').off('click').on('click', function() {
+						if (imgIndex === images.length - 1) {
+							$('.modalNext').css("display", "block"); // 다음 버튼 활성화
+						}
+						images.eq(imgIndex).removeClass('active');//현재이미지에 active빼기
+						imgIndex--;//인덱스 추가.
+						images.eq(imgIndex).addClass('active');//다음이미지에 active추가
+						if (imgIndex === 0) {
+							$('.modalprev').css("display", "none"); // 다음 버튼 활성화
+						}
+					});
+				}
+			});//해당 포트폴리오번호에 맞는 사진 리스트(((1)))끝
+		//다음버튼누르기
+				
+				
+				
+				//해당 포트폴리오 번호에 맞는 헤더 붙여주기(((2)))시작	
+
+				var modalheader=`<div class="mTopSectionInfoImg">
+					<img src="${selectedPortfolio.profile}" alt="이미지">
+					</div>
+					<div class="mTopSectionImgMaster">
+						<div class="modalMasterId">${selectedPortfolio.ptgId}</div>
+						&nbsp;&nbsp; <i class="bi-dot"></i>
+						<button><i class="zzim-icon bi-check2"></i></button>
+					</div>`	
+				$(".mTopSectionInfo").empty();
+				$(".mTopSectionInfo").append(modalheader); //헤더는 다 붙여줌 화면구성을 하자.
+				
+				
+				
+				if (loginUserId == selectedPortfolio.ptgId){$('.menuButton').show()
+					}else{{$('.menuButton').hide()}
+				}
+				$('.modalMasterId').click(function(){
+					location.href = `/silhyun/portfolio/${selectedPortfolio.ptgId}`})
+				
+								
+								
+								//찜 호출 
+								    $.ajax({  //해당 유저가 해당 작가를 찜 했는지
+								        url:`/silhyun/isZzim/${loginUserId}/${portNum}`
+								    }).then(result => {
+								        console.log(result)
+								        if(result){ 							  					           
+										  if ($('.zzim-icon').text('팔로우')) {
+											  $('.zzim-icon').text('');
+											  $('.zzim-icon').addclass('bi-check2')
+										  } 							         
+								        }else{
+							                if($('.zzim-icon').hasClass('bi-check2')){
+							                    $('.zzim-icon').removeClass('bi-check2').text('팔로우')
+							                }
+								        }
+								    })
+								
+								
+								
+								$('.zzim-icon').parent('button').on('click',function(){  //찜 버튼 클릭 이벤트
+								
+								    if($(this).children('.zzim-icon').hasClass('bi-check2')){  //찜이 되어있지 않으면 찜 추가
+								       	$.ajax({
+								    	    url: '/silhyun/delZzim',
+								    	    type: 'post',
+								    	    data: JSON.stringify({
+								    	        id: loginUserId,
+								    	        ctgrNum: portNum
+								    	    }),
+								               contentType: 'application/json',
+								               headers: {
+								                       'X-HTTP-Method-Override': 'DELETE'
+								               }
+								    	}).then(result => {
+								    		 $(this).children('.zzim-icon').removeClass('bi-check2').text('팔로우')
+								    	   
+								    	});
+								    	
+								    }else{  
+								    	$.ajax({
+								            url:'/silhyun/insertZzim',
+								            type:'post',
+								            data:JSON.stringify({
+								                id: loginUserId,
+								                ctgrNum : portNum
+								            }),
+								            contentType: 'application/json'
+								        }).then(result=>{
+								           
+								            $(this).children('.zzim-icon').addClass('bi-check2').text('');
+								        })
+								    }
+								})
+
+
+				//해당 포트폴리오 번호에 맞는 헤더 붙여주기(((2)))끝
+							
+				
+				
+						//////모달 내 삭제~
+
+		$('.menuButton-item.portDelBtn').on('click', function() {
+			//포트폴리오지우기
+			$.ajax({
+				url: `/silhyun/portfolioDelete/${portNum}`,
+				method: 'DELETE',
+				success: function(response) {
+					location.reload();
+
+				}.bind(this),
+				error: function() {
+					alert('서버와의 통신에 실패했습니다.');
+				}
+			});
+		})
+		//수정
+		$('.menuButton i').click(function() {
+			$('.menuButton').find('input[type="hidden"][name="portNum"]').val(portNum);//input에 portNum넣기
+			$('.menuButton').find('input[type="hidden"][name="ptgId"]').val(selectedPortfolio.ptgId);//input에 ptgId넣기
+			
+		})
+		$('.menuButton-item button').click(function() { $('#goUpdatePort').submit(); })
+
+		///수정폼////////////////////////////
+				
+				
+				
+				//해당 포트폴리오 번호에 맞는 내용 븥여주기(((3)))시작
+				
+				//해당 포트폴리오 쓴 내용 붙이는 거.
+				var modalContentSit = `<div class="mMiddleInfoImg">
+				<img src="${selectedPortfolio.profile}" alt="small-image">
+								</div>
+								<div class="mMiddleInfoImgMaster">
+									<div class="mMiddleMasterId">${selectedPortfolio.ptgId}</div>
+									&nbsp;&nbsp;
+									<p class="mMiddleMasterCon">${selectedPortfolio.cntn}</p>
+								</div>`
+				$(".mMiddleInfo").empty();
+				$(".mMiddleInfo").append(modalContentSit);
+				//작가가쓴포트폴리오 작성했을 때 내용 붙이는 거.
+				//댓글시작
+				//댓글시작
+		$(".mMiddleComment").empty();//댓글창청
+		commentList(portNum)
+
+		//댓글작성
+		$("#send").off('click').on('click', function() {
+			commentInsertt(portNum)
+		});
+
+		//엔터 누르긔
+		$('#contact-message').on('keydown', function(event) {
+			if (event.key === 'Enter') {
+				commentInsertt(portNum)
+			}
+		});
+
+		// 동적으로 생성된 태그에 그룹이벤트 부여
+		//$(".commentZone").off('click').on('click', '#replyWrite', function(e) {
+		$(document).on('click', '.commentZone #replyWrite', function(e) {
+			let group_number = $(this).closest('.commentZone').find('#comGrp').val();
+
+			$('#contact-message').val('@' + $(this).closest('.commentZone').find('#comId:first').text())
+			$('#contact-message').data("dep", "1")
+			$('#contact-message').data("grp", group_number);
+			$('#grpNum').val($('#contact-message').data("grp"));
+
+		})
+
+		//$('.replyZone').off('click').on('click', '#rereplyWrite', function() {
+		$(document).on('click', '.replyZone #rereplyWrite', function(e) {
+			let group_number = $(this).closest('.replyZone').find('#repGrp').val();
+
+			$('#contact-message').val('@' + $(this).closest('.replyZone').find('#comId').text())
+			$('#contact-message').data("dep", "1")
+			$('#contact-message').data("grp", group_number);
+			$('#grpNum').val($('#contact-message').data("grp"));
+		})
+
+		$(document).on('click', '.commentZone .comDelBtn', function(e) {
+			//$(".commentZone").on('click', '.comDelBtn', function() {
+			console.log('삭제클릭')
+
+			let grp = $(this).closest('.commentZone').find('.comGrp').val(); //삭제할 댓글의 그룹
+
+			$(".mMiddleComment").empty();
+			$.ajax({
+				url: "/commentDelete",
+				type: "delete",
+				data: {
+					grp
+				}
+				,
+				success: function(data) {
+					commentList(portNum)
+				}
+			})
+
+		})
+		$(document).on('click', '.replyZone .reDelBtn', function(e) {
+			//$(".replyZone").on('click', '.reDelBtn', function() {
+			let comNum = $(this).closest('.replyZone').find('.comNum').val(); //삭제할 댓글 번호
+
+			$(".mMiddleComment").empty();
+			$.ajax({
+				url: "/replyDelete",
+				type: "delete",
+				data: {
+					comNum
+				}
+				,
+				success: function(data) {
+					commentList(portNum)
+				}
+			})
+		})
+
+//댓글끝
+
+
+
+
+
+
+		//해당 포트폴리오 번호에 맞는 내용 븥여주기(((3)))끝
+
+				//해당 포트폴리오 번호에 맞는 내용 븥여주기(((3)))끝
+				
+				//해당 포트폴리오 번호에 맞는 푸터 븥여주기(((4)))시작
+				var modalBottomInfo=`<div class="modalClickIcons">
+								<i class="heart-icon bi-heart"></i><i class="chat-icon bi-chat"></i>
+							</div>
+							<div class="modalHeartInfo">
+								<small>좋아요</small> <strong><span>${selectedPortfolio.likes}</span></strong><small>
+									개</small>
+							</div>
+							<div class="modalInsertDate">${selectedPortfolio.portDate+'작성'}</div>`
+			
+				$(".modalBottomInfo").empty();
+				$(".modalBottomInfo").append(modalBottomInfo);
+				
+			
+				//해당 포트폴리오 번호에 맞는 푸터 븥여주기(((4)))끝
+				
+				
+				
+				
+				
+				//모달안에서 기능 ==1==하트 시작
+				
+				//모달 하트눌렀을 때
+				$(".heart-icon").click(function() {
+					var thisHeart = $(this)
+					if (thisHeart.hasClass("bi-heart")) {//좋아요+
+						$.ajax({
+							type: 'POST',
+							url: '/silhyun/addLike',
+							data: JSON.stringify({ id: loginUserId, portNum: portNum }),
+							contentType: 'application/json',
+							success: function(result) {
+								thisHeart.removeClass("bi-heart").addClass("bi-heart-fill");//찬하트로바꾸기
+								//하트 숫자 올리기.
+								var likeCount = parseInt($('.modalHeartInfo').find('span').text());
+									$('.modalHeartInfo').find('span').text(likeCount+1);
+							},
+							error: function(xhr, status, error) {
+								console.log(error);
+								alert('좋아요 실패~');
+							}
+						});
+					} else {//좋아요-
+						$.ajax({
+							url: '/silhyun/deleteLike',
+							type: 'POST',
+							data: JSON.stringify({ id: loginUserId, portNum: portNum }),
+							contentType: 'application/json',
+							headers: {
+								'X-HTTP-Method-Override': 'DELETE'
+							},
+							success: function(response) {
+								thisHeart.removeClass("bi-heart-fill").addClass("bi-heart");//빈하트로 바꾸기
+								//하트 숫자 올리기.
+								var likeCount = parseInt($('.modalHeartInfo').find('span').text());
+									$('.modalHeartInfo').find('span').text(likeCount-1);
+							},
+							error: function(error) {
+								console.log(error);
+								alert('조아요 삭제 실패~');
+							}
+						});
+					}
+				});//모달 하트눌렀을 때 생기는 이벤트
+				
+				//모달안에서 기능 ==1==하트 끝
+
+		
+		});//사진 클릭했을 때 생기는 이벤트 끝 
+		function commentList(portNum) {
+			$.ajax({
+				url: `/commentList/${portNum}`,
+				type: 'get',
+			})
+				.then(result => {
+					console.log(result);
+					// dep가 0인거 먼저 붙이기.
+					result.forEach(comm => {
+						if (comm.dep === 0) {
+							const commentHtml = `
+	                        <div class="commentZone">
+	                            <div class="avatar rounded-circle">
+	                                <img src="${comm.profile}" alt="small-image">
+	                            </div>
+	                            <div class="commentCon">
+	                                <div class="commentInfo">
+	                                    <strong><div class="mt-0 mb-1 commentId" id="comId">${comm.id}</div></strong>&nbsp;&nbsp;
+	                                    <div class="commentContent">${comm.cntn}</div>
+	                                    <input type="text" class="comGrp" name="grp" id="comGrp" value="${comm.grp}"  style="display:none;">
+	                                    <input type="text" class="comNum" name="comNum" value="${comm.comNum}"  style="display:none;">
+	                                </div>
+	                                <div class='nav dark-link small'>
+	                                    <div class="mb-2 small">${comm.comDate}</div>&nbsp;    
+	                                    <a class="ms-3" href="#contact-message" id="replyWrite">답글 달기</a>&nbsp;       
+	                                    <span class="comDelBtn">삭제<span>&nbsp;
+	                                    <span class="replyShowBtn" style="display:none;"><i class="bi-dash-lg">답글 더보기</i></span>
+	                                </div>
+	                                <ul class="popup" style="display:none;"></ul>
+	                            </div>
+	                        </div>`;
+							$('.mMiddleComment').append(commentHtml);
+						}
+					});
+
+					// dep가 1인 것을 dep가 0+grp가 같은 것에
+					result.forEach(comm => {
+						if (comm.dep === 1) {
+							const replyHtml = `
+	                        <li class="replyZone">
+	                            <div class="avatar rounded-circle">
+	                                <img src="${comm.profile}" alt="small-image">
+	                            </div>
+	                            <div class="commentCon">
+	                                <div class="commentInfo">
+	                                    <strong><div class="mt-0 mb-1 commentId" id="comId">${comm.id}</div></strong>&nbsp;
+	                                    <div class="commentContent">${comm.cntn}</div>
+	                                    <input type="hidden" class="repGrp" name="grp" id="repGrp" value="${comm.grp}">
+	                                    <input type="hidden" class="comNum" name="comNum" value="${comm.comNum}">
+	                                </div>
+	                                <div class='nav dark-link small'>
+	                                    <div class="mb-2 small">${comm.comDate}</div>  
+	                                    <a class="ms-3" href="#contact-message" id="rereplyWrite">답글 달기</a>&nbsp;&nbsp;        
+	                                    <span class="reDelBtn">삭제<span>&nbsp;&nbsp;
+	                                </div>   	
+	                            </div>
+	                        </li>`;
+							const popup = $(`.commentZone:has(.comGrp[value="${comm.grp}"]):last .popup`);
+							popup.append(replyHtml);
+							$(`.commentZone:has(.comGrp[value="${comm.grp}"]):last .replyShowBtn`).css('display', 'flex');
+
+
+						}
+					});
+
+
+					$('.replyShowBtn').click(function() {
+						console.log('eee')
+						const popup = $(this).closest('.commentCon').find('.popup');
+						popup.toggle();
+						const buttonText = popup.is(':visible') ? '답글 숨기기' : '답글 더보기';
+						$(this).html(`<i class="bi-dash-lg">${buttonText}</i>`);
+					});
+				});
+		}
+		
+		function commentInsertt(portNum) {
+		
+
+			let contactMessage = $("#contact-message").val(); //댓글내용
+			let dep = $("dep").val(); //깊이(댓글,대댓글) 구분
+			let grp = $('#contact-message').data("grp"); //댓글그룹
+			let comNum = $("comNum").val();
+
+
+
+			if ($("#contact-message").data("dep") == "1") {
+				dep = 1;
+			}
+
+
+			if (contactMessage == "") {
+				alert("내용을 입력해 주세요.")
+				$("#contact-message").focus();
+				return false;		// 내용 미입력시 작성 불가
+			}
+
+			$.ajax({
+				url: "/commentInsert",
+				type: "POST",
+				data: JSON.stringify(
+					{
+						"id": loginUserId,
+
+						"ctgrNum": portNum,
+						"cntn": contactMessage,
+						"dep": dep,
+						"grp": grp,
+						"comNum": comNum
+					}
+				),
+				contentType: 'application/json',
+				success: function(data) {
+
+					$(".mMiddleComment").empty();
+					commentList(portNum)
+					if (data.dep == 1) {
+						$(this).closest('.commentCon').find('.popup').css('display', 'block');
+					}
+					$("#contact-message").val('');
+				},
+				error: function() {
+					alert('등록실패');
+				}
+			});
+		}
+			
+
+	    //포트폴리오 사진 리스트 불러오기
+		function StandLine(aa){
+			for(i=0; i<aa.length; i++){
+				
+				const portPhotoList = `<div class="col-sm-6 col-lg-3 modalButton">
+					<div class='portInfo' style='display:none'>${aa[i].portNum}</div>
+								<div class="product-card-1">
+									<div class="product-card-image">										
+										<div class="product-action">
+										
+										</div>
+										<div class="product-media image-container">
+											<img class="img-fluid"
+												src="${aa[i].phoRt}" title="" alt="">
+											
+												<div class="overlay">
+													<div class="overlayText"><i class="bi bi-heart-fill">&nbsp;</i>${aa[i].likes}</div>
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>`
+		
+			$("div#rowg-3").append(portPhotoList);		
+							
+							
+							
+							//클릭한 사진의 포트폴리오 번호 빼와....?
+									
+							
+			}
+		}
+		//포트폴리오 사진 리스트 불러오기~함수
+		
+		
+		//최신순 정렬
+		function recentStand(portfolioA){
+		$("li:contains('최신순')").click(function(){
+			const recentList = portfolioA.sort((a, b) => new Date(b.portDate) - new Date(a.portDate));
+		$("div#rowg-3").children().remove();	
+			StandLine(recentList);
+		});
+		}
+		
+		//조아요순 정렬
+		function likeStand(portfolioB){
+		$("li:contains('좋아요순')").click(function(){
+			const likeList = portfolioB.sort((a, b) => b.likes - a.likes)
+		$("div#rowg-3").children().remove();	
+			StandLine(likeList);
+		});
+		}
+		
+	
+
+	
+
+		</script>
+
+
+		<script src="/js/around.js"></script>
+		<script src="/js/modal.js"></script>
+		<!-- js -->
+
+
+		<!-- 
+    ========================
+       End Wrapper 
+    ========================
+    -->
+		<!-- script start -->
+		<!-- jquery -->
+		<script src="/js/jquery-3.5.1.min.js"></script>
+		<!--bootstrap-->
+		<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- slick carousel -->
+		<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+		<!-- magnific -->
+		<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+		<!-- isotope -->
+		<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/jarallax/jarallax-all.js"></script>
+		<!-- Theme Js -->
+		<script src="/js/custom.js"></script>
+		<script src="/js/theme.js"></script>
+
+		<!-- End script start -->
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{home/layout}">
+
+<head>
+	<!-- metas -->
+	<meta charset="utf-8">
+	<meta name="author" content="pxdraft" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="keywords" content="ShopApp - eCommerce Bootstrap 5 Template" />
+	<meta name="description" content="ShopApp - eCommerce Bootstrap 5 Template" />
+
+	<script src="
+https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js
+"></script>
+	<!-- title -->
+	<title>예약하는 폼</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/img/favicon.ico">
+	<style>
+		html,
+		body {
+			box-sizing: border-box;
+			padding: 0;
+			margin: 0;
+		}
+
+		*,
+		*:before,
+		*:after {
+			box-sizing: inherit;
+		}
+
+		.clearfix:after {
+			content: '';
+			display: block;
+			clear: both;
+			float: none;
+		}
+
+		/* ======== Calendar ======== */
+		.my-calendar {
+			width: 100%;
+			height: 400px;
+			/*           margin: 30px; */
+			padding: 20px 20px 10px;
+			text-align: center;
+			font-weight: 800;
+			border: 1px solid #ddd;
+			cursor: default;
+		}
+
+		.my-calendar .clicked-date {
+			border-radius: 25px;
+			margin-top: 1;
+			float: left;
+			width: 1;
+			text-align: center;
+			padding: 46px 0 26px;
+			background: #ddd;
+		}
+
+		.my-calendar .calendar-box {
+			width: 100%;
+			height: 400px;
+		}
+
+		.clicked-date .cal-day {
+			/* font-size: 1px; */
+			font-size: 24px;
+		}
+
+		.clicked-date .cal-date {
+			/* font-size: 1px; */
+			font-size: 130px;
+		}
+
+		.ctr-box {
+			padding: 0 16px;
+			margin-bottom: 20px;
+			font-size: 20px;
+		}
+
+		.ctr-box .btn-cal {
+			position: relative;
+			float: left;
+			width: 25px;
+			height: 25px;
+			margin-top: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			border: none;
+			background: none;
+		}
+
+		.ctr-box .btn-cal:after {
+			content: '<';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			line-height: 25px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+		.ctr-box .btn-cal.next {
+			float: right;
+		}
+
+		.ctr-box .btn-cal.next:after {
+			content: '>';
+		}
+
+		.cal-table {
+			width: 100%;
+		}
+
+		.cal-table th {
+			width: 14.2857%;
+			padding-bottom: 5px;
+			font-size: 16px;
+			font-weight: 900;
+		}
+
+		.cal-table td {
+			padding: 3px 0;
+			height: 50px;
+			font-size: 15px;
+			vertical-align: middle;
+		}
+
+		.cal-table td.day {
+			position: relative;
+			cursor: pointer;
+			color: lightgray;
+		}
+
+		.cal-table td.today {
+			background: #ffd255;
+			border-radius: 50%;
+			color: #fff;
+		}
+
+		.cal-table td.day-active {
+			background: #fff;
+			border-radius: 50%;
+			color: lightgray;
+		}
+
+		.cal-table td.has-event:after {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 4px;
+			background: #FFC107;
+		}
+
+		.res-yes {
+			background-color: black;
+		}
+
+		.res-no {
+			background-color: lightgray;
+		}
+
+		.form-check-input {
+			width: 20px;
+			height: 20px;
+			margin-bottom: 7px;
+		}
+
+		.form-check-label {
+			font-weight: bold;
+		}
+
+		#selectDate {
+			font-size: larger;
+			font-weight: bolder;
+		}
+
+		#selectTime {
+			font-size: larger;
+			font-weight: bolder;
+		}
+	</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<!-- Skippy & Prload -->
+		<!-- skippy -->
+		<a id="skippy" class="skippy visually-hidden-focusable overflow-hidden" href="#content">
+			<div class="container">
+				<span class="u-skiplink-text">Skip to main content</span>
+			</div>
+		</a>
+		<!-- End skippy -->
+		<!-- Edn Skippy & Prload -->
+		<div class="wrapper">
+			<!-- heder height -->
+			<div class="header-height-bar"></div>
+			<!-- Main -->
+			<main>
+				<!-- Breadcrumb -->
+				<div class="py-3 bg-gray-100">
+					<div class="container">
+						<div class="row align-items-center">
+							<div class="col-lg-6 my-2">
+								<h1 class="m-0 h4 text-center text-lg-start"></h1>
+							</div>
+							<div class="col-lg-6 my-2">
+								<ol
+									class="breadcrumb dark-link m-0 small justify-content-center justify-content-lg-end">
+									<li class="breadcrumb-item"><a class="text-nowrap" href="/"><i
+												class="bi bi-home"></i>Home</a></li>
+									<li class="breadcrumb-item text-nowrap active" aria-current="page">Reservation</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Breadcrumb -->
+				<!-- Product Details -->
+				<section class="product-details py-6">
+					<div class="container">
+						<div class="row">
+							<!-- Product Gallery -->
+							<div class="col-lg-6 lightbox-gallery product-gallery sticky-lg-top">
+								<!--작가 사진-->
+								<div class="swiper swiper_gallery">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide">
+											<div class="pd-gallery-slide">
+												<img th:src="${res[0].profile}" class="img-fluid" title="" alt="" style="width: 630px; height: 600px"><br><br>
+												<h5 style="text-align: center;">🍓[[${res[0].name}]]🍓</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!--작가 옵션-->
+								<div class="card" th:each="resd : ${res}" style="margin-bottom: 3px;">
+									<div class="card-header py-3 d-flex align-items-center">
+										<input class="form-check-input" type="checkbox" th:field="*{res}"
+											th:id="${resd.opNum}" th:value="${resd.ttl}">&nbsp;
+										<label class="form-check-label" th:for="${resd.opNum}" th:text="${resd.ttl}"
+											style="font-size: large;"></label>
+									</div>
+									<div class="card-body">
+										<span class="m-0">[[${resd.cntn}]]</span><br>
+										<strong>
+											<span th:text="${#numbers.formatInteger(resd.pri, 3, 'COMMA') + '원'}"></span>
+										</strong>
+									</div>
+									<form>
+										<input type="hidden" class="hiddenMoney" th:value="${resd.pri}">
+										<input type="hidden" name="ptgReYnDate" th:value="${resd.workDay}">
+										
+									</form>
+								</div>
+
+
+							</div>
+							<!-- End Product Gallery -->
+							<!-- Product Details -->
+							<div class="col-lg-6 ps-lg-5 pt-5 pt-lg-0">
+								<div class="product-detail">
+
+									<div class="products-title mb-2">
+										<div class="my-calendar clearfix">
+											<div class="clicked-date" style="display: none;">
+												<div class="cal-day"></div>
+												<div class="cal-date"></div>
+											</div>
+											<!--<div class="my-calendar clearfix">-->
+											<div class="calendar-box">
+												<div class="ctr-box clearfix">
+													<button type="button" title="prev" class="btn-cal prev">
+													</button>
+													<span class="cal-month"></span> <span class="cal-year"></span>
+													<button type="button" title="next" class="btn-cal next">
+													</button>
+												</div>
+												<table class="cal-table">
+													<thead>
+														<tr>
+															<th id="일"><font color="#F79DC2">일 </th>
+															<th id="월">월</th>
+															<th id="화">화</th>
+															<th id="수">수</th>
+															<th id="목">목</th>
+															<th id="금">금</th>
+															<th id="토"><font color="skyblue">토 </th>
+														</tr>
+													</thead>
+													<tbody class="cal-body"></tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+									<div class="card" style="margin-bottom: 3px;">
+										<div class="card-header py-3 d-flex align-items-center">
+											<h5 class="m-0">날짜</h5>
+											&nbsp;&nbsp; <span id="selectDate">날짜를 선택해 주세요</span>
+										</div>
+										<div class="card-header py-3 d-flex align-items-center">
+											<h5 class="m-0">시간</h5>
+											&nbsp;&nbsp; <span id="selectTime">시간을 선택해 주세요</span>
+										</div>
+									</div>
+									<div class="product-description timeTable" style="margin-bottom: 3px;">
+										
+									</div>
+									
+									<div class="product-description selectedOp">
+										<div class="card">
+											<div class="card-body">
+												<ul class="list-unstyled m-0 p-0">
+													<h5 class="me-2 border-bottom" >선택 내역</h5>
+													<li class="pb-3 mb-3 border-bottom">
+														<div class="row align-items-center selectOP">
+															<div class="col-8 selectOP">
+																<!-- Remove -->
+																<!-- <a class="small link-danger ms-auto" href="#!">
+																	<i class="bi bi-x"></i> Remove
+																</a> -->
+															</div>
+														</div>
+													</li>
+												</ul>
+												<ul class="list-unstyled m-0">
+													<li class="d-flex justify-content-between align-items-center">
+														<h6 class="me-2 Grand Total">Grand Total</h6><span class="text-end text-dark totalMoney"></span>
+													</li>
+												</ul>
+											</div>
+										</div>
+											
+										
+									</div>
+									
+
+									<div class="product-detail-actions d-flex">
+										<div class="cart-button" style="width: 100%;">
+											<button class="btn btn-primary pd-cart-btn mt-3"  style="width: 100%;"
+											data-bs-toggle="modal" data-bs-target="#topbarReser" disabled>예약하기</button>
+										</div>
+									</div>
+									<!-- 결제 정보 확인 모달  -->
+								<div class="modal fade" id="topbarReser">
+								    <div class="modal-dialog modal-dialog-centered">
+								        <div class="modal-content">
+								            <div class="modal-header bg-primary">
+								                <div class="modal-title p-3">
+								                    <h5 class="m-0 text-white" style="text-align: center;">예약 정보 확인</h5>
+								                </div>
+								                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								            </div>
+											<form id="reserTable" action="/pay/orderForm/" method="post">
+								            <div class="modal-body">
+								                <div class="w-100 p-3">
+													<div class="card">
+														<div class="card-body" style="text-align: center;">
+															<div class="row g-3 reserTable">
+																<div class="col-12">
+																	<span class="small letter-spacing-2">작가</span>
+																	<h6 class="m-0 mt-1">[[${res[0].name}]]</h6>
+																</div>
+																<div class="col-12">
+																	<span class="small letter-spacing-2">예약 날짜</span>
+																	<h6 class="m-0 mt-1 reserDate"></h6>
+																</div>
+																<div class="col-12">
+																	<span class="small letter-spacing-2">예약 시간</span>
+																	<h6 class="m-0 mt-1 reserTime"></h6>
+																</div>
+																<div class="col-12">
+																	<span class="small letter-spacing-2">촬영 장소</span>
+																	<h6 class="m-0 mt-1">[[${res[0].shotPlace}]]</h6>
+																</div>
+																<div class="col-12">
+																	<span class="small letter-spacing-2 op">촬영 옵션</span>
+																	<h6 class="m-0 mt-1 reserOP"></h6>
+																</div>
+																<hr>
+																<div class="col-12">
+																	<span class="small letter-spacing-2">Total</span>
+																	<h6 class="m-0 mt-1 reserTotal"></h6>
+																</div>
+															</div>
+														</div>
+														<div class="card-footer d-flex p-3">
+															<a class="link-dark text-uppercase fw-500" data-bs-dismiss="modal" aria-label="Close" style="cursor: pointer;">Edit</a>
+															<button type="submit" class="link-danger text-uppercase fw-500 ms-auto" style="border: 0;">결제</button>
+														</div>
+													</div>
+												</div>
+								            </div>
+											<input type="hidden" name="shotDate" >
+											<input type="hidden" name="shotTime"> 
+											<input type="hidden" name="opNum">
+											<input type="hidden" name="resPri">
+											<input type="hidden" name="ptgId" th:value="${res[0].ptgId}">
+											<input type="hidden" name="id" th:value="${id}">
+											<input type="hidden" name="ttl">
+										</form>
+								        </div>
+								    </div>
+								</div>
+								<!-- End 모달  -->
+									<!-- 안내사항 -->
+									<div class="product-detail-collapse">
+										<div class="pd-collapse-row">
+											<a class="pd-collapse-h5" data-bs-toggle="collapse"
+												href="#pd_description" role="button" aria-expanded="true"
+												aria-controls="pd_description">예약시 주의사항 <i
+												class="bi bi-chevron-up"></i></a>
+											<div class="collapse show" id="pd_description">
+												<div class="pd-collapse-box">
+													<p>
+														※ 환불 및 일정이동은 촬영일 기준 3일 전까지만 가능합니다. 이후에는 예약 변경이 불가능하며, 환불
+														규정에 따라 안내됩니다.<br> ※ 규정상 결제 시 한 타임만 예약이 가능합니다. 여러명 예약시
+														인원수에 맞춰 예약을 각각 결제해주세요. 촬영 옵션은 한가지만 체크해 주세요.<br> ※ 코로나
+														확산 방지를 위해 최대한 동반인 없이 방문 부탁드립니다.실내에서는 필수적으로 마스크를 착용해주셔야
+														합니다.<br> ※ 예약 확정알림 및 명일 카톡으로 주의사항을 보내드리고 있습니다. 꼭
+														숙지하시고 방문해주시길 바랍니다.<br>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="pd-collapse-row">
+											<a class="pd-collapse-h5" data-bs-toggle="collapse"
+												href="#pd_information" role="button" aria-expanded="false"
+												aria-controls="pd_information">촬영시 주의사항 <i
+												class="bi bi-chevron-up"></i></a>
+											<div class="collapse" id="pd_information">
+												<div class="pd-collapse-box">
+													<p>
+														※ 예약시간보다 여유롭게 방문해 주시길 부탁드립니다.<br> (15분 이상 늦으시면 촬영만
+														진행되고 보정은 추가로 보내드립니다. 30분 지각시에는 노쇼처리가 됩니다.)<br> ※ 협소한
+														스튜디오 사정상 공간 내 반려동물 출입을 제한하고 있습니다.<br> ※ 대형 출력용 고화질
+														jpg 파일은 현장에서 문의 후 구매가 가능합니다.<br> ※ 상반신 탈의 촬영은 불가능합니다.<br>
+														※ 사전 동의없는 2차 가공과 상업적 사용은 불가합니다.<br>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="pd-collapse-row">
+											<a class="pd-collapse-h5" data-bs-toggle="collapse"
+												href="#pd_review" role="button" aria-expanded="false"
+												aria-controls="pd_review">Q&A <i
+												class="bi bi-chevron-up"></i></a>
+											<div class="collapse" id="pd_review">
+												<div class="pd-collapse-box">
+													<p>
+														<strong>Q.무엇을 준비하면 될까요?</strong><br> A.유형학적인 사진이 아닌
+														각자의 개성을 존중하고자하기때문에 자연스러움을 추구하고 있습니다.<br> 원하시는 분위기에 대해
+														미리 고민하시길 추천드리고, 원활한 진행을 위해 예약시간보다 미리 도착하시는 걸 추천 드립니다<br>
+
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- end 안내사항 -->
+								</div>
+							</div>
+							<!-- End Product Details -->
+						</div>
+					</div>
+					<form>
+						<input type="hidden" name="ptgId" th:value="${res[0].ptgId}">
+					</form>
+				</section>
+				<!-- End Product Details -->
+			</main>
+			<!-- End Main -->
+		</div>
+
+		<!-- script start -->
+
+		<!--bootstrap-->
+		<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- slick carousel -->
+		<script src="/vendor/swiper/swiper-bundle.min.js"></script>
+		<!-- magnific -->
+		<script src="/vendor/magnific/jquery.magnific-popup.min.js"></script>
+		<!-- isotope -->
+		<script src="/vendor/isotope/isotope.pkgd.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/count-down/jquery.countdown.min.js"></script>
+		<!-- count-down -->
+		<script src="/vendor/jarallax/jarallax-all.js"></script>
+		<!-- Theme Js -->
+		<script src="/js/custom.js"></script>
+		<script src="/js/theme.js"></script>
+		<!-- End script start -->
+		<script>
+			//📌달력 만들기
+            const init = {
+              monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+                'November', 'December'
+              ],
+              dayList: ['일', '월', '화', '수', '목', '금', '토'],
+              today: new Date(), // 오늘 날짜
+              monForChange: new Date().getMonth(),
+              activeDate: new Date(),
+              getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+              getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+              nextMonth: function () { // 다음 버튼을 클릭 ->  해당하는 달을 1 증가시킨 후 그 숫자를 새로 가져온 날짜 객체 d에 d.setMonth()
+                let d = new Date();
+                d.setDate(1); //5월 31일에 nextMonth 함수를 실행시켜 달만 6월로 바꿔줄 경우 6월에는 30일까지밖에 없으므로 자동으로 7월 1일로 변경될 수 있
+                d.setMonth(++this.monForChange);
+                this.activeDate = d;
+                return d;
+              },
+              prevMonth: function () { //이전 버튼 클릭
+                let d = new Date();
+                d.setDate(1);
+                d.setMonth(--this.monForChange);
+                this.activeDate = d;
+                return d;
+              },
+              addZero: (num) => (num < 10) ? '0' + num : num,
+              activeDTag: null,
+              getIndex: function (node) {
+                let index = 0;
+                while (node = node.previousElementSibling) {
+                  index++;
+                }
+                return index;
+              }
+            };
+      
+            const $calBody = document.querySelector('.cal-body');  //달력 body
+            const $btnNext = document.querySelector('.btn-cal.next');  //달력 next버튼
+            const $btnPrev = document.querySelector('.btn-cal.prev');  //달력 prev버튼
+      
+            function loadDate(date, dayIn) {
+              document.querySelector('.cal-date').textContent = date;
+              document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+            }
+      
+            function loadYYMM(fullDate) { //동적으로 달력의 일자 출력 / 처음 캘린더 로드할때/ 달력에서 이전,이후 버튼을 클릭할때 실행됨 
+              let yy = fullDate.getFullYear();
+              let mm = fullDate.getMonth();
+              let firstDay = init.getFirstDay(yy, mm);
+              let lastDay = init.getLastDay(yy, mm);
+              let markToday; // 달력의 년도/월이 오늘 날짜의 년도/월과 일치하면 오늘 날짜의 일자를 할당
+      
+              if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+                markToday = init.today.getDate();
+              }
+      
+              document.querySelector('.cal-month').textContent = init.monList[mm];
+              document.querySelector('.cal-year').textContent = yy;
+      
+              let trtd = '';
+              let startCount;
+              let countDay = 0;
+              for (let i = 0; i < 6; i++) { //한달에 있는 한 주 
+                trtd += '<tr class="week">';
+                for (let j = 0; j < 7; j++) { //한주에 들어있는 일
+                  if (i === 0 && !startCount && j === firstDay.getDay()) { //날짜가 처음 시작하면 startCount을 1로 변경
+                    startCount = 1;
+                  }
+                  if (!startCount) {
+                    trtd += `<td>`
+                  } else {
+                    let dayList = ['일', '월', '화', '수', '목', '금', '토']
+                    let fullDate = yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1);
+                    let today = new Date(yy + '-' + init.addZero(mm + 1) + '-' + init.addZero(countDay + 1)).getDay()
+                    trtd += '<td class="day';
+                    trtd += (markToday && markToday === countDay + 1) ? ' today" ' :
+                    '"'; //countDay 변수가 markToday 값과 일치하면 td에 today 클래스
+                    trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}" id="${dayList[today]}">` //id="${item}"
+                  }
+                  trtd += (startCount) ? ++countDay : '';
+                  if (countDay === lastDay.getDate()) { //날짜 세는 것이 끝나면 startCount변수를 다시 0으로 초기화
+                    startCount = 0;
+                  }
+                  trtd += '</td>';
+                }
+                trtd += '</tr>';
+              }
+              $calBody.innerHTML = trtd;
+            }
+         
+            function createNewList(val) {  //버튼 이벤트에 따라서 동적으로 달력 생성
+              let id = new Date().getTime() + '';
+              let yy = init.activeDate.getFullYear();
+              let mm = init.activeDate.getMonth() + 1;
+              let dd = init.activeDate.getDate();
+              const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+              let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+      
+              let eventData = {};
+              eventData['date'] = date;
+              eventData['memo'] = val;
+              eventData['complete'] = false;
+              eventData['id'] = id;
+              init.event.push(eventData);
+              $todoList.appendChild(createLi(id, val, date));
+            }
+      
+            loadYYMM(init.today);
+            loadDate(init.today.getDate(), init.today.getDay());
+      
+            $btnNext.addEventListener('click', () => { //다음 버튼 클릭하면 발생하는 이벤트
+				loadYYMM(init.nextMonth())  
+				makePtgCal()				
+				makeGray()					
+			}); 
+            $btnPrev.addEventListener('click', () => { //이전 버튼 클릭하면 발생하는 이벤트
+				loadYYMM(init.prevMonth())
+				makePtgCal()
+				makeGray()
+			}); 
+      
+            $calBody.addEventListener('click', (e) => { //날짜 클릭하면 발생하는 event
+              if (e.target.classList.contains('day')) {
+                if (init.activeDTag) {
+                  init.activeDTag.classList.remove('day-active');
+                }
+                let day = Number(e.target.textContent);
+                loadDate(day, e.target.cellIndex);
+                e.target.classList.add('day-active');
+                init.activeDTag = e.target;
+                init.activeDate.setDate(day);
+                reloadTodo();
+              }
+            });
+
+       		//📌예약가능하지않은 날짜 클릭시 경고창 띄우기
+            function reloadTodo(e) {
+				alert("해당 날짜는 예약이 불가능합니다.")
+                $('.product-description.timeTable').children().remove()
+            }
+
+			$(function(){
+				makePtgCal()  //달력에 작가 예약 가능한 요일 까만색으로 만들기 
+				makeGray()  //오늘 날짜 이전의 달력은 다 회색으로 보여주기
+				chOpsToOrder()  //체크박스 클릭하면 선택내역으로 들어가도록
+				modalInfo()  // 모달에 고객 정보 담기
+				
+			})
+			
+			//📌선택 내역에 옵션이 없으면 예약버튼 비활성화
+			function noselectedOp(e){
+				console.log($('.col-8.selectOP').next().length)
+				console.log($('#selectDate').text())
+				console.log($('#selectTime').text())
+					if($('.col-8.selectOP').next().length > 0 && $('#selectDate').text() != '날짜를 선택해 주세요' && $('#selectTime').text() != '시간을 선택해 주세요'){
+						$('.btn.btn-primary.pd-cart-btn.mt-3').prop('disabled',false)
+						console.log('있다')
+						
+					}else if($('.col-8.selectOP').next().length < 0 ){
+						$('.btn.btn-primary.pd-cart-btn.mt-3').prop('disabled',true)
+						console.log('없다')
+					}
+			}
+
+			//📌오늘 날짜 이전의 달력은 다 회색으로 보여주기
+			function makeGray(){
+				function leadingZeros(n, digits) {
+					let zero = '';
+					n = n.toString();
+					
+					if (n.length < digits) {
+						for (i = 0; i < digits - n.length; i++)
+						zero += '0';
+					}
+					return zero + n;
+				}	
+				//오늘 날짜
+				let nowD = new Date();
+				let plusD =   //6개월 뒤
+				leadingZeros(nowD.getFullYear(), 4) + '-' +
+				leadingZeros(nowD.getMonth() + 7, 2) + '-' +  
+				leadingZeros(nowD.getDate(), 2);
+				nowD =
+				leadingZeros(nowD.getFullYear(), 4) + '-' +
+				leadingZeros(nowD.getMonth() + 1, 2) + '-' +
+				leadingZeros(nowD.getDate(), 2);
+
+				$('.week > .day').each(function(idx,itm){  
+					//console.log($(itm).attr('data-fdate'))
+					if($(itm).attr('data-fdate') < nowD){
+						$(itm).css('color','lightgray')
+					}else if($(itm).attr('data-fdate') > plusD)  //6개월까지만 예약 가능하도록
+					{
+						$(itm).css('color','lightgray').on('click',function(){
+							reloadTodo()
+						})
+					}
+				})
+			}
+
+			//📌달력에 작가 예약 가능한 요일 까만색으로 만들기  -> 그 안에서 아작스 불러서 처리하기(예약 가능한 시간)
+			function makePtgCal(){   
+				let ptgReYnDate = $("input[name='ptgReYnDate']").val()
+				var arr = ptgReYnDate.split(',')
+				console.log($('td.day').attr('data-fdate'))
+	
+				console.log(arr)
+				$(arr).each(function(idx,item){
+					console.log($(this))
+	
+						$('.week').find(`td[id=${item}]`).css('color', 'black').on('click',function(e){
+						e.stopPropagation()
+				
+						if($('#selectDate') != null){  
+							$('#selectDate').children().remove()
+						}
+						$('#selectDate').text($(this).attr('data-fdate'))
+						if( $('.product-description.timeTable') !=null){
+							$('.product-description.timeTable').children().remove()
+						}
+	
+						function leadingZeros(n, digits) {  
+							var zero = '';
+							n = n.toString();
+							
+							if (n.length < digits) {
+								for (i = 0; i < digits - n.length; i++)
+								zero += '0';
+							}
+							return zero + n;
+						}	
+						
+						var clickD = $(this).attr('data-fdate').toString()
+						let nowD = new Date();
+							
+						if(clickD){
+							nowD = 
+								leadingZeros(nowD.getFullYear(), 4) + '-' +
+								leadingZeros(nowD.getMonth() + 1, 2) + '-' +
+								leadingZeros(nowD.getDate(), 2);
+							if(clickD < nowD){
+								alert("예약 날짜는 오늘 날짜보다 빠를 수 없습니다");
+								return false
+							}
+							}	
+						
+						$('.product-description.timeTable').append(
+							`<div class="card">
+								<div class="card-header py-3 d-flex align-items-center">
+									<h5 class="m-0">예약가능한 시간</h5>
+								</div>
+								<div class="card-body time"></div>
+							</div>`
+						)
+						//ajax호출해서 선택가능한 시간 , 날짜 누르면 달력 하단에 예약 가능시간 띄우기
+						const ptgId = $("input[name='ptgId']").val();
+						console.log(ptgId)
+						const redate =$(this).attr('data-fdate')					
+	
+						$.ajax({
+							url: '/ajaxResTime/' + ptgId +"/"+ redate,
+							 datatype: "json"
+						}).then(result =>{
+							$(result).each(function(idx,item){
+								let cdNameBtn = `<button class="btn btn-primary timeList ms-2" id="${item.resyn}" timeCD="${item.resTime}" >${item.rest}</button>`
+								$('.card-body.time').append(cdNameBtn)
+									})
+								$('.btn.btn-primary.timeList').each(function(a,b){
+									if($(b).attr('id').replace(/[^0-9]/g,'') == '1'){
+										$(b).prop("disabled", true)
+										}
+									
+									})
+						}).then(error => console.log(error))
+					})
+					
+				})  //end 작가 근무 요일에 따른 달력 그리기
+			}
+
+            //📌예약 가능한 시간 클릭하면 시간에 선택한 시간들어가도록 
+		
+            $('.product-description.timeTable').on('click','.timeList',function(){  //그룹이벤트 써야함!!
+            if($('#selectTime') != null){  
+                $('#selectTime').children().remove()
+            }
+            $('#selectTime').text($(this).text()).attr('timeCD',$(this).attr('timeCD'))
+			$('.product-description.timeTable').children().remove()
+			noselectedOp()//선택 내역 없으면 예약하기 버튼 비활성화
+           })
+
+			//📌체크박스 체크하면 선택내역에 추가
+		   let totalMoney = Number(0);
+		   function chOpsToOrder(){
+			let ckOps =  $('.card input[type="checkbox"]');
+			let Array = [];
+			console.log(ckOps)
+			for(let ckOp of ckOps){
+				$(ckOp).on('click',function(){
+					if(ckOp.checked == true){
+						$('<div />').clone(true).attr('id',$(this).attr('id')+'_1').addClass('col-8 selectOP').appendTo($('.row.align-items-center.selectOP'))
+						.append($('<div />').addClass('mb-1 selectOPNM')
+						.append($('<span class="text-dark fw-500">').text($(this).val()).attr('id',$(this).attr('id'))))
+						.append($('<div />').addClass('mb-1 selectOPPRI').append($('<span class="m-0 text-muted w-100 d-block">'))
+						.text(Number($(this).parent().next().find('span').eq(1).text().replace(/[^0-9]/g,'')).toLocaleString()+'원'))  //0~9안에 있는 숫자가 아니면 공백으로 만듦 -> Number()를통해서 숫자로 만듦
+						.append(`<button class="small link-danger ms-auto" style="border: 0;">
+									<i class="bi bi-x"></i> Remove
+								</button>`)
+						console.log(Number($('.card-body strong span').text().replace(/[^0-9]/g,''))) 
+						console.log($('.card-body').find('span').eq(1).text())
+						console.log($(this))
+						console.log(Number($(this).parent().next().find('span').eq(1).text().replace(/[^0-9]/g,'')).toLocaleString())  //0~9안에 있는 숫자가 아니면 공백으로 만듦 -> Number()를통해서 숫자로 만듦
+						totalMoney += Number($(this).parent().next().find('span').eq(1).text().replace(/[^0-9]/g,''));
+						$('.text-end.text-dark.totalMoney').text(totalMoney.toLocaleString()+'원')
+						
+						$('input[name="opNum"]').val($(this).attr('id'))	
+						console.log('----장바구니테스트----')
+						console.log($(this).attr('id'))
+						Array.push($(this).attr('id'))
+						// $('input[name="resPri"]').val($('.text-end.text-dark.totalMoney').text(totalMoney.toLocaleString()))s
+
+						$('.col-8.selectOP').on('click','.small.link-danger.ms-auto',function(){
+							totalMoney -= Number($(this).prev().text().replace(/[^0-9]/g,''));
+							$('.text-end.text-dark.totalMoney').text(totalMoney.toLocaleString())
+							$(this).parent().remove()
+							$(ckOp).prop('checked',false)
+						})
+					}else if(ckOp.checked == false){
+						document.getElementById($(this).attr('id')+'_1').remove()
+						totalMoney -= Number($(this).parent().next().find('span').eq(1).text().replace(/[^0-9]/g,''));
+						$('.text-end.text-dark.totalMoney').text(totalMoney.toLocaleString())
+					}
+				})
+			}
+		   }
+
+		   //📌예약 버튼 누르면 모달창에 정보 담기 
+			function modalInfo(){
+				$('.btn.btn-primary.pd-cart-btn').on('click',function(){
+					   let reserDate = $('#selectDate').text()
+					   let reserTime = $('#selectTime').text()
+					   let resPri =Number($('.text-end.text-dark.totalMoney').text().replace(/[^0-9]/g,''))
+					$('input[name="shotDate"]').val(reserDate)
+					$('input[name="shotTime"]').val($('#selectTime').attr('timeCD'))
+					$('input[name="resPri"]').val(resPri)
+					
+					//예약 날짜, 예약 시간, 예약 옵션, 최종 가격
+					let reserArry = []
+					$('.reserTable').find('.reserDate').text(reserDate)
+					$('.reserTable').find('.reserTime').text(reserTime)
+					$('.reserTotal').text($('.text-end.text-dark.totalMoney').text())
+					$('.col-8.selectOP').each(function(a,b){
+						reserArry.push($(b).find('.selectOPNM').text())
+					})
+					$('input[name="ttl"]').val(reserArry)
+					console.log(reserArry)
+					$(reserArry).each(function(idx,op){
+						$('.small.letter-spacing-2.op').append(
+							`<h6 class="m-0 mt-1 reserOP">${op}</h6>`
+							).attr('id',$('.text-dark.fw-500'))
+						})
+				})
+		   }
+          </script>
+	</div><!--END layout:fragment="content" -->
+</body>
+
+</html>

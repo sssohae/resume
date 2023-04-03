@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+							<div class="row g-3 g-lg-4 list" id="page">
+								<div class="col-md-4 col-6" th:each="ptg : ${list}">
+									<div class="product-card-9 cList">
+										<div class="product-card-image">
+											<div class="product-action">
+												<!--하트-->
+												<a href="#" class="btn"> <i class="fi-heart"></i>
+												</a>
+											</div>
+											<div class="hover-scale">
+												<!--작가 사진-->
+												<div class="hover-scale-in">
+													<a
+														th:href="@{/silhyun/ptgDetail/{ptgId}(ptgId = ${ptg.ptgId})}">
+														<img class="img-fluid" th:src="${ptg.profile}" title=""
+														alt="사진이 뜨지않는다.." width="700" height="800">
+													</a>
+												</div>
+											</div>
+											<div class="product-card-info">
+												<!--작가 이름-->
+												<h6 class="product-title">
+													<a class="ptgtitle" href="#" th:text="${ptg.name}"></a>
+												</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+												<div class="pagination">
+					<a th:if="${page.prev}" th:href="${page.startPage-1}">&laquo;</a> <a
+						th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}"
+						th:href="${num}"
+						th:class="${page.criteria.pageNum==num} ? 'active'">[[${num}]]</a>
+					<a th:if="${page.next}" th:href="${page.endPage+1}">&raquo;</a>
+				</div>
+				<form id="actionFrm" action="/silhyun/ptgList" th:object="${page}">
+					<input type="hidden" name="pageNum" th:value="*{criteria.pageNum}">
+					<input type="hidden" name="amount" th:value="*{criteria.amount}">
+					<input type="hidden" name="searchType" th:value="${photographerVO.searchType}">
+					<input type="hidden" name="chkArray" th:value="${photographerVO.chkArray}">
+					<input type="hidden" name="chkfldArray" th:value="${photographerVO.chkfldArray}">
+					<input type="hidden" name="region" th:value="${photographerVO.region}">
+					<input type="hidden" name="field" th:value="${photographerVO.field}">
+					<input type="hidden" name="searchWord" th:value="${photographerVO.searchWord}">
+				</form>
+		     </div>
+				<script>
+				$(".pagination a").on("click", function(e){
+					e.preventDefault();
+					console.log($("#actionFrm").find("input[name='pageNum']").val())
+				 	$("#actionFrm").find("input[name='pageNum']").val($(this).attr("href"));
+					
+					var chkArray = new Array();
+	                var chkfldArray = new Array();
+	                var schWord = new Array();
+	                var rgTextAry = new Array();
+	                var fldTextAry = new Array();
+	                
+	            	$('#searchFrm').find("input[name='pageNum']").val(1);
+
+	                $("input[name='region']:checked").each(function () {
+	                    var tmpVal = $(this).val();
+	                    chkArray.push(tmpVal);
+	                    var rgText = $(this).parent().text()
+	                    rgTextAry.push(rgText);
+
+	                });
+	                
+	                $("lavel")
+	                $("input[name='field']:checked").each(function () {
+	                    var fldVal = $(this).val();
+	                    chkfldArray.push(fldVal);
+	                    var fldText = $(this).parent().text();
+	                    fldTextAry.push(fldText)
+	                });
+	                var word = $("input[name='searchWord']").val();
+
+	                let list = [];
+	                list.push(chkArray);
+	                list.push(chkfldArray);
+	                //                 if (chkArray.length < 1) {
+	                //                     alert("지역을 선택해주시기 바랍니다.");
+	                //                     return;
+	                //                 }
+	                //                 if (chkfldArray.length < 1) {
+	                //                     alert("분야을 선택해주시기 바랍니다.")
+	                //                     return;
+	                //                 }
+	                console.log(chkArray)
+	                console.log(chkfldArray)
+	                $.ajax({
+	                        url: "/silhyun/searchPtgList",
+	                        type: "post",
+	                        data: JSON.stringify({
+	                            chkfldArray: chkfldArray,
+	                            chkArray: chkArray,
+	                            searchWord: word,
+	                            pageNum: 1,
+	                            amount: 10
+	                        }),
+	                        contentType: "application/json"
+	                    })
+	                    .then(res => {
+	                    	$('#page').empty().append(res)
+	                    })
+				})
+				</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+ 
+  <body>
+
+  <div layout:fragment="content">
+    <div class="container">
+      <br>
+      <section class="section bg-cover bg-center" style="background-image: url(/img/bestC.jpg)">
+        <div class="container">
+          <div class="row justify-content-center py-10">
+            <div class="col-lg-6 text-center">
+              <h6 class="mb-3" style="color:white;font-weight: bolder;">무슨 강의를 들을지 고민되신다면</h6>
+              <h3 class="display-3 fw-500" style="color:white;font-weight: bolder;">BEST TOP10 CLASS</h3>
+              <p class="lead text-white" style="font-weight: bolder;">
+                  현직자가 선택한 최고의 강의들을 지금 살펴보세요!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+      <br>
+      <br>
+
+      <section class="section pt-0">
+        <div class="container">
+          <div>
+            <div class="tab-content" id="home-6_tabsContent">
+              <div class="tab-pane fade show active" id="h6_tab_1"
+                role="tabpanel" aria-labelledby="h3_tabnav_1">
+                <div class="row g-3 g-lg-4" th:each="bC, sts : ${bCList}" th:Class="${sts}">
+                  <div class="col-6 col-lg-3" style="float: left; height: 485px">
+                    <div class="product-card-7">
+                      <div class="product-card-image" style="width: 300px; height: 300px">
+                        <div class="badge-ribbon">
+                          <span th:if="${bC.CCD== 'CL1'}" class="badge bg-danger">
+                            오프라인
+                            </span>
+                          <span th:if="${bC.CCD== 'CL2'}" class="badge bg-info">
+                            온라인
+                            </span>
+                        </div>
+                        <div class="product-action">
+                          <a href="#" class="btn" style="background: none; border: none">
+                            <i class="fi-heart" style="color: pink"></i>
+                          </a>
+                        </div>
+                        <div class="product-media">
+                          <a th:href="@{/silhyun/classes/classesInfo(classNum=${bC.CNUM})}">
+                            <img class="img-fluid" th:src="${bC.THNI}" title="" alt=""/>
+                          </a>
+                        </div>
+                        <div class="product-cart-btn">
+                          <a class="btn btn-primary" th:href="@{/silhyun/classes/classesInfo(classNum=${bC.CNUM})}">
+                            <i class="fi-eye"></i>
+                            상세 보기
+                          </a>
+                        </div>
+                      </div>
+                      <div class="product-card-info">
+                        <div class="rating-star text">
+                          <span th:each="star : ${#numbers.sequence(1, 5)}">
+                            <i th:if="${bC.STAR >= star}" class="bi bi-star-fill active"></i>
+                            <i th:if="${bC.STAR >= star - 0.5 && bC.STAR < star}" class="bi bi-star-half active"></i>
+                            <i th:if="${bC.STAR < star - 0.5}" class="bi bi-star"></i>
+                          </span>
+                          <span th:text="${bC.STAR}"></span>
+                        </div>
+                        <h6 class="product-title">
+                          <a th:href="@{/silhyun/classes/classesInfo(classNum=${bC.CNUM})}" th:text="${bC.TTL}"></a>
+                        </h6>
+                        <div class="product-price">
+                          <span class="text-primary" th:text="${bC.CPRI}">
+                          </span><small>원</small>
+                        </div>
+                        <a th:text="${bC.NAME}"> </a><br/>
+                        <div th:if="${bC.CCD== 'CL2'}">
+                          <a th:text="'총 '+ ${bC.CNT}+'강'"></a>
+                        </div>
+                        <div th:if="${bC.CCD== 'CL1'}">
+                          <a th:text="${bC.CDT}"> </a><br />
+                          <a th:text="${bC.CPLACE}+' / '+${bC.CTIME}"> </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <br>
+    <br>
+    
+  </body>
+</html>

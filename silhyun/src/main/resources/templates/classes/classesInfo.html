@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{home/layout}">
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+    crossorigin="anonymous"></script>
+
+<head>
+    <style>
+		/* 스타일링 */
+		div.minimalistBlack {
+			width: 70%;
+			border-collapse: collapse;
+			text-align: left;
+		}
+
+		#attl {
+			padding-left: 15px;
+		}
+
+		.divTable.minimalistBlack .divTableCell,
+		.divTable.minimalistBlack .divTableHead {
+			padding: 5px 4px;
+		}
+
+		.divTable.minimalistBlack .divTableBody .divTableCell {
+			font-size: 13px;
+		}
+
+		.divTable.minimalistBlack .divTableHeading {
+			background: #B96F4A;
+			border-bottom: 1px solid #000000;
+		}
+
+		.divTable.minimalistBlack .divTableHeading .divTableHead {
+			font-size: 15px;
+			font-weight: bold;
+			color: #000000;
+		}
+
+		.minimalistBlack .tableFootStyle {
+			font-size: 14px;
+		}
+
+		/* DivTable.com */
+		.divTable {
+			display: table;
+		}
+
+		.divTableRow {
+			display: table-row;
+			border-bottom: 1px solid steelblue;
+		}
+
+		.divTableHeading {
+			display: table-header-group;
+			text-align: center;
+		}
+
+		.divTableCell,
+		.divTableHead {
+			display: table-cell;
+			text-align: center;
+		}
+
+		.divTableHeading {
+			display: table-header-group;
+		}
+
+		.divTableFoot {
+			display: table-footer-group;
+		}
+
+		.divTableBody {
+			display: table-row-group;
+		}
+
+		/* 모달 창 스타일링 */
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			padding-top: 100px;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 50%;
+		}
+
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.ansBox{
+			padding-left: 10px;
+
+		}
+		a{
+			text-decoration-line: none;
+		}
+		button {
+			margin-left: 10px;
+			
+		}
+
+		
+		
+
+	</style>
+
+</head>
+
+<body>
+
+    <div layout:fragment="content">
+        <section class="product-details py-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 lightbox-gallery product-gallery">
+                        <div class="swiper swiper_gallery">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="pd-gallery-slide">
+                                        <a class="gallery-link" th:href="${cInfo.thni}">
+                                            <i class="bi bi-arrows-fullscreen"></i></a>
+                                        <img th:src="${cInfo.thni}" class="img-fluid" title="" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 ps-lg-5">
+                        <div class="product-detail pt-4 pt-lg-0">
+                            <form action="/pay/orderFormCla" method="post">
+                                <div class="products-brand pb-2">
+                                    <span th:text="${plusInfo.fdCd}"></span>
+                                </div>
+                                <div class="products-title mb-2">
+                                    <h4 class="h4 claTtl" th:id="${cInfo.classNum}" th:text="${cInfo.claTtl}"></h4>
+                                </div>
+                                <div class="rating-star text small pb-4">
+                                    <span th:each="star : ${#numbers.sequence(1, 5)}">
+                                            <i th:if="${plusInfo.starAvg >= star}" class="bi bi-star-fill active"></i>
+                                            <i th:if="${plusInfo.starAvg >= star - 0.5 && plusInfo.starAvg < star}" class="bi bi-star-half active"></i>
+                                            <i th:if="${plusInfo.starAvg < star - 0.5}" class="bi bi-star"></i>
+                                        </span>&nbsp;    
+                                        <small th:text="${plusInfo.starAvg} +' / ' "></small>
+                                        <small th:text="${plusInfo.rvCnt}"></small><small> Reviews</small>
+                                    </div>
+                                    <div class="product-description">
+                                        <p th:text="${cInfo.claDesct}">강의에 대한 어떤 멋진 설명</p>
+                                    </div>
+                                    <div class="product-price fs-3 fw-500 mb-2">
+                                        <span class="text-primary claPri" data-th-text="${#numbers.formatInteger(cInfo.claPri, 1, 'COMMA') + '원(VAT포함가)'}"></span>
+                                    </div>
+                                    <br>                     
+                                    <div class="product-detail-actions d-flex flex-wrap pt-3">
+                                        <div class="cart-button mb-3 d-flex">
+                                            <button th:if="${cmPlusInfo == null || cmPlusInfo.buyYN == null || cmPlusInfo.buyYN == 0}" 
+                                            type="submit" class="btn btn-dark me-3"><i class="fi-shopping-cart"></i> 구입하기</button>
+                                            <button type="button" th:if="${cmPlusInfo != null and cmPlusInfo.buyYN != null and
+                                             cmPlusInfo.buyYN == 1}" class="btn btn-primary me-3" 
+                                            th:onclick="|location.href='@{/silhyun/myPage/myClasses}'|">💖 내 학습방</button>                            
+                                            <button type="button" class="btn btn-outline-dark me-3">
+                                                <i class="zzim-icon bi-person" style="font-size: 20px"></i>찜</button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id" th:value="${session.id}">
+                                    <input type="hidden" name="ptgId" th:value="${cInfo.ptgId}">
+                                    <input type="hidden" name="ctgrNum">
+                                    <input type="hidden" name="claTtl">
+                                    <input type="hidden" name="resPri">
+                                    <input type="hidden" name="classNum">
+                                    <input type="hidden" id="ctgrNum" th:value="${cInfo.classNum}">
+									<input type="hidden" id="ctgr" value="C">
+                              </form>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                            <div class="pt-4">
+                                <img class="img-fluid" src="/img/fashion/payment-details.png" title="" alt="">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-6 py-md-6 pb-lg-10 pt-lg-5">
+            <div class="container">
+                <div class="product-tabs">
+                    <ul class="nav product-nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a href="#" class="nav-link active" id="pd_description_tab" data-bs-toggle="tab"
+                                data-bs-target="#pd_description" role="tab" aria-controls="pd_description"
+                                aria-selected="true">강의 소개</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="#" class="nav-link" id="pd_reviews_tab_02" data-bs-toggle="tab"
+                                data-bs-target="#pd_reviews" role="tab" aria-controls="pd_reviews"
+                                aria-selected="false">후기</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="#" class="nav-link" id="pd_qst_tab" data-bs-toggle="tab"
+                                data-bs-target="#px_qst" role="tab" aria-controls="px_qst"
+                                aria-selected="false">문의</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="pd_description" role="tabpanel"
+                            aria-labelledby="pd_description_tab">
+                            <div class="row">
+                                <div class="col-lg-7 pe-lg-10">
+                                    <h5>기록가가 쓴 멋진 강의 설명</h5>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                        culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                        culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <h5 class="pt-3">기록가의 어떤 리스트</h5>
+                                    <ul class="mb-5">
+                                        <li>Comodous in tempor ullamcorper miaculis</li>
+                                        <li>Pellentesque vitae neque mollis urna mattis laoreet.</li>
+                                        <li>Divamus sit amet purus justo.</li>
+                                        <li>Proin molestie egestas orci ac suscipit risus posuere loremous</li>
+                                    </ul>
+                                    <h5>기록가의 어떤 리스트2</h5>
+                                    <ol>
+                                        <li>Comodous in tempor ullamcorper miaculis</li>
+                                        <li>Pellentesque vitae neque mollis urna mattis laoreet.</li>
+                                        <li>Divamus sit amet purus justo.</li>
+                                        <li>Proin molestie egestas orci ac suscipit risus posuere loremous</li>
+                                    </ol>
+                                    <blockquote
+                                        class="bg-gray-100 p-3 lead fw-400 mt-5 text-dark border-start border-primary border-5"
+                                        th:text="'작가소개 :  '+${plusInfo.itr}">          
+                                    </blockquote>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="pb-3">
+                                        <div id="player"></div>
+                                        <p style="display: none;"  th:text="${cInfo.ot}" id="ot"></p>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <div class="d-flex border p-3">
+                                                <div class="fs-1 text-primary">
+                                                    <i class="bi bi-truck"></i>
+                                                </div>
+                                                <div class="col ps-3">
+                                                    <h6 class="mb-1">Free shipping</h6>
+                                                    <p class="m-0">Lorem ipsum dolor sit amet</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="d-flex border p-3">
+                                                <div class="fs-1 text-primary">
+                                                    <i class="bi bi-headphones"></i>
+                                                </div>
+                                                <div class="col ps-3">
+                                                    <h6 class="mb-1">Contact us 24/7</h6>
+                                                    <p class="m-0">Lorem ipsum dolor sit amet</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="d-flex border p-3">
+                                                <div class="fs-1 text-primary">
+                                                    <i class="bi bi-box-arrow-in-left"></i>
+                                                </div>
+                                                <div class="col ps-3">
+                                                    <h6 class="mb-1">30 Days Return</h6>
+                                                    <p class="m-0">Lorem ipsum dolor sit amet</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="d-flex border p-3">
+                                                <div class="fs-1 text-primary">
+                                                    <i class="bi bi-shield-lock"></i>
+                                                </div>
+                                                <div class="col ps-3">
+                                                    <h6 class="mb-1">100% Secure Payment</h6>
+                                                    <p class="m-0">Lorem ipsum dolor sit amet</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="px_information" role="tabpanel"
+                            aria-labelledby="pd_information_tab">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <table class="table text-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Product #</th>
+                                                <td class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisic
+                                                    elit</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Available packaging</th>
+                                                <td class="text-muted ">consectetur adipisic elit eiusm tempor</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Weight</th>
+                                                <td class="text-muted ">Ut enim ad minim venialo quis nostrud</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Sunt in culpa qui</th>
+                                                <td class="text-muted ">labore et dolore magna aliqua.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-6">
+                                    <table class="table text-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Weight</th>
+                                                <td class="text-muted">dolor sit amet </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Sunt in culpa qui</th>
+                                                <td class="text-muted ">Lorem ipsum dolor sit amet </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Product #</th>
+                                                <td class="text-muted ">Lorem ipsum dolor sit amet </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="fw-500 text-dark">Available packaging</th>
+                                                <td class="text-muted ">Lorem ipsum dolor sit amet </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pd_reviews" role="tabpanel" aria-labelledby="pd_reviews_tab_02">
+                           
+                                <!-- 리뷰 들어오는곳 -->
+                            <div id="reviews">
+                                <div></div>
+                            </div>
+
+                        </div>
+                        
+                        <div class="tab-pane fade" id="px_qst" role="tabpanel"
+                            aria-labelledby="pd_qst_tab">
+                            <div class="row">
+										<div class="col-lg-8 pe-lg-8">
+											<div align="center" class="ansArea" style="width: 1300px">
+												<div class="divTable minimalistBlack">
+													<div class="divTableHeading">
+														<div class="divTableRow">
+															<div class="divTableHead" style="width: 200px;">제목</div>
+															<div class="divTableHead" style="width: 120px;">작성자</div>
+															<div class="divTableHead" style="width: 120px;">작성날짜</div>
+															<div class="divTableHead" style="width: 120px;">답변상태</div>
+															<div class="divTableHead" style="width: 220px;"></div>
+														</div>
+													</div>
+													<div class="divTableBody qstArea"></div>
+												</div>
+												<div></div>
+												<div id="textBox"></div>
+												<br> <br>
+												<button id="new-post-btn" class="btn btn-outline-secondary btn-sm">문의하기</button>
+
+												<!-- 문의 모달 -->
+												<div id="myModal" class="modal">
+													<!-- 모달 창 내용 -->
+													<div class="modal-content">
+														<span class="close">&times;</span>
+														<h2>상품 문의</h2>
+														<form>
+															<label for="title">제목:</label> <input type="text" id="title" class="title" name="title"
+																placeholder="제목을 입력하세요..." style="width: 400px;">
+															<br> <br> <label for="content">내용:</label>
+															<textarea id="qstCntn" name="qstCntn" rows="5" placeholder="내용을 입력하세요..."
+																style="width: 400px;"></textarea>
+															<br> <input type="checkbox" class="secChk" id="secChk" name="isSecret">
+															<label for="isSecret">비밀글</label> <br> <br>
+															<button type="button" id="send" class="btn btn-outline-secondary btn-sm">작성</button>
+															<button type="reset" id="cancel" class="btn btn-outline-secondary btn-sm">취소</button>
+														</form>
+													</div>
+												</div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section bg-gray-100">
+            <div class="container" align="center">
+                <div class="row justify-content-center mb-4 mb-lg-6">
+                    <div class="col-lg-6 text-center">
+                        <h3 class="h2 mb-2">이런 강의는 어떠세요?</h3>
+                        <p class="fs-6 m-0">새로운 강의들을 확인해보세요.</p>
+                    </div>
+                </div>
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" th:each="random, sts : ${randomList}" th:Class="${sts}">
+                    <div class="product-card-1" style="width:324px;height:460px;">
+                        <div class="product-card-image">
+                            <div class="badge-ribbon">
+                                <span class="badge bg-warning">new</span>
+                            </div>
+                            <div class="product-media">
+                                <a href="#">
+                                    <img class="img-fluid" th:src="${random.THNI}" title="" alt="">
+                                </a>
+                                <div class="product-cart-btn">
+                                    <a href="#" class="btn btn-primary btn-sm w-100">
+                                        <i class="fi-eye"></i>
+                                        상세 보기
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-card-info">
+                            <div class="product-meta small">
+                                <a href="#" th:text="${random.FCD}"></a>
+                            </div>
+                            <div class="rating-star text">
+                                <span th:each="star : ${#numbers.sequence(1, 5)}">
+                                    <i th:if="${random.STAR >= star}" class="bi bi-star-fill active"></i>
+                                    <i th:if="${random.STAR >= star - 0.5 && random.STAR < star}" class="bi bi-star-half active"></i>
+                                    <i th:if="${random.STAR < star - 0.5}" class="bi bi-star"></i>
+                                </span>
+                                    <a th:text="${random.STAR}"></a>
+                            </div>
+                            <h6 class="product-title">
+                                <a th:href="@{/silhyun/classes/classesInfo(classNum=${random.CNUM})}" th:text="${random.TTL}"></a>
+                            </h6>
+                                <a th:text="${random.NAME}"> </a><br>                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                
+<script src="/js/review/review.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="text/javascript">
+
+  var player;
+  var interval;
+
+  //강의 소개의 ot영상
+  function onPlayerReady(event) {
+    console.log("onReady");
+  }
+
+  function onYouTubeIframeAPIReady() {
+    var youtubeUrl = document.getElementById("ot").textContent;
+    var youtubeId = youtubeUrl.match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/)[7];
+
+    if (player) {
+
+      player.loadVideoById(youtubeId);
+      
+    } else {
+      player = new YT.Player('player', {
+        height: '315px',
+        width: '524px',
+        videoId: youtubeId,
+        playerVars: {
+          start: 0
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+  }
+  
+    //▶결제전 확인 페이지에 정보 넘기기
+    $(function(){
+    	console.log($('.h4.claTtl').text())
+    	let claTtl = $('.h4.claTtl').text();
+    	$('input[name="claTtl"]').val(claTtl)
+    	let resPri = $('.text-primary.claPri').text().replace(/[^0-9]/g,'');
+        console.log(resPri)
+        $('input[name="resPri"]').val(resPri)
+        let classNum = $('.h4.claTtl').attr('id')
+        console.log(classNum)
+        $('input[name="classNum"]').val(classNum)
+        $('input[name="ctgrNum"]').val(classNum)
+    	
+    }) 
+    
+    //▶ 찜
+    //찜 호출 
+	let id = $('input[name="id"]').val()
+	let ctgrNum =$('.h4.claTtl').attr('id')
+	$(function(){
+	    
+	    $.ajax({
+	        url:`/silhyun/cIsZzim/${id}/${ctgrNum}`
+	    }).then(result => {
+	        console.log(result)
+	        if(result){ 
+	            if($('.zzim-icon').hasClass('bi-person')){
+	                $('.zzim-icon').removeClass('bi-person').addClass('bi-person-heart')
+	            }
+	       }else{
+               if($('.zzim-icon').hasClass('bi-person-heart')){
+                   $('.zzim-icon').removeClass('bi-person-heart').addClass('bi-person')
+               }
+	        }
+	    })
+	
+	})
+	
+	$('.btn.btn-outline-dark.me-3').on('click',function(){
+	    if($(this).children().hasClass('bi-person')){  //찜 추가
+	        $.ajax({
+	            url:'/silhyun/cInsertZzim',
+	            type:'post',
+	            data:JSON.stringify({
+	                id: id,
+	                ctgrNum : ctgrNum
+	            }),
+	            contentType: 'application/json'
+	        }).then(result=>{
+	            $(this).children().removeClass('bi-person').addClass('bi-person-heart')
+	
+	           // let countZzim = parseInt($('.product-wishlist').find('p').text())
+	           // $('.product-wishlist').find('p').text(countZzim + 1);
+	        })
+	    }else{  //찜 삭제
+	        $.ajax({
+	            url:'/silhyun/cDelZzim',
+	            type:'post',
+	            data:JSON.stringify({
+	                id: id,
+	                ctgrNum : ctgrNum
+	            }),
+	            contentType: 'application/json',
+				headers: {
+				        'X-HTTP-Method-Override': 'DELETE'
+				}
+	        }).then(result =>{
+	            $(this).children().removeClass('bi-person-heart').addClass('bi-person')
+	          //  let countZzim = parseInt($('.product-wishlist').find('p').text())
+	          //  $('.product-wishlist').find('p').text(countZzim - 1);
+	        })
+	    }
+	})
+
+</script>
+<script src="/js/classQst.js"></script>
+</div>
+</body>
+</html>
