@@ -189,8 +189,11 @@
                                             <td class="p-3" align="center" th:text="${myC1.fdCd}"></td>
                                             <td class="p-3" align="center"><a th:text="${myC1.cPlace}"></a> <br>
                                                 <a th:text="${myC1.cDt} +''+ ${myC1.cTime}"></a></td>
-                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
-                                                    th:text="${myC1.dDayCnt}+ '일 전'"></span></td>
+                                            <td class="p-3" align="center">
+	                                            <span class="fw-600" style="color: green;" th:if="${myC1.dDayCnt}>0" th:text="${myC1.dDayCnt}+ '일 전'"></span>
+	                                            <span class="fw-600" style="color: red;" th:if="${myC1.dDayCnt}==0" th:text="'D-DAY'"></span>
+	                                            <span class="fw-600" style="color: black;" th:if="${myC1.dDayCnt}<0" th:text="'종료'"></span>
+                                            </td>
                                         </tr>
                                 </table>
                             </div>
@@ -213,7 +216,7 @@
                                     </thead>
                                     <tbody th:each="myC2,sts2 : ${myC2}" th:Class="${sts2}"
                                         th:if="${myC2.IVCnt != null and myC2.IVCnt != 0 }"
-                                        th:onclick="|location.href='@{/silhyun/classes/myClassesVideos(classNum=${myC2.classNum}) }'|">
+                                        th:onclick="${myC2.dDayCnt}>=0 ?|location.href='@{/silhyun/classes/myClassesVideos(classNum=${myC2.classNum}) }'| : '' ">
                                         <tr>
                                             <td class="p-3" align="center"><span class="fw-500"
                                                     th:text="${sts2.count}"></span></td>
@@ -222,8 +225,10 @@
                                             <td class="p-3" align="center" th:text="${myC2.fdCd}"></td>
                                             <td class="p-3" align="center"
                                                 th:text="'총 ' + ${myC2.IVCnt} + '강/ 총 ' + ${myC2.timeSum}+'분'"></td>
-                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
-                                                    th:text="${myC2.dDayCnt}+'일'"></span></td>
+                                            <td class="p-3" align="center">
+                                            	<span class="fw-600" style="color: green;" th:if="${myC2.dDayCnt}>=0" th:text="${myC2.dDayCnt}+'일'"></span>
+                                                <span class="fw-600" style="color: black;" th:if="${myC2.dDayCnt}<0" th:text="'만료'"></span>
+                                             </td>
                                         </tr>
                                     </tbody>
                                     <tbody th:each="myC2,sts2 : ${myC2}" th:Class="${sts2}"
@@ -237,8 +242,10 @@
                                             <td class="p-3" align="center" th:text="${myC2.fdCd}"></td>
                                             <td class="p-3" align="center"
                                                 th:text="'총 ' + ${myC2.IVCnt} + '강/ 총 ' + ${myC2.timeSum}+'분'"></td>
-                                            <td class="p-3" align="center"><span class="fw-600" style="color: green;"
-                                                    th:text="${myC2.dDayCnt}+'일'"></span></td>
+                                            <td class="p-3" align="center">
+                                            	<span class="fw-600" style="color: green;" th:if="${myC2.dDayCnt}>=0" th:text="${myC2.dDayCnt}+'일'"></span>
+                                                <span class="fw-600" style="color: black;" th:if="${myC2.dDayCnt}<0" th:text="'만료'"></span>
+                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
