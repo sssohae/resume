@@ -16,9 +16,16 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     <!-- CSS Template -->
     <link href="/css/theme.css" rel="stylesheet">
-
-    <!-- 이 페이지만 쓰는 css요소를 이 문서 안에 좀 썼어요. -->
+	<!-- 꽃가루 날리기 -->
+	<script src="https://tistory4.daumcdn.net/tistory/3134841/skin/images/confetti_v2.js"></script>
+    
     <style>
+    
+    	canvas{
+   				z-index:10;pointer-events: none;position: fixed;top: 0;transform: scale(1.1);
+   				right:0;
+   				}
+    	
         body {
             font-family: "Lato", sans-serif;
         }
@@ -71,19 +78,14 @@
 </head>
 
 <body>
-
-    <!-- Preload -->
-    <div id="loading" class="loading-preloader">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-    <!-- End Preload -->
    
     <!-- Main -->
     <main layout:fragment="content">
+	<!-- 꽃가루 자리 캔버스 -->
+	<canvas id="canvas"></canvas>
         <!-- Table -->
         <div class="container">
+
             <div class="row">
                 <!-- Profile Menu -->
         <!-- End Header -->
@@ -196,7 +198,7 @@
                         </div>
                         <!-- End Profile Menu -->
                 <!-- Content -->
-
+				
                 <div class="col-lg-8 col-xxl-9">
                                                 <section>
                                 <div class="container">
@@ -231,11 +233,17 @@
              
                     </section>
 
-
+					</div>
+					</div>
+					</div>
                 </div>
             </div>
         </div>
-        						<span id="cumlwTime" style="display: none">0</span>
+        <div class="buttonContainer" style="display: none;">
+			<button class="canvasBtn" id="stopButton">Stop Confetti</button>
+			<button class="canvasBtn" id="startButton">Drop Confetti</button>	
+		</div>
+	        						<span id="cumlwTime" style="display: none">0</span>
          <input id="classNum" type="hidden" th:value="${IV.classNum}">
         <input id="inetNum" type="hidden" th:value="${IV.inetNum}">
       <input  id="inetVdo" type="hidden" th:value="${IV.inetVdo}">
@@ -245,6 +253,7 @@
         <!-- 동영상 제어 스크립트  -->
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="text/javascript">
+	
   var player;
   var interval;
   
@@ -322,14 +331,22 @@
       // 재생이 종료되면 호출됨
       console.log("종료됨");
       clearInterval(interval);
-      //ewTime = Math.floor(player.getCurrentTime());
+      ewTime = Math.floor(player.getCurrentTime());
       console.log("ewTime="+ewTime+"cumlwTime="+cumlwTime.innerText);
       //console.log("현재 지점 초단위. 여기서는 영상이 종료돼서 종료+종료지점" + Math.floor(player.getCurrentTime()));
-
-
+      reAction();
     }
   }
 
+	  //꽃가루 이벤트
+	  function reAction(){
+	  	$("#startButton").trigger("click");
+	  	setTimeout(function(){
+	  		$("#stopButton").trigger("click");
+	  	}, 3000);
+	  };
+	  
+  
   function count() {
 	  cumlwTime.innerText = parseInt(cumlwTime.innerText) + 1;
 
@@ -361,7 +378,7 @@
 	    	
 	  });
 	   	cumlwTime.innerText = "0";
-	}, 5000); // 10초 간격으로 호출
+	}, 5000); // 5초 간격으로 호출
   
   
 </script>
