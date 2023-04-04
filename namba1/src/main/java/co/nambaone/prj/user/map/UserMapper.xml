@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.nambaone.prj.user.map.UserMapper">
+
+	<insert id="userInsert"
+		parameterType="co.nambaone.prj.user.service.UserVO">
+		INSERT INTO MEMBER
+		VALUES(#{userEmail},#{userPassword},#{userNickname},
+		#{userTel},#{report},#{cardNumber},#{payDate},
+		SYSDATE,'USER')
+	</insert>
+
+	<select id="userSelect" resultType="co.nambaone.prj.user.service.UserVO">
+		SELECT * FROM MEMBER		WHERE USER_EMAIL = #{userEmail }
+				<if test="userPassword != null">AND USER_PASSWORD = #{userPassword}</if>
+	</select>
+	
+	<select id="findPw" resultType="co.nambaone.prj.user.service.UserVO">
+		SELECT USER_PASSWORD
+		FROM MEMBER
+		WHERE USER_EMAIL = #{userEmail}
+	</select>
+
+	<update id="userUpdate">
+		UPDATE MEMBER
+		<set>
+			<if test="userPassword != null">USER_PASSWORD = #{userPassword},</if>  
+			<if test="userTel != null">USER_TEL = #{userTel},</if>
+			<if test="cardNumber != null">CARD_NUMBER = #{cardNumber},
+			PAY_DATE = ADD_MONTHS(SYSDATE, 1)</if> 
+		</set>
+		WHERE USER_EMAIL = #{userEmail }
+	</update>
+	
+	
+	<select id="isIdCheck" resultType="boolean">
+		SELECT CASE WHEN COUNT(USER_EMAIL) = 1 THEN 0 ELSE 1 END AS ID
+		FROM MEMBER
+		WHERE USER_EMAIL = #{userEmail }
+				
+	</select>
+	
+	<select id="countNotice" resultType="int">
+	SELECT COUNT(*) FROM NOTICE
+	</select>
+	
+</mapper>

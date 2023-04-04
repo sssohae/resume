@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.nambaone.prj.movie.map.MovieMapper">
+	<!-- api에서 가져오는 것,,지울수더... -->
+	<select id="willInsert"></select>
+	
+	<!-- <select id="insertedSelect" resultType=""></select> -->
+	
+	<update id="movieUpdate"></update>
+	<insert id="movieInsert"></insert>
+	<delete id="movieDelete"></delete>
+</mapper>
