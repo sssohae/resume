@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>ACCOUNT MANAGE</title>
 </head>
-	<script src="js/noticeAjaxFetch.js"></script>
+	<script src="js/userAjaxFetch.js"></script>
 <body>
 	<!-- Page Preloder -->
 	<div id="preloder">
