@@ -10,7 +10,7 @@ import java.sql.Statement;
 public class DAO {
 
 	private String jdbcDriver = "org.sqlite.JDBC";
-	private String jdbcUrl = "jdbc:sqlite:/D:/resume/MemberManagementSystem.db";
+	private String jdbcUrl = "jdbc:sqlite:/D:/resume_etc/MemberManagementSystem.db";
 
 	protected Connection conn;
 	protected Statement stmt;
