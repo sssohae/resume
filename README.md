@@ -1,5 +1,5 @@
 실현하다(silhyun)                                           
-2023.02.13.~2023.03.15.
+2023.02.13.~2023.03.15.                                   
 Java, JavaScript, Spring Boot, Thymeleaf, jQuery, HTML/CSS, Oracle, JavaScript, MyBatis, Eclipse
 
 사진 촬영 중개 플랫폼
@@ -28,7 +28,7 @@ Chart.js와 SweetAlert를 통한 외부 라이브러리 사용 방법
 
 
 NAMBA1(namba1)                                   
-2022.12.19.~2023.01.02.
+2022.12.19.~2023.01.02.                                   
 Java, JavaScript, HTML/CSS, Apache Tomcat 9.0, Oracle, MyBatis, Eclipse
 
 영화 정보 사이트
